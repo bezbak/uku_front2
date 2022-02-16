@@ -1,0 +1,55 @@
+{
+    "env": {
+        "browser": true,
+        "es2020": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "plugin:prettier/recommended",
+        "prettier",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": ["react", "prettier", "@typescript-eslint"],
+    "parser": "@typescript-eslint/parser",
+    "ignorePatterns": [".eslintrc.js", ".stylelintrc.json"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": ["./tsconfig.json"]
+    },
+    "rules": {
+        "no-var": "warn",
+        "react/prop-types": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }
+        ],
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/require-await": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/await-thenable": "error",
+        "camelcase": "warn",
+        "react-i18n/no-dynamic-translation-keys": "error",
+        "react-i18n/no-missing-interpolation-keys": "error",
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto"
+            }
+        ]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}
