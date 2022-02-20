@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
-            "~/*": ["src/*"],
+            "@/*": ["src/*"],
             "@components/*": ["src/components/*"]
         },
         "target": "es5",
@@ -19,7 +19,9 @@
         "isolatedModules": true,
         "jsx": "preserve",
         "downlevelIteration": true,
-        "incremental": true
+        "incremental": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.css"],
     "exclude": ["node_modules"]
