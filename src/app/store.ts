@@ -2,10 +2,15 @@ import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "@/components/Authorization/authSlice";
 import locationReducer from "@components/Location/locationSlice";
+import profileFeedReducer from "@components/Home/FeedSlice";
 
 export function makeStore() {
     return configureStore({
-        reducer: { auth: authReducer, location: locationReducer },
+        reducer: {
+            auth: authReducer,
+            location: locationReducer,
+            profileFeed: profileFeedReducer,
+        },
     });
 }
 

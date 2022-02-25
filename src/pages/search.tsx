@@ -4,13 +4,13 @@ import Home from "@/components/Home";
 import Layout from "@/components/Layout";
 import { ReactNode } from "react";
 
-const Index = () => {
-    return <Home />;
+const Search = () => {
+    return <div>search</div>;
 };
 
-export default Index;
+export default Search;
 
-Index.getLayout = function getLayout(page: ReactNode) {
+Search.getLayout = function getLayout(page: ReactNode) {
     return (
         <Layout>
             <Header />
