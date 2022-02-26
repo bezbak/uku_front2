@@ -53,3 +53,32 @@ export const ProfileFeedSchema = object({
     previous: nullable(string()),
     results: array(ProfileFeedItemSchema),
 });
+
+export const ProfileInfoSchema = object({
+    id: number(),
+    first_name: string(),
+    last_name: string(),
+    phone: string(),
+    avatar: nullable(string()),
+    followers_count: number(),
+    following_count: number(),
+    publications_count: number(),
+    instagram: nullable(string()),
+    telegram: nullable(string()),
+    whatsapp: nullable(string()),
+    following: boolean(),
+    gender: string(),
+    age: number(),
+    status: union([literal("active"), literal("blocked")]),
+});
+
+export const oldPhoneSchema = object({
+    message: string(),
+    success: boolean(),
+});
+
+export const UpdateProfileSchema = object({
+    instagram: nullable(string()),
+    telegram: nullable(string()),
+    whatsapp: nullable(string()),
+});

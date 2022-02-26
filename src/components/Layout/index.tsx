@@ -1,10 +1,15 @@
 import { ReactNode } from "react";
-import Header from "../Header/Header";
 
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
-            <main>{children}</main>
+            <main className="main">{children}</main>
+            <style jsx>{`
+                .main {
+                    min-height: 100vh;
+                    position: relative;
+                }
+            `}</style>
         </>
     );
 }

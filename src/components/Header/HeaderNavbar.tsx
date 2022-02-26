@@ -1,19 +1,20 @@
-import { tokenManagerDiToken } from "@/lib/TokenManager";
-import Link from "next/link";
 import * as React from "react";
-import { container } from "tsyringe";
+
 import Avatar from "../Avatar";
 import Container from "../Container";
-import Icon from "../Icon";
 import { HearIcon } from "../icons/HeartIcon";
-import SearchIcon from "../icons/SearchIcon";
+import Icon from "../Icon";
+import Link from "next/link";
 import Logo from "./Logo";
+import SearchIcon from "../icons/SearchIcon";
 import Select from "react-select";
+import { TokenManagerDiToken } from "@/lib/TokenManager";
+import { container } from "tsyringe";
 
 export interface IHeaderNavbarProps {}
 
 export default function HeaderNavbar() {
-    const tokenManager = container.resolve(tokenManagerDiToken);
+    const tokenManager = container.resolve(TokenManagerDiToken);
     const auth = tokenManager.getToken();
     return (
         <div className="navbar">
@@ -52,7 +53,7 @@ export default function HeaderNavbar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href={auth ? "/profile" : "/login"}>
+                                <Link href={auth ? "/my-profile" : "/login"}>
                                     <a className="navbar__right-link link-reset-default-styles">
                                         {auth ? (
                                             <>

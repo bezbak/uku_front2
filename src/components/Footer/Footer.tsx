@@ -1,8 +1,8 @@
-import Link from "next/link";
-import Container from "../Container";
-import Icon from "../Icon";
 import AppStoreIcon from "../icons/AppStoreIcon";
+import Container from "../Container";
 import GooglePlayIcon from "../icons/GooglePlayIcon";
+import Icon from "../Icon";
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -51,8 +51,8 @@ export default function Footer() {
             </Container>
             <style jsx>{`
                 .footer {
+                    width: 100%;
                     padding: 19px 0;
-                    margin-top: 27px;
                     background: #f9f9f9;
                 }
 
@@ -91,11 +91,11 @@ export default function Footer() {
                 }
 
                 .footer_right-text {
-                    font-size: 10px;
+                    font-size: 9px;
                 }
 
                 .footer_right-app {
-                    font-size: 15px;
+                    font-size: 11px;
                 }
             `}</style>
         </div>

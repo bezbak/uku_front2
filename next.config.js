@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const API_URL =
-    process.env.NODE_ENV === "production"
-        ? "http://test.api.uku.kg/"
-        : "https://api.uku.kg/";
+    process.env.APP_ENV === "prod"
+        ? "https://api.uku.kg/"
+        : "http://test.api.uku.kg/";
 module.exports = {
     reactStrictMode: true,
     async rewrites() {
@@ -14,4 +14,5 @@ module.exports = {
         ];
     },
     trailingSlash: true,
+    productionBrowserSourceMaps: true,
 };

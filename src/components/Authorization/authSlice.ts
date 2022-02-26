@@ -1,10 +1,11 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { AppState } from "../../app/store";
-import { container } from "tsyringe";
 import { IRegisterSchema } from "./types";
-import { tokenManagerDiToken } from "@/lib/TokenManager";
+import { NextRouter } from "next/router";
+import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { authServiceToken } from "@/tokens";
+import { container } from "tsyringe";
 
 export interface CounterState {
     value: "login" | "register" | "confirm";
@@ -45,7 +46,7 @@ export const loginAsync = createAsyncThunk(
 export const confirmAsync = createAsyncThunk(
     "auth/confirm",
     async (
-        data: { phone: string; confirmCode: string },
+        data: { phone: string; confirmCode: string; rout: NextRouter },
         { rejectWithValue }
     ) => {
         const authService = container.resolve(authServiceToken);
@@ -54,6 +55,7 @@ export const confirmAsync = createAsyncThunk(
             if (!request) return;
             const { response } = request;
             const { data: confirm } = await response;
+            data.rout.push("/");
             return confirm;
         } catch (error) {
             return rejectWithValue((error as any).message);
@@ -106,7 +108,7 @@ export const authSlice = createSlice({
             })
             .addCase(confirmAsync.fulfilled, (state, { payload }) => {
                 if (!payload) return;
-                const tokenManager = container.resolve(tokenManagerDiToken);
+                const tokenManager = container.resolve(TokenManagerDiToken);
                 tokenManager.setToken(payload.token);
                 if (!payload.is_profile_completed) {
                     state.value = "register";
@@ -123,7 +125,7 @@ export const authSlice = createSlice({
                 state.status = "loading";
             })
             .addCase(registerAsync.fulfilled, (state, { payload }) => {
-                const tokenManager = container.resolve(tokenManagerDiToken);
+                const tokenManager = container.resolve(TokenManagerDiToken);
                 if (payload?.token) {
                     tokenManager.setToken(payload.token);
                 }
