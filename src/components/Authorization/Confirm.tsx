@@ -1,26 +1,35 @@
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { FC, FormEvent, useEffect, useState } from "react";
-import Button from "../Buttons/Button";
+import { IErroType, confirmFormSchema } from "./types";
+import { StructError, assert } from "superstruct";
 import {
     confirmAsync,
     incorectNumber,
     loginAsync,
     selectPhone,
 } from "./authSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+
+import Button from "../Buttons/Button";
 import CN from "classnames";
-import { useRouter } from "next/router";
 import Spinner from "../Spinner";
+import { changePage } from "../MyProfile/ProfileSlice";
 import getFormDate from "@/utils/getFormData";
-import { confirmFormSchema, IErroType } from "./types";
-import { assert, StructError } from "superstruct";
+import { phoneConfirmAsync } from "../MyProfile/ConfirmSlice";
+import { useRouter } from "next/router";
 
 interface IConfirmProps {
     status: "idle" | "loading" | "failed";
     message?: string;
     confirmStatus: "idle" | "loading" | "failed";
+    type: "new" | "old" | "login";
 }
 
-const Confirm: FC<IConfirmProps> = ({ message, status, confirmStatus }) => {
+const Confirm: FC<IConfirmProps> = ({
+    message,
+    status,
+    confirmStatus,
+    type,
+}) => {
     const [code, setCode] = useState("");
     const [time, setTime] = useState(60);
     const [error, setError] = useState<IErroType>({});
@@ -33,14 +42,21 @@ const Confirm: FC<IConfirmProps> = ({ message, status, confirmStatus }) => {
         setError({});
         try {
             assert(data, confirmFormSchema);
-            const { payload } = await dispatch(
-                confirmAsync({
-                    phone,
-                    confirmCode: data.code,
-                })
-            );
-            if ((payload as any)?.is_profile_completed) {
-                rout.push("/");
+            if (type === "login") {
+                dispatch(
+                    confirmAsync({
+                        phone,
+                        confirmCode: data.code,
+                        rout,
+                    })
+                );
+            } else {
+                dispatch(
+                    phoneConfirmAsync({
+                        code: data.code,
+                        type,
+                    })
+                );
             }
         } catch (error: unknown) {
             if (error instanceof StructError) {
@@ -52,6 +68,14 @@ const Confirm: FC<IConfirmProps> = ({ message, status, confirmStatus }) => {
         }
     };
 
+    const handleIncorrectNumber = () => {
+        if (type === "login") {
+            dispatch(incorectNumber());
+        } else if (type === "new") {
+            dispatch(changePage("newConfirm"));
+        }
+    };
+
     useEffect(() => {
         const timer = setInterval(() => {
             setTime(time - 1);
@@ -59,7 +83,7 @@ const Confirm: FC<IConfirmProps> = ({ message, status, confirmStatus }) => {
         if (time === 0) clearInterval(timer);
 
         return () => clearInterval(timer);
-    }, [time]);
+    }, [time, status]);
 
     useEffect(() => {
         setError({});
@@ -74,7 +98,7 @@ const Confirm: FC<IConfirmProps> = ({ message, status, confirmStatus }) => {
                     {phone}
                     <button
                         className="confirm__incorrect button-reset-default-styles"
-                        onClick={() => dispatch(incorectNumber())}
+                        onClick={() => handleIncorrectNumber()}
                     >
                         Неверный номер?
                     </button>

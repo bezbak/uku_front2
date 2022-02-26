@@ -1,21 +1,25 @@
 import "react-phone-input-2/lib/style.css";
 
+import { FC, FormEvent } from "react";
 import { changeNumber, loginAsync, selectPhone } from "./authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Button from "../Buttons/Button";
-import { FC, FormEvent } from "react";
 import Link from "next/link";
 import PhoneInput from "react-phone-input-2";
 import Spinner from "../Spinner";
+import { newPhoneAsync } from "../MyProfile/ConfirmSlice";
+import { useRouter } from "next/router";
 
 interface ILoginProps {
     status: string;
     message?: string;
+    type: "new" | "login";
 }
 
-const Login: FC<ILoginProps> = ({ status, message }) => {
+const Login: FC<ILoginProps> = ({ status, message, type }) => {
     const phone = useAppSelector(selectPhone);
+    const rout = useRouter();
     const dispatch = useAppDispatch();
     const onChangePhone = (number: string) => {
         dispatch(changeNumber(`+${number}`));
@@ -23,12 +27,21 @@ const Login: FC<ILoginProps> = ({ status, message }) => {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(loginAsync(phone));
+        if (type === "login") {
+            dispatch(loginAsync(phone));
+        } else {
+            dispatch(
+                newPhoneAsync({
+                    phone,
+                    rout,
+                })
+            );
+        }
     };
     return (
         <div className="login">
             <div className="login__header">
-                <h3>Вход</h3>
+                <h3>{type === "login" ? "Вход" : "Введите новый номер"}</h3>
                 <Link href={"/"}>
                     <button className="login__button">Отмена</button>
                 </Link>

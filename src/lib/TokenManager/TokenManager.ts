@@ -1,6 +1,6 @@
-import { singleton } from "tsyringe";
-import { TokenManagerInterface } from ".";
 import CookiesManager from "../CookiesManager/CookiesManager";
+import { TokenManagerInterface } from ".";
+import { singleton } from "tsyringe";
 
 const UKU_TOKEN_COOKIE_KEY = "UKU_TOKEN";
 

@@ -49,6 +49,12 @@ const Button: FC<ButtonProps> = ({
                     cursor: pointer;
                 }
 
+                .button--outline {
+                    border: 1px solid ${buttonColor};
+                    background: transparent;
+                    color: ${buttonColor};
+                }
+
                 .button--disable {
                     opacity: 0.5;
                 }
