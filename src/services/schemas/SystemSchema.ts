@@ -5,3 +5,9 @@ export const FaqSchema = object({
     question: string(),
     answer: string(),
 });
+
+export const AgreementSchema = object({
+    id: number(),
+    title: string(),
+    description: string(),
+});
