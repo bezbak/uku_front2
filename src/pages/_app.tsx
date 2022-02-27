@@ -9,6 +9,7 @@ import {
     authServiceToken,
     locationServiceToken,
     profileServiceToken,
+    systemServiceToken,
 } from "@/tokens";
 
 import type { AppProps } from "next/app";
@@ -18,6 +19,7 @@ import LocationService from "@/services/LocationService";
 import { NextPage } from "next";
 import ProfileService from "@/services/ProfileService";
 import { Provider } from "react-redux";
+import SystemService from "@/services/SystemService";
 import { container } from "tsyringe";
 import store from "../app/store";
 
@@ -41,12 +43,14 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     const authService = new AuthService(api, tokenManager);
     const locationService = new LocationService(api);
     const profileService = new ProfileService(api, tokenManager);
+    const systemService = new SystemService(api);
 
     container.registerInstance(apiDIToken, api);
     container.registerInstance(TokenManagerDiToken, tokenManager);
     container.registerInstance(authServiceToken, authService);
     container.registerInstance(locationServiceToken, locationService);
     container.registerInstance(profileServiceToken, profileService);
+    container.registerInstance(systemServiceToken, systemService);
     const getLayout = Component.getLayout ?? ((page) => page);
     return (
         <Provider store={store}>

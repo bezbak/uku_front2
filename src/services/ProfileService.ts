@@ -1,5 +1,4 @@
 import {
-    IAuth,
     IOldPhoneChnage,
     IProfileFeed,
     IUpdateProfile,
@@ -14,8 +13,6 @@ import {
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
-import { AuthSchema } from "./schemas/AccountSchema";
-import ProfileInfo from "@/components/MyProfile/ProfileInfo";
 import { TokenManagerInterface } from "@/lib/TokenManager";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
 
