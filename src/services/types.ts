@@ -7,6 +7,7 @@ import {
     oldPhoneSchema,
 } from "./schemas/ProfileSchema";
 
+import { FaqSchema } from "./schemas/SystemSchema";
 import { Infer } from "superstruct";
 import LocationSchema from "./schemas/LocationSchema";
 
@@ -18,3 +19,4 @@ export type IProfileFeedItem = Infer<typeof ProfileFeedItemSchema>;
 export type IprofileInfo = Infer<typeof ProfileInfoSchema>;
 export type IOldPhoneChnage = Infer<typeof oldPhoneSchema>;
 export type IUpdateProfile = Infer<typeof UpdateProfileSchema>;
+export type IFaq = Infer<typeof FaqSchema>;

@@ -5,6 +5,7 @@ import confirmReducer from "@components/MyProfile/ConfirmSlice";
 import locationReducer from "@components/Location/locationSlice";
 import profileFeedReducer from "@components/Home/FeedSlice";
 import profilePublicationReducer from "@components/MyProfile/ProfileSlice";
+import systemReducer from "./systemSlice";
 
 export function makeStore() {
     return configureStore({
@@ -14,6 +15,7 @@ export function makeStore() {
             profileFeed: profileFeedReducer,
             profilePublication: profilePublicationReducer,
             confirm: confirmReducer,
+            system: systemReducer,
         },
     });
 }
