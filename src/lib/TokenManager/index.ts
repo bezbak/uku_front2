@@ -1,3 +1,3 @@
 export * from "./TokenManager";
-export * from "./tokenManagerDIToken";
+export * from "./TokenManagerDIToken";
 export * from "./TokenManagerInterface";
