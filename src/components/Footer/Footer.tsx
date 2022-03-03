@@ -10,10 +10,10 @@ export default function Footer() {
             <Container>
                 <div className="footer__inner">
                     <ul className="footer__list list-reset-default-styles">
-                        <Link href={"/"}>
+                        <Link href={"/contacts"}>
                             <li className="footer__item">Контакты</li>
                         </Link>
-                        <Link href={"/contacts"}>
+                        <Link href={"/faq"}>
                             <li className="footer__item">F.A.Q.</li>
                         </Link>
                     </ul>
