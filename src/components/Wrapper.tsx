@@ -1,5 +1,6 @@
+import React, { ReactNode } from "react";
+
 import Container from "./Container";
-import { ReactNode } from "react";
 
 const Wrapper = ({
     children,

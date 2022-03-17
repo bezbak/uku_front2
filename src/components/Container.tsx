@@ -1,5 +1,7 @@
 import { FC, ReactNode } from "react";
 
+import React from "react";
+
 export interface IContainerProps {
     children: ReactNode;
 }

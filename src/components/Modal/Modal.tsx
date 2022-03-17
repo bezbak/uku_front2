@@ -1,4 +1,5 @@
-import { FC, ReactNode, useEffect } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
+
 import CN from "classnames";
 import Scrollable from "../Scrollable";
 

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { faqAsync, selectFaq } from "@/app/systemSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 

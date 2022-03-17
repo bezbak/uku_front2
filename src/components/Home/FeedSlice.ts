@@ -1,20 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { AppState } from "../../app/store";
-import { container } from "tsyringe";
 import { IProfileFeed } from "@/services/types";
+import { container } from "tsyringe";
 import { profileServiceToken } from "@/tokens";
 
 export interface ProfileFeedState {
     feed: IProfileFeed | null;
+    fovourite: IProfileFeed | null;
     status: "idle" | "loading" | "failed";
-    page: number;
 }
 
 const initialState: ProfileFeedState = {
     feed: null,
+    fovourite: null,
     status: "idle",
-    page: 1,
 };
 
 export const profileFeedAsync = createAsyncThunk(
@@ -26,6 +26,18 @@ export const profileFeedAsync = createAsyncThunk(
         const { response } = request;
         const { data: profileFeed } = await response;
         return profileFeed;
+    }
+);
+
+export const fovouriteAsync = createAsyncThunk(
+    "fovororite",
+    async (page: number) => {
+        const profileService = container.resolve(profileServiceToken);
+        const request = profileService.getFovourite(page);
+        if (!request) return;
+        const { response } = request;
+        const { data: fovourite } = await response;
+        return fovourite;
     }
 );
 
@@ -41,11 +53,14 @@ export const profileFeedSlice = createSlice({
             .addCase(profileFeedAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
                 state.feed = payload || null;
+            })
+            .addCase(fovouriteAsync.fulfilled, (state, { payload }) => {
+                state.fovourite = payload || null;
             });
     },
 });
 
 export const selectFeed = (state: AppState) => state.profileFeed.feed;
-export const selectPage = (state: AppState) => state.profileFeed.page;
+export const selectFav = (state: AppState) => state.profileFeed.fovourite;
 
 export default profileFeedSlice.reducer;

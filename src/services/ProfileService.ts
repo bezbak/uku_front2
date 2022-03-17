@@ -22,7 +22,7 @@ class ProfileService {
         private readonly tokenManager: TokenManagerInterface
     ) {}
     getProfileFeed(page: number) {
-        const request = this.api.get("/account/profile/feed", {
+        const request = this.api.get("/account/profile/feed/", {
             data: {
                 page,
             },
@@ -32,7 +32,7 @@ class ProfileService {
     }
 
     getProfilePublication(page: number) {
-        const request = this.api.get("/account/profile/publication", {
+        const request = this.api.get("/account/profile/publication/", {
             data: {
                 page,
             },
@@ -45,7 +45,7 @@ class ProfileService {
     }
 
     getProfileInfo() {
-        const request = this.api.get("/account/profile", {
+        const request = this.api.get("/account/profile/", {
             headers: {
                 [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
             },
@@ -55,7 +55,7 @@ class ProfileService {
     }
 
     sendSmsToOldPhone() {
-        const request = this.api.get("/account/send-sms-to-old-phone", {
+        const request = this.api.get("/account/send-sms-to-old-phone/", {
             headers: {
                 [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
             },
@@ -70,7 +70,7 @@ class ProfileService {
         whatsapp?: string;
     }) {
         const request = this.api.patch(
-            "/account/profile/update",
+            "/account/profile/update/",
             {
                 ...data,
             },
@@ -86,7 +86,7 @@ class ProfileService {
 
     updateAvatar(form: FormData) {
         const request = this.api.patch(
-            "/account/avatar",
+            "/account/avatar/",
             {
                 avatar: form,
             },
@@ -96,8 +96,20 @@ class ProfileService {
                 },
             }
         );
-        console.log(request);
         assertApiResponse<IUpdateProfile>(request, UpdateProfileSchema);
+        return request;
+    }
+
+    getFovourite(page: number) {
+        const request = this.api.get("/account/favorite/", {
+            data: {
+                page,
+            },
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
+        assertApiResponse<IProfileFeed>(request, ProfileFeedSchema);
         return request;
     }
 }

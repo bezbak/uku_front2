@@ -1,64 +1,62 @@
-import { profileInfoAsync, selectProfileInfo } from "./ProfileSlice";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-
 import Avatar from "../Avatar";
-import EditIcon from "../icons/EditIcon";
+import Button from "../Buttons/Button";
 import Icon from "../Icon";
 import InstagramIcon from "../icons/InstagramIcon";
 import { IprofileInfo } from "@/services/types";
+import React from "react";
 import TelagramIcon from "../icons/TelegramIcon";
 import WhatsAppIcon from "../icons/WhatsAppIcon";
 
 export interface IProfileInfoProps {
     info: IprofileInfo | null;
     onEdit: () => void;
+    page: "my" | "user";
+    follow?: boolean;
 }
 
-export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
-    const ageToString = (age: number) => {
-        var txt;
-        let count = age % 100;
-        if (count >= 5 && count <= 20) {
-            txt = "лет";
-        } else {
-            count = count % 10;
-            if (count == 1) {
-                txt = "год";
-            } else if (count >= 2 && count <= 4) {
-                txt = "года";
-            } else {
-                txt = "лет";
-            }
-        }
-        return age + " " + txt;
-    };
+export default function ProfileInfo({
+    info,
+    onEdit,
+    page,
+    follow,
+}: IProfileInfoProps) {
+    // const ageToString = (age: number) => {
+    //     let txt;
+    //     let count = age % 100;
+    //     if (count >= 5 && count <= 20) {
+    //         txt = "лет";
+    //     } else {
+    //         count = count % 10;
+    //         if (count === 1) {
+    //             txt = "год";
+    //         } else if (count >= 2 && count <= 4) {
+    //             txt = "года";
+    //         } else {
+    //             txt = "лет";
+    //         }
+    //     }
+    //     return age + " " + txt;
+    // };
 
     return (
         <div className="profile-info">
             <div className="profile-info__header">
                 <Avatar
-                    name="tets"
                     width={140}
                     height={140}
                     url={info?.avatar}
+                    border={true}
+                    placholderSize={60}
+                    name={info?.first_name || ""}
                 />
-                <button
-                    type="button"
-                    className="profile-info__edit"
-                    onClick={onEdit}
-                >
-                    <Icon>
-                        <EditIcon />
-                    </Icon>
-                </button>
             </div>
             <div className="profile-info__content">
                 <h4 className="profile-info__name">
                     {info?.first_name} {info?.last_name}
                 </h4>
-                <span className="profile-info__info">
+                {/* <span className="profile-info__info">
                     {info?.gender} {info && ageToString(info?.age)}
-                </span>
+                </span> */}
             </div>
             <div className="profile-info__static">
                 <div>
@@ -80,10 +78,23 @@ export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
                     </div>
                 </div>
             </div>
-            <div className="profile-info__icons">
-                {info?.telegram && (
+            <div>
+                <Button
+                    type="button"
+                    onClick={onEdit}
+                    buttonColor={follow ? "#24475A" : undefined}
+                >
+                    {page === "my"
+                        ? "Редактировать"
+                        : follow
+                        ? "Вы подписаны"
+                        : "Подписаться"}
+                </Button>
+            </div>
+            {!!info && (
+                <div className="profile-info__icons">
                     <a
-                        href={info?.telegram}
+                        href={info.telegram || ""}
                         type="button"
                         className="profile-info__social"
                         style={{
@@ -94,10 +105,8 @@ export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
                             <TelagramIcon />
                         </Icon>
                     </a>
-                )}
-                {info?.whatsapp && (
                     <a
-                        href={info?.whatsapp}
+                        href={info.whatsapp || ""}
                         type="button"
                         className="profile-info__social"
                         style={{
@@ -108,10 +117,8 @@ export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
                             <WhatsAppIcon />
                         </Icon>
                     </a>
-                )}
-                {info?.instagram && (
                     <a
-                        href={info?.instagram}
+                        href={info.instagram || ""}
                         type="button"
                         className="profile-info__social"
                         style={{
@@ -122,8 +129,9 @@ export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
                             <InstagramIcon />
                         </Icon>
                     </a>
-                )}
-            </div>
+                </div>
+            )}
+
             <style jsx>{`
                 .profile-info {
                     text-align: center;
@@ -139,7 +147,7 @@ export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
                 }
 
                 .profile-info__static {
-                    padding: 12px;
+                    padding: 12px 0;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -179,6 +187,7 @@ export default function ProfileInfo({ info, onEdit }: IProfileInfoProps) {
                 .profile-info__icons {
                     display: flex;
                     column-gap: 12px;
+                    margin-top: 12px;
                 }
 
                 .profile-info__social {

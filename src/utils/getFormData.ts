@@ -7,7 +7,7 @@ const getFormDate = (form: HTMLFormElement) => {
 
     const data: formDataType = {};
 
-    for (let [key, value] of formData) {
+    for (const [key, value] of formData) {
         data[key] = value;
     }
 

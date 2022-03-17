@@ -1,21 +1,35 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import Avatar from "../Avatar";
 import Container from "../Container";
 import { HearIcon } from "../icons/HeartIcon";
 import Icon from "../Icon";
 import Link from "next/link";
+import LocationIcon from "../icons/LocationIcon";
+import LocationModal from "../Location/LocationModal";
 import Logo from "./Logo";
+import React from "react";
 import SearchIcon from "../icons/SearchIcon";
 import Select from "react-select";
-import { TokenManagerDiToken } from "@/lib/TokenManager";
-import { container } from "tsyringe";
-
-export interface IHeaderNavbarProps {}
+import { useGetToken } from "@/hooks/useGetToken";
+import { useRouter } from "next/router";
 
 export default function HeaderNavbar() {
-    const tokenManager = container.resolve(TokenManagerDiToken);
-    const auth = tokenManager.getToken();
+    const router = useRouter();
+    const token = useGetToken();
+    const [locationModal, setLocationModal] = useState(false);
+    const [location, setLocation] = useState<{
+        id: number;
+        name: string;
+    }>({
+        id: 0,
+        name: "",
+    });
+
+    useEffect(() => {
+        console.log(location);
+    }, [location]);
+
     return (
         <div className="navbar">
             <Container>
@@ -32,6 +46,20 @@ export default function HeaderNavbar() {
                     </div>
                     <div className="navbar__right">
                         <ul className="navbar__right-list list-reset-default-styles">
+                            {router.route === "/search" && (
+                                <li>
+                                    <button
+                                        type="button"
+                                        className="navbar__right-link button-reset-default-styles"
+                                        onClick={() => setLocationModal(true)}
+                                    >
+                                        <Icon width={18} height={18}>
+                                            <LocationIcon />
+                                        </Icon>
+                                        <span>Выбор</span>
+                                    </button>
+                                </li>
+                            )}
                             <li>
                                 <Link href={"/search"}>
                                     <a className="navbar__right-link link-reset-default-styles">
@@ -43,7 +71,7 @@ export default function HeaderNavbar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href={"/search"}>
+                                <Link href="/favourite">
                                     <a className="navbar__right-link link-reset-default-styles">
                                         <Icon width={18} height={18}>
                                             <HearIcon />
@@ -53,9 +81,9 @@ export default function HeaderNavbar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href={auth ? "/my-profile" : "/login"}>
-                                    <a className="navbar__right-link link-reset-default-styles">
-                                        {auth ? (
+                                <Link href={token ? "/my-profile" : "/login"}>
+                                    <div className="navbar__right-link">
+                                        {token ? (
                                             <>
                                                 <Avatar
                                                     name=""
@@ -85,13 +113,19 @@ export default function HeaderNavbar() {
                                                 <span>Войти</span>
                                             </>
                                         )}
-                                    </a>
+                                    </div>
                                 </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </Container>
+            <LocationModal
+                open={locationModal}
+                title="Найдите ваш город"
+                setLocation={setLocation}
+                setLocationModal={setLocationModal}
+            />
             <style jsx global>{`
                 .navbar {
                     padding: 16px 0;
@@ -122,6 +156,7 @@ export default function HeaderNavbar() {
                     align-items: center;
                     font-size: 18px;
                     color: #181818;
+                    cursor: pointer;
                 }
 
                 .navbar__right-link svg {

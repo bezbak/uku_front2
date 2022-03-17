@@ -1,4 +1,5 @@
-import { FC, ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
+
 import CN from "classnames";
 
 interface IScrollableProps {

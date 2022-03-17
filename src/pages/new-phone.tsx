@@ -5,6 +5,7 @@ import {
 
 import Auth from "@/components/Authorization/Auth";
 import Login from "@/components/Authorization/Login";
+import React from "react";
 import { useAppSelector } from "@/app/hooks";
 
 export default function NewPhone() {

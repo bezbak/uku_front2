@@ -1,8 +1,10 @@
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "@/components/Authorization/authSlice";
+import categoryReduce from "@components/Search/Category/CategorySlice";
 import confirmReducer from "@components/MyProfile/ConfirmSlice";
 import locationReducer from "@components/Location/locationSlice";
+import postReducer from "@components/Post/PostSlice";
 import profileFeedReducer from "@components/Home/FeedSlice";
 import profilePublicationReducer from "@components/MyProfile/ProfileSlice";
 import systemReducer from "./systemSlice";
@@ -16,6 +18,8 @@ export function makeStore() {
             profilePublication: profilePublicationReducer,
             confirm: confirmReducer,
             system: systemReducer,
+            category: categoryReduce,
+            post: postReducer,
         },
     });
 }

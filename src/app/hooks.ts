@@ -22,12 +22,15 @@ export const useForm =
                 }),
                 defaultValues
             );
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         await handler(data);
         form.reset();
     };
 
 // https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const useInterval = (callback: Function, delay: number) => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const savedCallback = useRef<Function>();
     useEffect(() => {
         savedCallback.current = callback;
