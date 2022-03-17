@@ -1,5 +1,13 @@
-import { AgreementSchema, FaqSchema } from "./schemas/SystemSchema";
-import { AuthSchema, ConfirmSchema } from "./schemas/AccountSchema";
+import {
+    AgreementSchema,
+    ContactSchema,
+    FaqSchema,
+} from "./schemas/SystemSchema";
+import {
+    AuthSchema,
+    ConfirmSchema,
+    FollowSchema,
+} from "./schemas/AccountSchema";
 import {
     ProfileFeedItemSchema,
     ProfileFeedSchema,
@@ -8,6 +16,7 @@ import {
     oldPhoneSchema,
 } from "./schemas/ProfileSchema";
 
+import { CategoryListSchema } from "./schemas/CategorySchema";
 import { Infer } from "superstruct";
 import LocationSchema from "./schemas/LocationSchema";
 
@@ -21,3 +30,6 @@ export type IOldPhoneChnage = Infer<typeof oldPhoneSchema>;
 export type IUpdateProfile = Infer<typeof UpdateProfileSchema>;
 export type IFaq = Infer<typeof FaqSchema>;
 export type IAgreemnet = Infer<typeof AgreementSchema>;
+export type ICategoryList = Infer<typeof CategoryListSchema>;
+export type IContact = Infer<typeof ContactSchema>;
+export type IFollow = Infer<typeof FollowSchema>;

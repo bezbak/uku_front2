@@ -1,7 +1,9 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
+
 import { ILocation } from "../../services/types";
 import Icon from "../Icon";
 import RigthArrowIcon from "../icons/RightArrowIcon";
+
 interface ILocationlistProps {
     items: ILocation;
     setLocation: Dispatch<

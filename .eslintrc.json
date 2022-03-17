@@ -37,9 +37,7 @@
         "@typescript-eslint/require-await": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/await-thenable": "error",
-        "camelcase": "warn",
-        "react-i18n/no-dynamic-translation-keys": "error",
-        "react-i18n/no-missing-interpolation-keys": "error",
+        "camelcase": "off",
         "prettier/prettier": [
             "error",
             {

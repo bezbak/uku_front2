@@ -1,11 +1,12 @@
+import React, { ReactNode } from "react";
+
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
-import Home from "@/components/Home";
 import Layout from "@/components/Layout";
-import { ReactNode } from "react";
+import { default as _Search } from "@components/Search/Search";
 
 const Search = () => {
-    return <div>search</div>;
+    return <_Search />;
 };
 
 export default Search;

@@ -1,5 +1,9 @@
-import { AuthSchema, ConfirmSchema } from "./schemas/AccountSchema";
-import { IAuth, IConfirm, IOldPhoneChnage } from "./types";
+import {
+    AuthSchema,
+    ConfirmSchema,
+    FollowSchema,
+} from "./schemas/AccountSchema";
+import { IAuth, IConfirm, IFollow, IOldPhoneChnage } from "./types";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
@@ -36,7 +40,7 @@ class AuthService {
 
     register(data: Omit<IRegisterSchema, "rule">) {
         const request = this.api.patch(
-            "/account",
+            "/account/",
             {
                 ...data,
             },
@@ -62,7 +66,7 @@ class AuthService {
         const request = this.api.post(
             `/account/${
                 type === "new" ? "new-phone-confirm" : "old-phone-confirm"
-            }`,
+            }/`,
             {
                 confirmation_code: code,
             },
@@ -82,7 +86,7 @@ class AuthService {
 
     newPhone(phone: string): ApiRequestInterface<IAuth> {
         const request = this.api.post(
-            "/account/change-old-phone",
+            "/account/change-old-phone/",
             {
                 phone: phone,
             },
@@ -93,7 +97,28 @@ class AuthService {
             }
         );
         assertApiResponse<IAuth>(request, AuthSchema);
-        console.log(request);
+        return request;
+    }
+
+    follow(id: number) {
+        const request = this.api.get(`/account/follow/${id}/`, {
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
+
+        assertApiResponse<IFollow>(request, FollowSchema);
+        return request;
+    }
+
+    fave(id: number) {
+        const request = this.api.get(`/account/favorite/${id}`, {
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
+
+        assertApiResponse<IFollow>(request, FollowSchema);
         return request;
     }
 }

@@ -49,7 +49,7 @@ export const ProfileFeedItemSchema = object({
 
 export const ProfileFeedSchema = object({
     count: number(),
-    next: nullable(string()),
+    next: nullable(number()),
     previous: nullable(string()),
     results: array(ProfileFeedItemSchema),
 });

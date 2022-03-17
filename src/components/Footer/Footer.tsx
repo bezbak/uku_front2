@@ -3,6 +3,7 @@ import Container from "../Container";
 import GooglePlayIcon from "../icons/GooglePlayIcon";
 import Icon from "../Icon";
 import Link from "next/link";
+import React from "react";
 
 export default function Footer() {
     return (
@@ -54,6 +55,7 @@ export default function Footer() {
                     width: 100%;
                     padding: 19px 0;
                     background: #f9f9f9;
+                    margin-top: 20px;
                 }
 
                 .footer__inner {

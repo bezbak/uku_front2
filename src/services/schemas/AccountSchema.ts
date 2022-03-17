@@ -14,3 +14,8 @@ export const ConfirmSchema = object({
         })
     ),
 });
+
+export const FollowSchema = object({
+    message: string(),
+    subscribe: boolean(),
+});

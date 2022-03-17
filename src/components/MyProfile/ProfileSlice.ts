@@ -1,10 +1,10 @@
 import { IProfileFeed, IprofileInfo } from "@/services/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { profileServiceToken, publicationServiceToken } from "@/tokens";
 
 import type { AppState } from "../../app/store";
 import { NextRouter } from "next/router";
 import { container } from "tsyringe";
-import { profileServiceToken } from "@/tokens";
 import { toast } from "react-toastify";
 
 export interface LocationState {
@@ -43,6 +43,30 @@ export const profileInfoAsync = createAsyncThunk("profile/info", async () => {
     const { data: info } = await response;
     return info;
 });
+
+export const publicationProfileInfo = createAsyncThunk(
+    "publication/profile/info",
+    async (id: string) => {
+        const profileService = container.resolve(publicationServiceToken);
+        const request = profileService.getPublicationUser(id);
+        if (!request) return;
+        const { response } = request;
+        const { data: info } = await response;
+        return info;
+    }
+);
+
+export const publicationProfileFeed = createAsyncThunk(
+    "publication/profile/feed",
+    async ({ id, page }: { id: string; page: number }) => {
+        const profileService = container.resolve(publicationServiceToken);
+        const request = profileService.getPublicationUserPub(id, page);
+        if (!request) return;
+        const { response } = request;
+        const { data: feed } = await response;
+        return feed;
+    }
+);
 
 export const updateAvatarAsync = createAsyncThunk(
     "profile/avatar",
@@ -142,6 +166,16 @@ export const profileSlice = createSlice({
                     instagram: payload.instagram,
                     whatsapp: payload.whatsapp,
                 };
+            })
+            .addCase(publicationProfileInfo.fulfilled, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                state.info = payload;
+            })
+            .addCase(publicationProfileFeed.fulfilled, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                state.profile = payload;
             });
     },
 });

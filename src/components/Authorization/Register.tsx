@@ -1,21 +1,22 @@
 import "react-day-picker/lib/style.css";
 
-import Button from "../Buttons/Button";
-import DayPickerInput from "react-day-picker/DayPickerInput";
-import { FC, FormEvent, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { registerAsync, selectPhone } from "./authSlice";
-import Select from "react-select";
-import dateFnsFormat from "date-fns/format";
-import { formatDate, parseDate } from "@/utils/formatDate";
-import getFormDate from "@/utils/getFormData";
-import { assert, StructError } from "superstruct";
 import { IErroType, registerFormSchema } from "./types";
+import React, { FC, FormEvent, useState } from "react";
+import { StructError, assert } from "superstruct";
+import { formatDate, parseDate } from "@/utils/formatDate";
+import { registerAsync, selectPhone } from "./authSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+
+import Button from "../Buttons/Button";
 import CN from "classnames";
 import Checkbox from "../Checkbox";
+import DayPickerInput from "react-day-picker/DayPickerInput";
 import LocationModal from "../Location/LocationModal";
-import { useRouter } from "next/router";
+import Select from "react-select";
 import Spinner from "../Spinner";
+import dateFnsFormat from "date-fns/format";
+import getFormDate from "@/utils/getFormData";
+import { useRouter } from "next/router";
 
 interface IRegisterProps {
     status: string;

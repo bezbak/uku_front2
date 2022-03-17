@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { privacyPolicyAsync, selectPrivacy } from "@/app/systemSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 

@@ -1,4 +1,4 @@
-import { IAgreemnet, IFaq } from "@/services/types";
+import { IAgreemnet, IContact, IFaq } from "@/services/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { AppState } from "./store";
@@ -9,12 +9,14 @@ export interface LocationState {
     faq: IFaq[];
     agreement: IAgreemnet | null;
     privacy: IAgreemnet | null;
+    contact: IContact | null;
 }
 
 const initialState: LocationState = {
     faq: [],
     agreement: null,
     privacy: null,
+    contact: null,
 };
 
 export const faqAsync = createAsyncThunk("system/faq", async () => {
@@ -47,6 +49,15 @@ export const privacyPolicyAsync = createAsyncThunk(
     }
 );
 
+export const contactAsync = createAsyncThunk("system/contact", async () => {
+    const systemService = container.resolve(systemServiceToken);
+    const request = systemService.getContact();
+    if (!request) return;
+    const { response } = request;
+    const { data: contact } = await response;
+    return contact;
+});
+
 export const systemSlice = createSlice({
     name: "system",
     initialState,
@@ -60,6 +71,10 @@ export const systemSlice = createSlice({
             .addCase(agreementAsync.fulfilled, (state, { payload }) => {
                 if (!payload) return;
                 state.agreement = payload;
+            })
+            .addCase(contactAsync.fulfilled, (state, { payload }) => {
+                if (!payload) return;
+                state.contact = payload;
             });
     },
 });
@@ -67,5 +82,6 @@ export const systemSlice = createSlice({
 export const selectFaq = (state: AppState) => state.system.faq;
 export const slectAgreement = (state: AppState) => state.system.agreement;
 export const selectPrivacy = (state: AppState) => state.system.privacy;
+export const selectContact = (state: AppState) => state.system.contact;
 
 export default systemSlice.reducer;

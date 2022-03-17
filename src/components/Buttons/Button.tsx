@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 
 import CN from "classnames";
+import React from "react";
 
 interface ButtonProps {
     type: "button" | "submit";

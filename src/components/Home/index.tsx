@@ -1,20 +1,23 @@
-import { profileFeedAsync, selectFeed, selectPage } from "./FeedSlice";
+import React, { useEffect, useState } from "react";
+import { profileFeedAsync, selectFeed } from "./FeedSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
-import Container from "../Container";
 import PostCard from "../Post/PostCard";
 import PostList from "../Post/PostList";
 import Wrapper from "../Wrapper";
-import { useEffect } from "react";
 
 const Home = () => {
     const feed = useAppSelector(selectFeed);
-    const page = useAppSelector(selectPage);
     const dispatch = useAppDispatch();
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
         dispatch(profileFeedAsync(page));
     }, [page]);
+
+    useEffect(() => {
+        console.log("es");
+    }, [feed?.next]);
 
     return (
         <Wrapper title="Лента">

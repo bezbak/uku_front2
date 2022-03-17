@@ -1,5 +1,5 @@
-import { FC, FormEvent, useEffect, useState } from "react";
 import { IErroType, confirmFormSchema } from "./types";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { StructError, assert } from "superstruct";
 import {
     confirmAsync,
@@ -36,7 +36,7 @@ const Confirm: FC<IConfirmProps> = ({
     const rout = useRouter();
     const dispatch = useAppDispatch();
     const phone = useAppSelector(selectPhone);
-    const handleConfirm = async (event: FormEvent<HTMLFormElement>) => {
+    const handleConfirm = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = getFormDate(event.currentTarget);
         setError({});

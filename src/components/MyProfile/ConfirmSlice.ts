@@ -1,9 +1,8 @@
-import { IProfileFeed, IprofileInfo } from "@/services/types";
-import { authServiceToken, profileServiceToken } from "@/tokens";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { AppState } from "../../app/store";
 import { NextRouter } from "next/router";
+import { authServiceToken } from "@/tokens";
 import { changePage } from "./ProfileSlice";
 import { container } from "tsyringe";
 

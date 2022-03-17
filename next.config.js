@@ -5,14 +5,21 @@ const API_URL =
         : "http://test.api.uku.kg/";
 module.exports = {
     reactStrictMode: true,
+    trailingSlash: false,
     async rewrites() {
         return [
+            {
+                source: "/api/v1/publication/user/:slug",
+                destination: `${API_URL}/api/v1/publication/user/:slug`,
+            },
+            {
+                source: "/api/v1/account/favorite/:slug",
+                destination: `${API_URL}/api/v1/account/favorite/:slug`,
+            },
             {
                 source: "/api/v1/:slug*",
                 destination: `${API_URL}api/v1/:slug*/`,
             },
         ];
     },
-    trailingSlash: true,
-    productionBrowserSourceMaps: true,
 };

@@ -12,7 +12,7 @@ export interface CounterState {
     status: "idle" | "loading" | "failed";
     phoneNumber: string;
     message: string | undefined;
-    region_detail: {} | null;
+    region_detail: Record<string, unknown> | null;
     userLogined: boolean;
     confrimStatus: "loading" | "idle" | "failed";
 }
@@ -95,7 +95,7 @@ export const authSlice = createSlice({
             .addCase(loginAsync.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(loginAsync.fulfilled, (state, { payload }) => {
+            .addCase(loginAsync.fulfilled, (state) => {
                 state.value = "confirm";
                 state.status = "idle";
             })

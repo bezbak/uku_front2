@@ -1,6 +1,6 @@
 import "react-phone-input-2/lib/style.css";
 
-import { FC, FormEvent } from "react";
+import React, { FC, FormEvent } from "react";
 import { changeNumber, loginAsync, selectPhone } from "./authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 

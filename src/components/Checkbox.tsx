@@ -1,5 +1,6 @@
 import CN from "classnames";
 import { FC } from "react";
+import React from "react";
 
 interface CheckboxProps {
     error: boolean;
