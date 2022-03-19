@@ -1,10 +1,12 @@
 import { IProfileFeed, IprofileInfo } from "@/services/types";
+import React, { useEffect, useRef } from "react";
 
 import Container from "../Container";
 import PostCard from "../Post/PostCard";
 import PostList from "../Post/PostList";
 import ProfileInfo from "./ProfileInfo";
-import React from "react";
+import { selectProfileStatus } from "./ProfileSlice";
+import { useAppSelector } from "@/app/hooks";
 
 export interface IProfileProps {
     onAction: (action: boolean) => void;
@@ -12,6 +14,7 @@ export interface IProfileProps {
     posts: IProfileFeed | null;
     info: IprofileInfo | null;
     follow?: boolean;
+    setPage: (page: number) => void;
 }
 
 export default function Profile({
@@ -20,7 +23,35 @@ export default function Profile({
     info,
     posts,
     follow,
+    setPage,
 }: IProfileProps) {
+    const ref = useRef(null);
+    const status = useAppSelector(selectProfileStatus);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (
+                    entry.isIntersecting &&
+                    status !== "loading" &&
+                    posts?.next
+                ) {
+                    setPage(posts?.next);
+                }
+            },
+            {
+                root: null,
+                rootMargin: "0px",
+                threshold: 1.0,
+            }
+        );
+        if (ref && ref.current && posts?.next && status !== "loading") {
+            observer.observe(ref.current);
+        }
+        return () => {
+            ref.current ? observer.unobserve(ref.current) : undefined;
+        };
+    }, [posts?.next]);
+
     return (
         <section className="profile">
             <Container>
@@ -45,6 +76,7 @@ export default function Profile({
                                     );
                                 })}
                             </PostList>
+                            <div ref={ref} />
                         </div>
                     </main>
                 </div>

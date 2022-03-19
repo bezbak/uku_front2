@@ -8,12 +8,14 @@ import RigthArrowIcon from "@/components/icons/RightArrowIcon";
 
 export interface ICategoryItemProps {
     item: ICategoryList;
+    setCategoryId: (id: number) => void;
 }
 
-export function CategoryItem({ item }: ICategoryItemProps) {
+export function CategoryItem({ item, setCategoryId }: ICategoryItemProps) {
     const [open, setOpen] = React.useState(false);
 
-    const handleClick = (item: ICategoryList) => {
+    const handleClick = (item: ICategoryList, isOpeneble: boolean) => {
+        if (!isOpeneble) setCategoryId(item.id);
         setOpen(!open);
     };
 
@@ -22,7 +24,7 @@ export function CategoryItem({ item }: ICategoryItemProps) {
             <button
                 type="button"
                 className="button-reset-default-styles category__button"
-                onClick={() => handleClick(item)}
+                onClick={() => handleClick(item, item.children.length > 0)}
             >
                 <div className="category__title">
                     {item.image ? (
@@ -46,7 +48,10 @@ export function CategoryItem({ item }: ICategoryItemProps) {
                 })}
             >
                 {item.children.length > 0 && (
-                    <Category items={item.children as ICategoryList[]} />
+                    <Category
+                        items={item.children as ICategoryList[]}
+                        setCategoryId={setCategoryId}
+                    />
                 )}
             </div>
             <style jsx>

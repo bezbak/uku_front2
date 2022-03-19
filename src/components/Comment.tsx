@@ -1,0 +1,92 @@
+import React, { useState } from "react";
+
+import Avatar from "./Avatar";
+import { IComment } from "@/services/types";
+import Link from "next/link";
+
+export interface ICommentProps {
+    comment: IComment;
+}
+
+export default function Comment({ comment }: ICommentProps) {
+    const [show, setShow] = useState(false);
+    return (
+        <div className="comment">
+            <Avatar
+                name={comment.author.first_name}
+                url={comment.author.avatar}
+                placholder={true}
+            />
+            <div className="comment__content">
+                <p className="comment__text">
+                    <Link href={`/profile/${comment.author.id}`}>
+                        <a className="comment__author">
+                            {comment.author.first_name}{" "}
+                            {comment.author.last_name}
+                        </a>
+                    </Link>{" "}
+                    {comment.text}
+                </p>
+                {comment.image !== null ? (
+                    <img src={comment.image} alt="#" />
+                ) : null}
+                <div className="comment__action">
+                    <span className="comment__created">
+                        {comment.created_at}
+                    </span>
+                    <button className="comment__answer button-reset-default-styles">
+                        Ответить
+                    </button>
+                </div>
+                {comment.replies.length > 0 && (
+                    <button
+                        type="button"
+                        className="comment__more button-reset-default-styles"
+                        onClick={() => setShow(!show)}
+                    >
+                        ---{" "}
+                        {show
+                            ? "Скрыть коментарии"
+                            : `Показать ${comment.replies.length} коментариев`}
+                    </button>
+                )}
+            </div>
+            <style jsx>{`
+                .comment {
+                    display: flex;
+                    align-items: self-start;
+                    margin-top: 10px;
+                    column-gap: 8px;
+                }
+                .comment__text {
+                    font-size: 14px;
+                    margin-bottom: 6px;
+                }
+
+                .comment__author {
+                    text-decoration: none;
+                    color: #091a2e;
+                    text-transform: capitalize;
+                    font-weight: 600;
+                }
+
+                .comment__created {
+                    font-size: 14px;
+                    color: #a5a5a5;
+                    margin-right: 32px;
+                }
+
+                .comment__answer {
+                    font-size: 14px;
+                    color: #a5a5a5;
+                }
+
+                .comment__more {
+                    font-size: 14px;
+                    color: #a5a5a5;
+                    margin-top: 10px;
+                }
+            `}</style>
+        </div>
+    );
+}

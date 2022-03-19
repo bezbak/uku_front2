@@ -1,18 +1,22 @@
+import { authServiceToken, publicationServiceToken } from "@/tokens";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { authServiceToken } from "@/tokens";
+import { AppState } from "@/app/store";
+import { IPublication } from "@/services/types";
 import { container } from "tsyringe";
 
 export interface PostState {
     following: boolean;
     message: string;
     status: "idle" | "loading" | "failed";
+    publication: IPublication | null;
 }
 
 const initialState: PostState = {
     following: false,
     status: "idle",
     message: "",
+    publication: null,
 };
 
 export const followAsync = createAsyncThunk("follow", async (id: number) => {
@@ -33,6 +37,18 @@ export const faveAsync = createAsyncThunk("fave", async (id: number) => {
     return fave;
 });
 
+export const publicationAsync = createAsyncThunk(
+    "publication",
+    async (id: string | number) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.getPublicationById(id);
+        if (!request) return;
+        const { response } = request;
+        const { data: publication } = await response;
+        return publication;
+    }
+);
+
 export const postSlice = createSlice({
     name: "follow",
     initialState,
@@ -47,8 +63,15 @@ export const postSlice = createSlice({
                 if (!payload) return;
                 state.following = payload.subscribe;
                 state.message = payload.message;
+            })
+            .addCase(publicationAsync.fulfilled, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                state.publication = payload;
             });
     },
 });
+
+export const selectPublication = (state: AppState) => state.post.publication;
 
 export default postSlice.reducer;

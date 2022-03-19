@@ -23,9 +23,14 @@ class ProfileService {
     ) {}
     getProfileFeed(page: number) {
         const request = this.api.get("/account/profile/feed/", {
-            data: {
+            params: {
                 page,
             },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IProfileFeed>(request, ProfileFeedSchema);
         return request;
@@ -33,12 +38,14 @@ class ProfileService {
 
     getProfilePublication(page: number) {
         const request = this.api.get("/account/profile/publication/", {
-            data: {
+            params: {
                 page,
             },
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IProfileFeed>(request, ProfileFeedSchema);
         return request;
@@ -46,9 +53,11 @@ class ProfileService {
 
     getProfileInfo() {
         const request = this.api.get("/account/profile/", {
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IprofileInfo>(request, ProfileInfoSchema);
         return request;
@@ -56,9 +65,11 @@ class ProfileService {
 
     sendSmsToOldPhone() {
         const request = this.api.get("/account/send-sms-to-old-phone/", {
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IOldPhoneChnage>(request, oldPhoneSchema);
         return request;
@@ -75,9 +86,11 @@ class ProfileService {
                 ...data,
             },
             {
-                headers: {
-                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-                },
+                headers: this.tokenManager.getToken()
+                    ? {
+                          [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                      }
+                    : undefined,
             }
         );
         assertApiResponse<IUpdateProfile>(request, UpdateProfileSchema);
@@ -91,9 +104,11 @@ class ProfileService {
                 avatar: form,
             },
             {
-                headers: {
-                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-                },
+                headers: this.tokenManager.getToken()
+                    ? {
+                          [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                      }
+                    : undefined,
             }
         );
         assertApiResponse<IUpdateProfile>(request, UpdateProfileSchema);
@@ -102,12 +117,14 @@ class ProfileService {
 
     getFovourite(page: number) {
         const request = this.api.get("/account/favorite/", {
-            data: {
+            params: {
                 page,
             },
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IProfileFeed>(request, ProfileFeedSchema);
         return request;

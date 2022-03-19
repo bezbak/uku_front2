@@ -7,6 +7,7 @@ import locationReducer from "@components/Location/locationSlice";
 import postReducer from "@components/Post/PostSlice";
 import profileFeedReducer from "@components/Home/FeedSlice";
 import profilePublicationReducer from "@components/MyProfile/ProfileSlice";
+import searchReducer from "@components/Search/SearchSlice";
 import systemReducer from "./systemSlice";
 
 export function makeStore() {
@@ -20,6 +21,7 @@ export function makeStore() {
             system: systemReducer,
             category: categoryReduce,
             post: postReducer,
+            search: searchReducer,
         },
     });
 }

@@ -1,71 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { faveAsync, followAsync } from "./PostSlice";
 
-import Avatar from "../Avatar";
 import CN from "classnames";
 import { IProfileFeedItem } from "@/services/types";
 import Icon from "../Icon";
 import Link from "next/link";
+import PostHeader from "./PostHeader";
 import ViewedIcon from "../icons/ViewedIcon";
 import { useAppDispatch } from "@/app/hooks";
+import { useGetToken } from "@/hooks/useGetToken";
+import { useRouter } from "next/router";
 
 export interface IPostCardProps {
     item: IProfileFeedItem;
+    onFollow?: () => void;
+    onFave?: () => void;
 }
 
-export default function PostCard({ item }: IPostCardProps) {
+export default function PostCard({ item, onFollow, onFave }: IPostCardProps) {
     const dispatch = useAppDispatch();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [follow, setFollow] = useState(item.user.following);
     const [inFave, setInFave] = useState(item.is_favorite);
+    const auth = useGetToken();
+    const rout = useRouter();
     const handleFollow = async (event: any) => {
         event.preventDefault();
-        const { payload } = await dispatch(followAsync(item.user.id));
-        setFollow((payload as any).subscribe);
+        if (auth) {
+            const { payload } = await dispatch(followAsync(item.user.id));
+            setFollow((payload as any).subscribe);
+            if (onFollow) onFollow();
+        } else {
+            rout.push("/login");
+        }
     };
 
     const handleFave = async (event: any) => {
         event.preventDefault();
-        await dispatch(faveAsync(item.id));
-        setInFave(!inFave);
+        if (auth) {
+            await dispatch(faveAsync(item.id));
+            setInFave(!inFave);
+            if (onFave) onFave();
+        } else {
+            rout.push("/login");
+        }
     };
+
+    useEffect(() => {
+        setFollow(item.user.following);
+    }, [item]);
 
     return (
         <Link href={`/posts/${item.id}`}>
             <article className="post-card">
-                <header className="post-card__header">
-                    <Link href={`profile/${item.user.id}`}>
-                        <div className="post-card__header-left">
-                            <Avatar
-                                url={item.user.avatar}
-                                name={item.user.first_name}
-                            />
-                            <div>
-                                <h3 className="post-card__header-title">
-                                    {item.user.first_name} {item.user.last_name}
-                                </h3>
-                                <p className="post-card__header-location">
-                                    {item.user.location}
-                                </p>
-                            </div>
-                        </div>
-                    </Link>
-
-                    <div className="post-card__header-right">
-                        <button
-                            type="button"
-                            className={CN(
-                                "post-card__button button-reset-default-styles",
-                                {
-                                    "post-card__button--follow": !follow,
-                                }
-                            )}
-                            onClick={(event) => handleFollow(event)}
-                        >
-                            {follow ? "Вы подписаны" : "Подписаться"}
-                        </button>
-                    </div>
-                </header>
+                <PostHeader
+                    handleFollow={handleFollow}
+                    userLink={`${item.user.id}`}
+                    avatar={item.user.avatar}
+                    first_name={item.user.first_name}
+                    last_name={item.user.last_name}
+                    follow={follow}
+                    location={item.location.name}
+                />
                 <section className={CN("post-card__body")}>
                     <div className="post-card__images">
                         <button
@@ -156,36 +152,6 @@ export default function PostCard({ item }: IPostCardProps) {
                 <style jsx>{`
                     .post-card {
                         cursor: pointer;
-                    }
-
-                    .post-card__header {
-                        padding: 12px 16px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        border: 1px solid #dfdfdf;
-                        border-radius: 6px 6px 0px 0px;
-                    }
-
-                    .post-card__header-left {
-                        display: flex;
-                        column-gap: 8px;
-                        font-size: 4px;
-                    }
-
-                    .post-card__header-title {
-                        font-weight: normal;
-                        font-size: 14px;
-                        margin-bottom: 4px;
-                    }
-
-                    .post-card__header-location {
-                        font-size: 12px;
-                        color: #a0a0a0;
-                    }
-
-                    .post-card__button--follow {
-                        color: #e56366;
                     }
 
                     .post-card__images {

@@ -151,7 +151,7 @@ export default function EditProfileInfo({
             <style jsx global>{`
                 .edit-info {
                     position: fixed;
-                    z-index: 2;
+                    z-index: 100;
                     top: 0;
                     width: 407px;
                     height: 100%;

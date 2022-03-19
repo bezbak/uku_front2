@@ -34,7 +34,7 @@ const Header = () => {
                             <span className="burger__item" />
                         </label>
                         <Link href="/">
-                            <h2>Uku.kg</h2>
+                            <h2 className="mobile__logo">Uku.kg</h2>
                         </Link>
                         <button
                             type="button"
@@ -46,7 +46,7 @@ const Header = () => {
                         </button>
                     </div>
                 </Container>
-                <MobileNavigator open={open} />
+                <MobileNavigator open={open} setOpen={setOpen} />
             </div>
             <style jsx>{`
                 .header {
@@ -68,6 +68,10 @@ const Header = () => {
                     align-items: center;
                     padding: 19px 0;
                     box-shadow: inset 0px -1px 0px rgb(0 0 0 / 5%);
+                }
+
+                .mobile__logo {
+                    cursor: pointer;
                 }
 
                 .burger {

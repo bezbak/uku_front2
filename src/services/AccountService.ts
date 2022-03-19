@@ -91,9 +91,11 @@ class AuthService {
                 phone: phone,
             },
             {
-                headers: {
-                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-                },
+                headers: this.tokenManager.getToken()
+                    ? {
+                          [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                      }
+                    : undefined,
             }
         );
         assertApiResponse<IAuth>(request, AuthSchema);
@@ -102,9 +104,11 @@ class AuthService {
 
     follow(id: number) {
         const request = this.api.get(`/account/follow/${id}/`, {
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
 
         assertApiResponse<IFollow>(request, FollowSchema);
@@ -113,9 +117,11 @@ class AuthService {
 
     fave(id: number) {
         const request = this.api.get(`/account/favorite/${id}`, {
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
 
         assertApiResponse<IFollow>(request, FollowSchema);
