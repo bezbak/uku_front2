@@ -26,10 +26,6 @@ export default function HeaderNavbar() {
         name: "",
     });
 
-    useEffect(() => {
-        console.log(location);
-    }, [location]);
-
     return (
         <div className="navbar">
             <Container>

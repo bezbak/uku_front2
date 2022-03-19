@@ -189,5 +189,7 @@ export const selectProfileInfo = (state: AppState) =>
     state.profilePublication.info;
 export const selectProfilePage = (state: AppState) =>
     state.profilePublication.profilePage;
+export const selectProfileStatus = (state: AppState) =>
+    state.profilePublication.status;
 
 export default profileSlice.reducer;

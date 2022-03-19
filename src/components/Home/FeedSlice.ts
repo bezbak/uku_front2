@@ -9,12 +9,14 @@ export interface ProfileFeedState {
     feed: IProfileFeed | null;
     fovourite: IProfileFeed | null;
     status: "idle" | "loading" | "failed";
+    favStatus: "idle" | "loading" | "failed";
 }
 
 const initialState: ProfileFeedState = {
     feed: null,
     fovourite: null,
     status: "idle",
+    favStatus: "idle",
 };
 
 export const profileFeedAsync = createAsyncThunk(
@@ -52,15 +54,40 @@ export const profileFeedSlice = createSlice({
             })
             .addCase(profileFeedAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
-                state.feed = payload || null;
+                if (!payload) return;
+                if (state.feed === null || payload.previous === null) {
+                    state.feed = payload || null;
+                } else {
+                    state.feed = {
+                        ...payload,
+                        results: [...state.feed.results, ...payload.results],
+                    };
+                }
+            })
+            .addCase(fovouriteAsync.pending, (state) => {
+                state.favStatus = "loading";
             })
             .addCase(fovouriteAsync.fulfilled, (state, { payload }) => {
-                state.fovourite = payload || null;
+                state.favStatus = "idle";
+                if (!payload) return;
+                if (state.fovourite === null || payload.previous === null) {
+                    state.fovourite = payload || null;
+                } else {
+                    state.fovourite = {
+                        ...payload,
+                        results: [
+                            ...state.fovourite.results,
+                            ...payload.results,
+                        ],
+                    };
+                }
             });
     },
 });
 
 export const selectFeed = (state: AppState) => state.profileFeed.feed;
 export const selectFav = (state: AppState) => state.profileFeed.fovourite;
+export const selectFeedStatus = (state: AppState) => state.profileFeed.status;
+export const selectFavStatus = (state: AppState) => state.profileFeed.favStatus;
 
 export default profileFeedSlice.reducer;

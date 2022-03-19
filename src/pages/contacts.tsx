@@ -120,7 +120,6 @@ export default function Contacts() {
 
                 .contacts__img {
                     width: 100%;
-                    height: 100%;
                     object-fit: cover;
                 }
 
@@ -153,6 +152,14 @@ export default function Contacts() {
                     display: flex;
                     column-gap: 8px;
                     align-items: center;
+                }
+
+                .contacts__right {
+                    width: 80%;
+                }
+
+                .contacts__left {
+                    width: 20%;
                 }
 
                 @media all and (max-width: 860px) {

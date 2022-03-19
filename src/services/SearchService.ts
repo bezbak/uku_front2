@@ -1,6 +1,8 @@
+import { ICategoryList, IProfileFeed } from "./types";
+
 import { ApiClientInterface } from "@/lib/ApiClient";
 import { CategoryListSchema } from "./schemas/CategorySchema";
-import { ICategoryList } from "./types";
+import { ProfileFeedSchema } from "./schemas/ProfileSchema";
 import { array } from "superstruct";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
 
@@ -9,6 +11,19 @@ class SearchService {
     getCattegory() {
         const request = this.api.get("/category/");
         assertApiResponse<ICategoryList[]>(request, array(CategoryListSchema));
+        return request;
+    }
+
+    getSearch(params?: {
+        page?: number;
+        category_id?: number;
+        location_id?: number;
+        q?: string;
+    }) {
+        const request = this.api.get("/publication/search/", {
+            params: params,
+        });
+        assertApiResponse<IProfileFeed>(request, ProfileFeedSchema);
         return request;
     }
 }

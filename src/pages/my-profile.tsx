@@ -51,7 +51,7 @@ const MyProfile = () => {
     const dispatch = useAppDispatch();
     const [edit, setEdit] = useState(false);
     const [alert, setAlert] = useState<IConfirmAlert>(confirmAlertInitial);
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const profile = useAppSelector(selectProfile);
     useEffect(() => {
         dispatch(profileAsync(page));
@@ -93,6 +93,7 @@ const MyProfile = () => {
                         page="my"
                         info={info}
                         posts={profile}
+                        setPage={setPage}
                     />
                     <EditProfileInfo
                         info={info}

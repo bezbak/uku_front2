@@ -1,8 +1,9 @@
-import { IProfileFeed, IprofileInfo } from "./types";
+import { IProfileFeed, IPublication, IprofileInfo } from "./types";
 import { ProfileFeedSchema, ProfileInfoSchema } from "./schemas/ProfileSchema";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
+import { PublicationSchema } from "./schemas/PublicationSchema";
 import { TokenManagerInterface } from "@/lib/TokenManager";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
 
@@ -13,9 +14,11 @@ class PublicationService {
     ) {}
     getPublicationUser(id: string | number) {
         const request = this.api.get(`/publication/user/${id}`, {
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IprofileInfo>(request, ProfileInfoSchema);
         return request;
@@ -26,11 +29,25 @@ class PublicationService {
             data: {
                 page,
             },
-            headers: {
-                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-            },
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
         });
         assertApiResponse<IProfileFeed>(request, ProfileFeedSchema);
+        return request;
+    }
+
+    getPublicationById(id: number | string) {
+        const request = this.api.get(`/publication/${id}/`, {
+            headers: this.tokenManager.getToken()
+                ? {
+                      [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                  }
+                : undefined,
+        });
+        assertApiResponse<IPublication>(request, PublicationSchema);
         return request;
     }
 }
