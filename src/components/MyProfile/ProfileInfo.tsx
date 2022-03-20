@@ -20,24 +20,6 @@ export default function ProfileInfo({
     page,
     follow,
 }: IProfileInfoProps) {
-    // const ageToString = (age: number) => {
-    //     let txt;
-    //     let count = age % 100;
-    //     if (count >= 5 && count <= 20) {
-    //         txt = "лет";
-    //     } else {
-    //         count = count % 10;
-    //         if (count === 1) {
-    //             txt = "год";
-    //         } else if (count >= 2 && count <= 4) {
-    //             txt = "года";
-    //         } else {
-    //             txt = "лет";
-    //         }
-    //     }
-    //     return age + " " + txt;
-    // };
-
     return (
         <div className="profile-info">
             <div className="profile-info__header">
@@ -94,9 +76,11 @@ export default function ProfileInfo({
             {!!info && (
                 <div className="profile-info__icons">
                     <a
-                        href={info.telegram || ""}
+                        href={`http://t.me/${info.telegram}`}
                         type="button"
                         className="profile-info__social"
+                        target="_blank"
+                        rel="noreferrer"
                         style={{
                             backgroundColor: "#039BE5",
                         }}
@@ -106,9 +90,13 @@ export default function ProfileInfo({
                         </Icon>
                     </a>
                     <a
-                        href={info.whatsapp || ""}
+                        href={`https://wa.me/${info.whatsapp
+                            ?.split(" ")
+                            .join("")}`}
                         type="button"
                         className="profile-info__social"
+                        target="_blank"
+                        rel="noreferrer"
                         style={{
                             backgroundColor: "#1BD741",
                         }}
@@ -118,9 +106,11 @@ export default function ProfileInfo({
                         </Icon>
                     </a>
                     <a
-                        href={info.instagram || ""}
+                        href={`https://instagram.com/${info.instagram}`}
                         type="button"
                         className="profile-info__social"
+                        target="_blank"
+                        rel="noreferrer"
                         style={{
                             backgroundColor: "#B06DB5",
                         }}

@@ -7,6 +7,7 @@ import Category from "./Category";
 import Container from "../Container";
 import PostCard from "../Post/PostCard";
 import PostList from "../Post/PostList";
+import { selectCategoryId } from "@/app/mainSlice";
 
 const Search = () => {
     const dispatch = useAppDispatch();
@@ -14,7 +15,7 @@ const Search = () => {
     const search = useAppSelector(selectSearch);
     const ref = useRef(null);
     const [page, setPage] = useState(1);
-    const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
+    const categoryId = useAppSelector(selectCategoryId);
 
     useEffect(() => {
         dispatch(categoryAsync());
@@ -24,13 +25,34 @@ const Search = () => {
         dispatch(searchAsync({ page, category_id: categoryId }));
     }, [page, categoryId]);
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && search?.next) {
+                    setPage(search?.next);
+                }
+            },
+            {
+                root: null,
+                rootMargin: "0px",
+                threshold: 1.0,
+            }
+        );
+        if (ref && ref.current && search?.next) {
+            observer.observe(ref.current);
+        }
+        return () => {
+            ref.current ? observer.unobserve(ref.current) : undefined;
+        };
+    }, [search?.next]);
+
     return (
         <section className="search">
             <Container>
                 <div className="search__inner">
                     <aside className="search__aside">
                         <h3 className="search__category">Категории</h3>
-                        <Category items={items} setCategoryId={setCategoryId} />
+                        <Category items={items} />
                     </aside>
                     <main className="search__main">
                         <header className="search__header">
@@ -97,13 +119,13 @@ const Search = () => {
                     }
                 }
 
-                @media all and (max-width: 530px) {
+                @media all and (max-width: 630px) {
                     .search__aside {
-                        width: 100%;
+                        display: none;
                     }
 
                     .search__main {
-                        display: none;
+                        width: 100%;
                     }
                 }
             `}</style>

@@ -61,6 +61,9 @@ export default function Footer() {
                 .footer__inner {
                     display: flex;
                     justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 15px;
                 }
 
                 .footer__list {

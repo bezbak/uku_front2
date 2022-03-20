@@ -100,9 +100,7 @@ class ProfileService {
     updateAvatar(form: FormData) {
         const request = this.api.patch(
             "/account/avatar/",
-            {
-                avatar: form,
-            },
+            { avatar: form },
             {
                 headers: this.tokenManager.getToken()
                     ? {
