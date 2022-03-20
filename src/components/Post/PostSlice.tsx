@@ -49,6 +49,18 @@ export const publicationAsync = createAsyncThunk(
     }
 );
 
+export const commentAsync = createAsyncThunk(
+    "comment",
+    async (data: { comment_id?: number; id: number; formData: FormData }) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.addComment(data);
+        if (!request) return;
+        const { response } = request;
+        const { data: publication } = await response;
+        return publication;
+    }
+);
+
 export const postSlice = createSlice({
     name: "follow",
     initialState,
@@ -68,6 +80,15 @@ export const postSlice = createSlice({
                 state.status = "idle";
                 if (!payload) return;
                 state.publication = payload;
+            })
+            .addCase(commentAsync.fulfilled, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                if (state.publication)
+                    state.publication = {
+                        ...state.publication,
+                        comments: [...state.publication.comments, payload],
+                    };
             });
     },
 });
