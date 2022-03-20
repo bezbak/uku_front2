@@ -4,6 +4,7 @@ import { profileServiceToken, publicationServiceToken } from "@/tokens";
 
 import type { AppState } from "../../app/store";
 import { NextRouter } from "next/router";
+import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { container } from "tsyringe";
 import { toast } from "react-toastify";
 
@@ -70,13 +71,18 @@ export const publicationProfileFeed = createAsyncThunk(
 
 export const updateAvatarAsync = createAsyncThunk(
     "profile/avatar",
-    async (form: FormData) => {
-        const profileService = container.resolve(profileServiceToken);
-        const request = profileService.updateAvatar(form);
-        if (!request) return;
-        const { response } = request;
-        const { data: info } = await response;
-        return info;
+    async (avatar: FormData) => {
+        const tokenManager = container.resolve(TokenManagerDiToken);
+        const token = tokenManager.getToken();
+        const headers = {
+            Authorization: `Token ${token}`,
+        };
+        const res = await fetch("/api/v1/account/avatar/", {
+            method: "PATCH",
+            body: avatar,
+            headers,
+        });
+        return await res.json();
     }
 );
 
@@ -176,6 +182,10 @@ export const profileSlice = createSlice({
                 state.status = "idle";
                 if (!payload) return;
                 state.profile = payload;
+            })
+            .addCase(updateAvatarAsync.fulfilled, (state, { payload }) => {
+                if (!payload || state.info === null) return;
+                state.info = { ...state.info, avatar: payload.avatar };
             });
     },
 });

@@ -200,6 +200,46 @@ export default function Post({ post }: { post: IPublication }) {
                     border: 0;
                     outline: none;
                 }
+
+                @media all and (max-width: 900px) {
+                    .post-view {
+                        position: relative;
+                        flex-wrap: wrap;
+                    }
+                    .post-view__left {
+                        width: 100%;
+                    }
+                    .post-view__left-inner {
+                        position: initial;
+                    }
+                    .post-view__right {
+                        width: 100%;
+                        padding-left: 16px;
+                    }
+                    .post-view__footer {
+                        position: absolute;
+                        width: 100%;
+                        left: 0;
+                        padding: 20px;
+                        bottom: 0;
+                        background: #fff;
+                    }
+                }
+
+                @media all and (max-width: 500px) {
+                    .post-view__title {
+                        font-size: 16px;
+                        line-height: 150%;
+                    }
+                    .post-view__desc {
+                        font-size: 14px;
+                        line-height: 175%;
+                        color: #525252;
+                    }
+                    .post-view__title {
+                        font-size: 14px;
+                    }
+                }
             `}</style>
             <style jsx global>{`
                 .post-view .post-view__header {
