@@ -13,6 +13,7 @@ export interface IPostHeaderProps {
     follow: boolean;
     handleFollow: (event: any) => void;
     headerClass?: string;
+    followEnable?: boolean;
 }
 
 export default function PostHeader({
@@ -24,6 +25,7 @@ export default function PostHeader({
     follow,
     handleFollow,
     headerClass,
+    followEnable,
 }: IPostHeaderProps) {
     return (
         <header className={CN("post-card__header", headerClass)}>
@@ -39,20 +41,22 @@ export default function PostHeader({
                 </div>
             </Link>
 
-            <div className="post-card__header-right">
-                <button
-                    type="button"
-                    className={CN(
-                        "post-card__button button-reset-default-styles",
-                        {
-                            "post-card__button--follow": !follow,
-                        }
-                    )}
-                    onClick={(event) => handleFollow(event)}
-                >
-                    {follow ? "Вы подписаны" : "Подписаться"}
-                </button>
-            </div>
+            {followEnable && (
+                <div className="post-card__header-right">
+                    <button
+                        type="button"
+                        className={CN(
+                            "post-card__button button-reset-default-styles",
+                            {
+                                "post-card__button--follow": !follow,
+                            }
+                        )}
+                        onClick={(event) => handleFollow(event)}
+                    >
+                        {follow ? "Вы подписаны" : "Подписаться"}
+                    </button>
+                </div>
+            )}
             <style jsx>{`
                 .post-card__header {
                     padding: 12px 16px;

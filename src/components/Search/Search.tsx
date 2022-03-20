@@ -40,7 +40,12 @@ const Search = () => {
                             <PostList>
                                 {search?.results.map((item) => {
                                     return (
-                                        <PostCard key={item.id} item={item} />
+                                        <PostCard
+                                            key={item.id}
+                                            item={item}
+                                            followEnable={false}
+                                            faveEneble={false}
+                                        />
                                     );
                                 })}
                             </PostList>

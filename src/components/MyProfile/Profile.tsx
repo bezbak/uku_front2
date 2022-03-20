@@ -72,7 +72,13 @@ export default function Profile({
                             <PostList>
                                 {posts?.results.map((item) => {
                                     return (
-                                        <PostCard key={item.id} item={item} />
+                                        <PostCard
+                                            key={item.id}
+                                            item={item}
+                                            header={false}
+                                            faveEneble={false}
+                                            followEnable={false}
+                                        />
                                     );
                                 })}
                             </PostList>

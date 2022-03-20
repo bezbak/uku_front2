@@ -6,9 +6,10 @@ import Link from "next/link";
 
 export interface ICommentProps {
     comment: IComment;
+    setAnswer: (data: { id: number; user: string }) => void;
 }
 
-export default function Comment({ comment }: ICommentProps) {
+export default function Comment({ comment, setAnswer }: ICommentProps) {
     const [show, setShow] = useState(false);
     return (
         <div className="comment">
@@ -27,18 +28,35 @@ export default function Comment({ comment }: ICommentProps) {
                     </Link>{" "}
                     {comment.text}
                 </p>
-                {comment.image !== null ? (
-                    <img src={comment.image} alt="#" />
-                ) : null}
+                {comment.image ? <img src={comment.image} alt="#" /> : null}
                 <div className="comment__action">
                     <span className="comment__created">
                         {comment.created_at}
                     </span>
-                    <button className="comment__answer button-reset-default-styles">
-                        Ответить
-                    </button>
+                    {!!comment.replies && (
+                        <button
+                            className="comment__answer button-reset-default-styles"
+                            onClick={() =>
+                                setAnswer({
+                                    id: comment.id,
+                                    user: `@${comment.author.first_name}_${comment.author.last_name}`,
+                                })
+                            }
+                        >
+                            Ответить
+                        </button>
+                    )}
                 </div>
-                {comment.replies.length > 0 && (
+                {show &&
+                    !!comment.replies &&
+                    (comment.replies as IComment[]).map((comment) => (
+                        <Comment
+                            comment={comment}
+                            key={comment.id}
+                            setAnswer={setAnswer}
+                        />
+                    ))}
+                {!!comment.replies && comment.replies.length > 0 && (
                     <button
                         type="button"
                         className="comment__more button-reset-default-styles"
