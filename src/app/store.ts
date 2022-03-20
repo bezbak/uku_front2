@@ -4,6 +4,7 @@ import authReducer from "@/components/Authorization/authSlice";
 import categoryReduce from "@components/Search/Category/CategorySlice";
 import confirmReducer from "@components/MyProfile/ConfirmSlice";
 import locationReducer from "@components/Location/locationSlice";
+import mainReducer from "./mainSlice";
 import postReducer from "@components/Post/PostSlice";
 import profileFeedReducer from "@components/Home/FeedSlice";
 import profilePublicationReducer from "@components/MyProfile/ProfileSlice";
@@ -22,6 +23,7 @@ export function makeStore() {
             category: categoryReduce,
             post: postReducer,
             search: searchReducer,
+            main: mainReducer,
         },
     });
 }

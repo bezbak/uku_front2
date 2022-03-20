@@ -5,17 +5,19 @@ import Category from ".";
 import { ICategoryList } from "@/services/types";
 import Icon from "@/components/Icon";
 import RigthArrowIcon from "@/components/icons/RightArrowIcon";
+import { setCategoryId } from "@/app/mainSlice";
+import { useAppDispatch } from "@/app/hooks";
 
 export interface ICategoryItemProps {
     item: ICategoryList;
-    setCategoryId: (id: number) => void;
 }
 
-export function CategoryItem({ item, setCategoryId }: ICategoryItemProps) {
+export function CategoryItem({ item }: ICategoryItemProps) {
     const [open, setOpen] = React.useState(false);
+    const dispatch = useAppDispatch();
 
     const handleClick = (item: ICategoryList, isOpeneble: boolean) => {
-        if (!isOpeneble) setCategoryId(item.id);
+        if (!isOpeneble) dispatch(setCategoryId(item.id));
         setOpen(!open);
     };
 
@@ -48,10 +50,7 @@ export function CategoryItem({ item, setCategoryId }: ICategoryItemProps) {
                 })}
             >
                 {item.children.length > 0 && (
-                    <Category
-                        items={item.children as ICategoryList[]}
-                        setCategoryId={setCategoryId}
-                    />
+                    <Category items={item.children as ICategoryList[]} />
                 )}
             </div>
             <style jsx>

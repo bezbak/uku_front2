@@ -32,6 +32,8 @@ export default function EditProfileInfo({
 }: IEditProfileInfoProps) {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const [telegramInput, setTelegramInput] = React.useState<string>("");
+    const [instagramInput, setInstagramInput] = React.useState<string>("");
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         onSubmit(event);
@@ -48,6 +50,14 @@ export default function EditProfileInfo({
         formData.append("avatar", file);
         dispatch(updateAvatarAsync(formData));
     };
+
+    React.useEffect(() => {
+        if (info) {
+            console.log(info);
+            setTelegramInput(info.telegram || "");
+            setInstagramInput(info.instagram || "");
+        }
+    }, [info]);
     return (
         <div
             className={CN("edit-info", {
@@ -121,24 +131,35 @@ export default function EditProfileInfo({
                         className="edit-info__input"
                         placeholder="Инстаграм"
                         name="instagram"
+                        value={instagramInput}
+                        onChange={(event) =>
+                            setInstagramInput(event.currentTarget.value)
+                        }
                     />
                 </label>
                 <label htmlFor="">
                     <span className="edit-info__label">Номер Whats App</span>
-                    <input
-                        type="text"
-                        className="edit-info__input"
-                        placeholder="Номер телефона"
-                        name="whatsapp"
+                    <PhoneInput
+                        value={info?.phone}
+                        placeholder={"Номер телефона"}
+                        inputProps={{
+                            name: "whatsapp",
+                        }}
+                        inputClass="edit-info__number-input"
+                        dropdownClass="edit-info__number--dropdown"
                     />
                 </label>
-                <label htmlFor="">
+                <label htmlFor="" className="edit-info__last-input">
                     <span className="edit-info__label">Telegram</span>
                     <input
                         type="text"
                         className="edit-info__input"
                         placeholder="Ваш ник"
                         name="telegram"
+                        value={telegramInput}
+                        onChange={(event) =>
+                            setTelegramInput(event.currentTarget.value)
+                        }
                     />
                 </label>
                 <Button type="submit" className="edit-info__save">
@@ -153,7 +174,7 @@ export default function EditProfileInfo({
                     position: fixed;
                     z-index: 100;
                     top: 0;
-                    width: 407px;
+                    width: 360px;
                     height: 100%;
                     backface-visibility: hidden;
                     transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -176,7 +197,7 @@ export default function EditProfileInfo({
                     cursor: pointer;
                 }
 
-                .edit-info__input {
+                .edit-info .edit-info__input {
                     border-radius: 8px;
                     background: #ffffff;
                     border: 1px solid #cacaca;
@@ -184,6 +205,11 @@ export default function EditProfileInfo({
                     width: 100%;
                     padding: 13px 16px;
                     margin-bottom: 10px;
+                }
+
+                .edit-info__last-input {
+                    margin-top: 10px;
+                    display: block;
                 }
 
                 .edit-info__close {

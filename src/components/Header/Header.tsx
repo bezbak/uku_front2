@@ -56,7 +56,7 @@ const Header = () => {
                 .header__mobile {
                     display: none;
                     position: fixed;
-                    z-index: 100;
+                    z-index: 1;
                     width: 100%;
                 }
 
