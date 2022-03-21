@@ -61,6 +61,66 @@ export const commentAsync = createAsyncThunk(
     }
 );
 
+export const createPostAsync = createAsyncThunk(
+    "post/create",
+    async (data: {
+        category: number;
+        location: number;
+        description: string;
+        images?: number[];
+    }) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.createPost(data);
+        if (!request) return;
+        const { response } = request;
+        const { data: post } = await response;
+        return post;
+    }
+);
+
+export const postImageUploadAsync = createAsyncThunk(
+    "post/image",
+    async (formData: FormData) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.postImageUpload(formData);
+        if (!request) return;
+        const { response } = request;
+        const { data: post } = await response;
+        return post;
+    }
+);
+
+export const updatePostAsync = createAsyncThunk(
+    "post/update",
+    async (data: {
+        category: number;
+        location: number;
+        description: string;
+        images?: number[];
+        postId: number;
+    }) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.updatePost(data);
+        if (!request) return;
+        const { response } = request;
+        const { data: post } = await response;
+        return post;
+    }
+);
+
+export const deletePostAsync = createAsyncThunk(
+    "post/delete",
+    async (postId: number) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.deletePost(postId);
+        console.log(request);
+        if (!request) return;
+        const { response } = request;
+        const { data: post } = await response;
+        return post;
+    }
+);
+
 export const postSlice = createSlice({
     name: "follow",
     initialState,

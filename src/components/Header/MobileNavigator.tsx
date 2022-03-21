@@ -133,7 +133,6 @@ function MobileNavigator({
                     )}
                 </>
             )}
-
             <style jsx>{`
                 .mobile-navigator {
                     position: absolute;

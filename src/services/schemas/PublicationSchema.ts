@@ -14,7 +14,7 @@ export const CommentSchema = object({
     created_at: string(),
     replies: array(),
     reply_to_user: nullable(string()),
-    text: string(),
+    text: nullable(string()),
 });
 
 export const PublicationSchema = object({
@@ -45,4 +45,10 @@ export const PublicationSchema = object({
     title: string(),
     viewed: number(),
     user: ProfileInfoSchema,
+});
+
+export const PublicationCreateSchema = object({
+    is_created: boolean(),
+    message: string(),
+    publication_id: number(),
 });

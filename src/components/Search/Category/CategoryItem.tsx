@@ -17,7 +17,7 @@ export function CategoryItem({ item }: ICategoryItemProps) {
     const dispatch = useAppDispatch();
 
     const handleClick = (item: ICategoryList, isOpeneble: boolean) => {
-        if (!isOpeneble) dispatch(setCategoryId(item.id));
+        dispatch(setCategoryId(item.id));
         setOpen(!open);
     };
 

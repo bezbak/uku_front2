@@ -1,0 +1,89 @@
+import React, { ChangeEvent, FormEvent } from "react";
+
+import AddImageIcon from "../icons/AddImageIcon";
+import Button from "../Buttons/Button";
+import Icon from "../Icon";
+
+interface IPostFormProps {
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    onImage?: (event: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    imageInput?: boolean;
+    description?: string;
+}
+
+export default function PostForm({
+    onSubmit,
+    onImage,
+    onChange,
+    imageInput = false,
+    description,
+}: IPostFormProps) {
+    return (
+        <form className="post-form" onSubmit={(event) => onSubmit(event)}>
+            {imageInput && (
+                <label className="post-form__text-label">
+                    <input
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        className="hide-elements"
+                        name="image"
+                        onChange={onImage}
+                    />
+                    <div className="post-form__image-input">
+                        <Icon width={22} height={19}>
+                            <AddImageIcon />
+                        </Icon>
+                    </div>
+                </label>
+            )}
+            <input
+                type="text"
+                placeholder="Введите описание объявления"
+                className="post-form__input"
+                name="text"
+                value={description}
+                onChange={onChange}
+                required
+            />
+            <Button
+                type="submit"
+                className="button-reset-default-styles post-form__button"
+            >
+                Опубликовать
+            </Button>
+            <style jsx global>{`
+                .post-form {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    column-gap: 12px;
+                }
+
+                .post-form__image-input {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 38px;
+                    width: 38px;
+                    background: #f8f8f8;
+                    border-radius: 65px;
+                    color: #9da5ae;
+                }
+
+                .post-form__input {
+                    width: -webkit-fill-available;
+                    font-size: 16px;
+                    padding: 12px 14px;
+                    background: #f8f8f8;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 6px;
+                }
+
+                .post-form .post-form__button.button {
+                    width: 147px;
+                }
+            `}</style>
+        </form>
+    );
+}

@@ -19,6 +19,7 @@ import AuthService from "@/services/AccountService";
 import CookiesManager from "@/lib/CookiesManager/CookiesManager";
 import LocationService from "@/services/LocationService";
 import { NextPage } from "next";
+import PostModal from "@/components/Post/PostModal";
 import ProfileService from "@/services/ProfileService";
 import { Provider } from "react-redux";
 import PublicationService from "@/services/PublicationService";
@@ -62,7 +63,11 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     const getLayout = Component.getLayout ?? ((page) => page);
     return (
         <Provider store={store}>
-            {getLayout(<Component {...pageProps} />)}
+            {getLayout(
+                <>
+                    <Component {...pageProps} /> <PostModal />
+                </>
+            )}
         </Provider>
     );
 }

@@ -15,6 +15,7 @@ import PrevIcon from "@/components/icons/PrevIcon";
 import TelagramIcon from "@/components/icons/TelegramIcon";
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 import { default as _Post } from "@components/Post/Post";
+import { editPost } from "@/app/mainSlice";
 import { useRouter } from "next/router";
 
 export function getServerSideProps() {
@@ -37,6 +38,10 @@ const Post = () => {
         router.back();
     };
 
+    const handleEditPost = () => {
+        dispatch(editPost(post));
+    };
+
     return (
         <section className="post">
             <Container>
@@ -51,44 +56,63 @@ const Post = () => {
                         </Icon>
                         <span>Назад</span>
                     </button>
-                    <div className="post__icons">
-                        <a
-                            href={post?.user.telegram || ""}
-                            type="button"
-                            className="post__social"
-                            style={{
-                                backgroundColor: "#039BE5",
-                            }}
-                        >
-                            <Icon width={32} height={32}>
-                                <TelagramIcon />
-                            </Icon>
-                        </a>
-                        <a
-                            href={post?.user.whatsapp || ""}
-                            type="button"
-                            className="post__social"
-                            style={{
-                                backgroundColor: "#1BD741",
-                            }}
-                        >
-                            <Icon width={32} height={32}>
-                                <WhatsAppIcon />
-                            </Icon>
-                        </a>
-                        <a
-                            href={post?.user.instagram || ""}
-                            type="button"
-                            className="post__social"
-                            style={{
-                                backgroundColor: "#B06DB5",
-                            }}
-                        >
-                            <Icon width={32} height={32}>
-                                <InstagramIcon />
-                            </Icon>
-                        </a>
-                    </div>
+                    {post?.is_owner ? (
+                        <div className="post__actions">
+                            <button
+                                type="button"
+                                className="button-reset-default-styles post__prev"
+                                onClick={handleEditPost}
+                            >
+                                <span>Редактировать</span>
+                            </button>
+                            <button
+                                type="button"
+                                className="button-reset-default-styles post__prev"
+                                onClick={handlePrev}
+                            >
+                                <span>Удалить</span>
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="post__icons">
+                            <a
+                                href={post?.user.telegram || ""}
+                                type="button"
+                                className="post__social"
+                                style={{
+                                    backgroundColor: "#039BE5",
+                                }}
+                            >
+                                <Icon width={32} height={32}>
+                                    <TelagramIcon />
+                                </Icon>
+                            </a>
+                            <a
+                                href={post?.user.whatsapp || ""}
+                                type="button"
+                                className="post__social"
+                                style={{
+                                    backgroundColor: "#1BD741",
+                                }}
+                            >
+                                <Icon width={32} height={32}>
+                                    <WhatsAppIcon />
+                                </Icon>
+                            </a>
+                            <a
+                                href={post?.user.instagram || ""}
+                                type="button"
+                                className="post__social"
+                                style={{
+                                    backgroundColor: "#B06DB5",
+                                }}
+                            >
+                                <Icon width={32} height={32}>
+                                    <InstagramIcon />
+                                </Icon>
+                            </a>
+                        </div>
+                    )}
                 </header>
                 {!!post && <_Post post={post} />}
             </Container>
@@ -110,6 +134,11 @@ const Post = () => {
                     column-gap: 12px;
                     border: 1px solid #d8d8d8;
                     border-radius: 6px;
+                }
+
+                .post__actions {
+                    display: flex;
+                    column-gap: 12px;
                 }
 
                 .post__icons {

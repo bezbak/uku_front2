@@ -5,6 +5,7 @@ import {
     nullable,
     number,
     object,
+    optional,
     string,
     union,
 } from "superstruct";
@@ -12,14 +13,16 @@ import {
 export const ProfileFeedItemSchema = object({
     id: number(),
     categories: string(),
-    user: object({
-        id: number(),
-        first_name: string(),
-        last_name: string(),
-        avatar: nullable(string()),
-        location: string(),
-        following: boolean(),
-    }),
+    user: optional(
+        object({
+            id: number(),
+            first_name: string(),
+            last_name: string(),
+            avatar: nullable(string()),
+            location: string(),
+            following: boolean(),
+        })
+    ),
     title: string(),
     description: string(),
     created_at: string(),
@@ -30,7 +33,7 @@ export const ProfileFeedItemSchema = object({
             image: string(),
         })
     ),
-    is_favorite: boolean(),
+    is_favorite: optional(boolean()),
     comment_count: number(),
     publication_type: string(),
     location: object({
@@ -45,6 +48,7 @@ export const ProfileFeedItemSchema = object({
         literal("blocked"),
     ]),
     link: string(),
+    blocking_reason_text: optional(nullable(string())),
 });
 
 export const ProfileFeedSchema = object({

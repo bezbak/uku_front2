@@ -42,7 +42,7 @@ const Home = () => {
         };
     }, [feed?.next]);
 
-    const handleFollow = () => {
+    const updatePosts = () => {
         dispatch(profileFeedAsync(1));
     };
 
@@ -54,7 +54,8 @@ const Home = () => {
                         <PostCard
                             key={item.id}
                             item={item}
-                            onFollow={handleFollow}
+                            onFollow={updatePosts}
+                            onDelete={updatePosts}
                         />
                     );
                 })}

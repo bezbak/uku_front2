@@ -53,7 +53,6 @@ export default function EditProfileInfo({
 
     React.useEffect(() => {
         if (info) {
-            console.log(info);
             setTelegramInput(info.telegram || "");
             setInstagramInput(info.instagram || "");
         }

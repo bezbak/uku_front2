@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { faveAsync, followAsync } from "./PostSlice";
+import { deletePostAsync, faveAsync, followAsync } from "./PostSlice";
 
 import CN from "classnames";
+import EditIcon from "../icons/EditIcon";
 import { IProfileFeedItem } from "@/services/types";
 import Icon from "../Icon";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export interface IPostCardProps {
     item: IProfileFeedItem;
     onFollow?: () => void;
     onFave?: () => void;
+    onDelete?: () => void;
     faveEneble?: boolean;
     followEnable?: boolean;
     header?: boolean;
@@ -24,19 +26,20 @@ export default function PostCard({
     item,
     onFollow,
     onFave,
+    onDelete,
     faveEneble = true,
     followEnable = true,
     header = true,
 }: IPostCardProps) {
     const dispatch = useAppDispatch();
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [follow, setFollow] = useState(item.user.following);
+    const [follow, setFollow] = useState(item.user?.following);
     const [inFave, setInFave] = useState(item.is_favorite);
     const auth = useGetToken();
     const rout = useRouter();
     const handleFollow = async (event: any) => {
         event.preventDefault();
-        if (auth) {
+        if (auth && item.user) {
             const { payload } = await dispatch(followAsync(item.user.id));
             setFollow((payload as any).subscribe);
             if (onFollow) onFollow();
@@ -56,28 +59,37 @@ export default function PostCard({
         }
     };
 
+    const handleDelete = async (event: any) => {
+        event.preventDefault();
+        await dispatch(deletePostAsync(item.id));
+        if (onDelete) onDelete();
+    };
+
     useEffect(() => {
-        if (!followEnable) setFollow(item.user.following);
+        if (!followEnable) setFollow(item.user?.following);
     }, [item]);
 
     return (
         <Link href={`/posts/${item.id}`}>
             <article className="post-card">
-                {header && (
-                    <PostHeader
-                        handleFollow={handleFollow}
-                        userLink={`${item.user.id}`}
-                        avatar={item.user.avatar}
-                        first_name={item.user.first_name}
-                        last_name={item.user.last_name}
-                        follow={follow}
-                        location={item.location.name}
-                        followEnable={followEnable}
-                    />
-                )}
+                {header &&
+                    item.user &&
+                    follow !== undefined &&
+                    !item.is_owner && (
+                        <PostHeader
+                            handleFollow={handleFollow}
+                            userLink={`${item.user.id}`}
+                            avatar={item.user.avatar}
+                            first_name={item.user.first_name}
+                            last_name={item.user.last_name}
+                            follow={follow}
+                            location={item.location.name}
+                            followEnable={followEnable}
+                        />
+                    )}
                 <section className={CN("post-card__body")}>
                     <div className="post-card__images">
-                        {faveEneble && (
+                        {faveEneble && !item.is_owner && (
                             <button
                                 type="button"
                                 className={CN(
@@ -107,6 +119,22 @@ export default function PostCard({
                                 </Icon>
                             </button>
                         )}
+                        {item.is_owner && (
+                            <div className="post-card__actions">
+                                <button className="button-reset-default-styles post-card__actions-button">
+                                    <Icon width={24} height={20}>
+                                        <EditIcon />
+                                    </Icon>
+                                </button>
+                                <button
+                                    className="button-reset-default-styles post-card__actions-button"
+                                    onClick={handleDelete}
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                        )}
+
                         {item.images.length > 0 ? (
                             <img
                                 src={item.images[selectedIndex]?.image}
@@ -136,7 +164,10 @@ export default function PostCard({
                                             }
                                         )}
                                         key={image.id}
-                                        onClick={() => setSelectedIndex(index)}
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            setSelectedIndex(index);
+                                        }}
                                     />
                                 ))}
                             </div>
@@ -239,6 +270,26 @@ export default function PostCard({
 
                     .post-card__dot--active {
                         background: #e56366;
+                    }
+
+                    .post-card__actions {
+                        display: none;
+                        position: absolute;
+                        right: 10px;
+                        top: 10px;
+                        column-gap: 12px;
+                        align-items: center;
+                    }
+
+                    .post-card__actions-button {
+                        font-size: 32px;
+                        color: #fff;
+                        font-weight: 100;
+                        line-height: 0;
+                    }
+
+                    .post-card:hover .post-card__actions {
+                        display: flex;
                     }
                 `}</style>
             </article>

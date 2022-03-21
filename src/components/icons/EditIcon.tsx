@@ -17,6 +17,7 @@ export default function EditIcon() {
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                fill="transparent"
             />
             <path
                 d="M22.4983 9.80692L36.4321 20.7296"
