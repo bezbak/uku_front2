@@ -83,6 +83,11 @@ const MyProfile = () => {
             setEdit(false);
         } catch (error: unknown) {}
     };
+
+    const updatePost = () => {
+        dispatch(profileAsync(1));
+    };
+
     return (
         <Layout>
             {profilePage === "main" ? (
@@ -94,6 +99,7 @@ const MyProfile = () => {
                         info={info}
                         posts={profile}
                         setPage={setPage}
+                        onDelete={updatePost}
                     />
                     <EditProfileInfo
                         info={info}

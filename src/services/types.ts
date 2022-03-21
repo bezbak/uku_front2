@@ -8,7 +8,11 @@ import {
     ConfirmSchema,
     FollowSchema,
 } from "./schemas/AccountSchema";
-import { CommentSchema, PublicationSchema } from "./schemas/PublicationSchema";
+import {
+    CommentSchema,
+    PublicationCreateSchema,
+    PublicationSchema,
+} from "./schemas/PublicationSchema";
 import {
     ProfileFeedItemSchema,
     ProfileFeedSchema,
@@ -36,3 +40,4 @@ export type IContact = Infer<typeof ContactSchema>;
 export type IFollow = Infer<typeof FollowSchema>;
 export type IPublication = Infer<typeof PublicationSchema>;
 export type IComment = Infer<typeof CommentSchema>;
+export type IPublicationCrate = Infer<typeof PublicationCreateSchema>;

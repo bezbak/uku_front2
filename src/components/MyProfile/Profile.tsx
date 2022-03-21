@@ -15,6 +15,7 @@ export interface IProfileProps {
     info: IprofileInfo | null;
     follow?: boolean;
     setPage: (page: number) => void;
+    onDelete?: () => void;
 }
 
 export default function Profile({
@@ -24,6 +25,7 @@ export default function Profile({
     posts,
     follow,
     setPage,
+    onDelete,
 }: IProfileProps) {
     const ref = useRef(null);
     const status = useAppSelector(selectProfileStatus);
@@ -78,6 +80,7 @@ export default function Profile({
                                             header={false}
                                             faveEneble={false}
                                             followEnable={false}
+                                            onDelete={onDelete}
                                         />
                                     );
                                 })}
@@ -108,7 +111,9 @@ export default function Profile({
                 }
                 .profile__title {
                     font-weight: 500;
+                    margin-bottom: 24px;
                 }
+
                 .profile .profile__button {
                     width: auto;
                 }

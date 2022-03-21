@@ -1,6 +1,17 @@
-import { CommentSchema, PublicationSchema } from "./schemas/PublicationSchema";
-import { IComment, IProfileFeed, IPublication, IprofileInfo } from "./types";
+import {
+    CommentSchema,
+    PublicationCreateSchema,
+    PublicationSchema,
+} from "./schemas/PublicationSchema";
+import {
+    IComment,
+    IProfileFeed,
+    IPublication,
+    IPublicationCrate,
+    IprofileInfo,
+} from "./types";
 import { ProfileFeedSchema, ProfileInfoSchema } from "./schemas/ProfileSchema";
+import { array, number } from "superstruct";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
@@ -64,6 +75,62 @@ class PublicationService {
             }
         );
         assertApiResponse<IComment>(request, CommentSchema);
+        return request;
+    }
+
+    createPost(data: {
+        category: number;
+        location: number;
+        description: string;
+    }) {
+        const request = this.api.post(
+            "/publication/create/",
+            { ...data },
+            {
+                headers: {
+                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                },
+            }
+        );
+        assertApiResponse<IPublicationCrate>(request, PublicationCreateSchema);
+        return request;
+    }
+
+    updatePost(data: {
+        category: number;
+        location: number;
+        description: string;
+        postId: number;
+    }) {
+        const request = this.api.put(
+            `/publication/${data.postId}/update/`,
+            { ...data },
+            {
+                headers: {
+                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                },
+            }
+        );
+        assertApiResponse<IPublication>(request, PublicationSchema);
+        return request;
+    }
+
+    deletePost(postId: number) {
+        const request = this.api.delete(`/publication/${postId}/delete/`, {
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
+        return request;
+    }
+
+    postImageUpload(formData: FormData) {
+        const request = this.api.post("/publication/image/upload/", formData, {
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
+        assertApiResponse<number[]>(request, array(number()));
         return request;
     }
 }
