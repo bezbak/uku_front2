@@ -15,7 +15,7 @@ export interface IProfileProps {
     info: IprofileInfo | null;
     follow?: boolean;
     setPage: (page: number) => void;
-    onDelete?: () => void;
+    onDelete?: (id: number) => void;
 }
 
 export default function Profile({
@@ -80,7 +80,9 @@ export default function Profile({
                                             header={false}
                                             faveEneble={false}
                                             followEnable={false}
-                                            onDelete={onDelete}
+                                            onDelete={(id) => {
+                                                if (onDelete) onDelete(id);
+                                            }}
                                         />
                                     );
                                 })}

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { selectLocation, setLocationModal } from "@/app/mainSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Avatar from "../Avatar";
 import Container from "../Container";
@@ -6,39 +7,23 @@ import { HearIcon } from "../icons/HeartIcon";
 import Icon from "../Icon";
 import Link from "next/link";
 import LocationIcon from "../icons/LocationIcon";
-import LocationModal from "../Location/LocationModal";
 import Logo from "./Logo";
 import React from "react";
 import SearchIcon from "../icons/SearchIcon";
-import Select from "react-select";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
 
-export default function HeaderNavbar() {
+export default function HeaderNavbar({ avatar }: { avatar: string }) {
     const router = useRouter();
     const token = useGetToken();
-    const [locationModal, setLocationModal] = useState(false);
-    const [location, setLocation] = useState<{
-        id: number;
-        name: string;
-    }>({
-        id: 0,
-        name: "",
-    });
-
+    const dispatch = useAppDispatch();
+    const location = useAppSelector(selectLocation);
     return (
         <div className="navbar">
             <Container>
                 <div className="navbar__inner">
                     <div className="navbar__left">
                         <Logo />
-                        <Select
-                            id="long-value-select"
-                            instanceId="long-value-select"
-                            placeholder="Введите название объявления"
-                            name="search"
-                            hideSelectedOptions={true}
-                        />
                     </div>
                     <div className="navbar__right">
                         <ul className="navbar__right-list list-reset-default-styles">
@@ -47,17 +32,27 @@ export default function HeaderNavbar() {
                                     <button
                                         type="button"
                                         className="navbar__right-link button-reset-default-styles"
-                                        onClick={() => setLocationModal(true)}
+                                        onClick={() =>
+                                            dispatch(setLocationModal(true))
+                                        }
                                     >
                                         <Icon width={18} height={18}>
                                             <LocationIcon />
                                         </Icon>
-                                        <span>Выбор</span>
+                                        <span>
+                                            {location ? location.name : "Выбор"}
+                                        </span>
                                     </button>
                                 </li>
                             )}
                             <li>
-                                <Link href={"/search"}>
+                                <Link
+                                    href={
+                                        router.route === "/search"
+                                            ? "/search/global"
+                                            : "/search"
+                                    }
+                                >
                                     <a className="navbar__right-link link-reset-default-styles">
                                         <Icon width={18} height={18}>
                                             <SearchIcon />
@@ -87,6 +82,7 @@ export default function HeaderNavbar() {
                                                     height={22}
                                                     placholder={true}
                                                     randomColor={false}
+                                                    url={avatar}
                                                 />
                                                 <span>Профиль</span>
                                             </>
@@ -116,12 +112,6 @@ export default function HeaderNavbar() {
                     </div>
                 </div>
             </Container>
-            <LocationModal
-                open={locationModal}
-                title="Найдите ваш город"
-                setLocation={setLocation}
-                setLocationModal={setLocationModal}
-            />
             <style jsx global>{`
                 .navbar {
                     padding: 16px 0;

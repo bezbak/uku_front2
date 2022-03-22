@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Layout from "@/components/Layout";
+import Masonry from "@/components/Masonry/Masonry";
 import PostCard from "@/components/Post/PostCard";
 import PostList from "@/components/Post/PostList";
 import Wrapper from "@/components/Wrapper";
@@ -23,6 +24,13 @@ export default function Favourite() {
     const fav = useAppSelector(selectFav);
     const status = useAppSelector(selectFavStatus);
     const [page, setPage] = useState(1);
+    const sizes = [
+        { columns: 1, gutter: 10 },
+        { mq: "630px", columns: 2, gutter: 10 },
+        { mq: "1155px", columns: 3, gutter: 10 },
+        { mq: "1540px", columns: 4, gutter: 10 },
+    ];
+
     useEffect(() => {
         if (!auth) rout.push("/login");
     }, [auth]);
@@ -53,23 +61,23 @@ export default function Favourite() {
     }, [fav?.next]);
 
     const handleFave = () => {
-        console.log("test");
         dispatch(fovouriteAsync(page));
     };
 
     return (
         <Wrapper title="Избранное">
-            <PostList>
+            <Masonry sizes={sizes}>
                 {fav?.results.map((item) => {
                     return (
                         <PostCard
                             key={item.id}
                             item={item}
                             onFave={handleFave}
+                            masonry={true}
                         />
                     );
                 })}
-            </PostList>
+            </Masonry>
             <div ref={ref} />
         </Wrapper>
     );

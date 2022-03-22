@@ -5,15 +5,18 @@ import React, { FC, FormEvent, useState } from "react";
 import { StructError, assert } from "superstruct";
 import { formatDate, parseDate } from "@/utils/formatDate";
 import { registerAsync, selectPhone } from "./authSlice";
+import {
+    selectLocation,
+    selectOpenLocationModal,
+    setLocationModal,
+} from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Button from "../Buttons/Button";
 import CN from "classnames";
 import Checkbox from "../Checkbox";
 import DayPickerInput from "react-day-picker/DayPickerInput";
-import LocationModal from "../Location/LocationModal";
 import Select from "react-select";
-import Spinner from "../Spinner";
 import dateFnsFormat from "date-fns/format";
 import getFormDate from "@/utils/getFormData";
 import { useRouter } from "next/router";
@@ -25,28 +28,25 @@ interface IRegisterProps {
 
 const Register: FC<IRegisterProps> = ({ status }) => {
     const [error, setError] = useState<IErroType>({});
-    const [locationModal, setLocationModal] = useState(false);
+    const locationModal = useAppSelector(selectOpenLocationModal);
     const rout = useRouter();
-    const [location, setLocation] = useState<{
-        id: number;
-        name: string;
-    }>({
-        id: 0,
-        name: "",
-    });
+    const location = useAppSelector(selectLocation);
     const phone = useAppSelector(selectPhone);
     const dispatch = useAppDispatch();
+
     const options = [
         { value: "male", label: "Мужской" },
         { value: "female", label: "Женский" },
     ];
+
     const DATE_FORMAT = "yyyy-MM-dd";
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = getFormDate(event.currentTarget);
         setError({});
         try {
-            data.region = location.id;
+            if (location) data.region = location.id;
             assert(data, registerFormSchema);
             const { payload } = await dispatch(registerAsync(data));
             if ((payload as any)?.is_profile_completed) {
@@ -126,13 +126,15 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                 <div className="registration__region">
                     <input
                         placeholder={"Выбор региона"}
-                        onClick={() => setLocationModal(!locationModal)}
+                        onClick={() =>
+                            dispatch(setLocationModal(!locationModal))
+                        }
                         type="text"
                         className={CN("registration__input", {
                             "registration__input--error": error.regionText,
                         })}
                         readOnly={true}
-                        value={location.name}
+                        value={location?.name || ""}
                         name="regionText"
                     />
                 </div>
@@ -142,16 +144,14 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                         Принимаю <span> правила программы лояльности</span>
                     </span>
                 </div>
-                <Button type="submit" className="registration__button">
-                    {status === "loading" ? <Spinner /> : "Сохранить"}
+                <Button
+                    type="submit"
+                    className="registration__button"
+                    loading={status === "loading"}
+                >
+                    Сохранить
                 </Button>
             </form>
-            <LocationModal
-                open={locationModal}
-                title="Найдите ваш город"
-                setLocation={setLocation}
-                setLocationModal={setLocationModal}
-            />
             <style jsx global>{`
                 .registration {
                     display: flex;
@@ -229,6 +229,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                 .registration__checkbox-text {
                     display: inline-block;
                     margin-left: 8px;
+                    font-size: 12px;
                 }
 
                 .registration__checkbox-text span {

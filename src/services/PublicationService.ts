@@ -11,7 +11,7 @@ import {
     IprofileInfo,
 } from "./types";
 import { ProfileFeedSchema, ProfileInfoSchema } from "./schemas/ProfileSchema";
-import { array, number } from "superstruct";
+import { array, number, object, string } from "superstruct";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
@@ -131,6 +131,21 @@ class PublicationService {
             },
         });
         assertApiResponse<number[]>(request, array(number()));
+        return request;
+    }
+
+    getAvatar() {
+        const request = this.api.get("/account/avatar/", {
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
+        assertApiResponse<{ avatar: string }>(
+            request,
+            object({
+                avatar: string(),
+            })
+        );
         return request;
     }
 }

@@ -115,8 +115,12 @@ const Confirm: FC<IConfirmProps> = ({
                     placeholder="Код"
                     name="code"
                 />
-                <Button type="submit" disable={code.length < 1}>
-                    {confirmStatus === "loading" ? <Spinner /> : "Подтвердить"}
+                <Button
+                    type="submit"
+                    disable={code.length < 1}
+                    loading={confirmStatus === "loading"}
+                >
+                    Подтвердить
                 </Button>
             </form>
 

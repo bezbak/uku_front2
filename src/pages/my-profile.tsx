@@ -27,6 +27,7 @@ import Login from "@/components/Authorization/Login";
 import Profile from "@/components/MyProfile/Profile";
 import { assert } from "superstruct";
 import { changeNumber } from "@/components/Authorization/authSlice";
+import { deletePostAsync } from "@/components/Post/PostSlice";
 import getFormDate from "@/utils/getFormData";
 import { useRouter } from "next/router";
 
@@ -34,10 +35,12 @@ interface IConfirmAlert {
     title: string;
     open: boolean;
     confirmText: string;
+    name: string;
 }
 
 const MyProfile = () => {
     const confirmAlertInitial = {
+        name: "",
         title: "",
         open: false,
         confirmText: "",
@@ -52,6 +55,7 @@ const MyProfile = () => {
     const [edit, setEdit] = useState(false);
     const [alert, setAlert] = useState<IConfirmAlert>(confirmAlertInitial);
     const [page, setPage] = useState(1);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
     const profile = useAppSelector(selectProfile);
     useEffect(() => {
         dispatch(profileAsync(page));
@@ -62,8 +66,14 @@ const MyProfile = () => {
     }, []);
 
     const confirmChange = () => {
-        dispatch(sendSmsToOldPhoneAsync(rout));
-        if (info) dispatch(changeNumber(info.phone));
+        if (alert.name === "delete") {
+            if (deleteId) dispatch(deletePostAsync(deleteId));
+            updatePost();
+        } else if (alert.name === "number") {
+            dispatch(sendSmsToOldPhoneAsync(rout));
+            if (info) dispatch(changeNumber(info.phone));
+        }
+        setAlert(confirmAlertInitial);
     };
 
     const handleChange = () => {
@@ -71,6 +81,7 @@ const MyProfile = () => {
             title: "Вы действительно хотите сменить номер?",
             open: true,
             confirmText: "Сменить",
+            name: "number",
         });
         setEdit(false);
     };
@@ -88,6 +99,16 @@ const MyProfile = () => {
         dispatch(profileAsync(1));
     };
 
+    const handleDelete = (id: number) => {
+        setAlert({
+            title: "Вы действительно хотите удалить объявление?",
+            open: true,
+            confirmText: "Удалить",
+            name: "delete",
+        });
+        setDeleteId(id);
+    };
+
     return (
         <Layout>
             {profilePage === "main" ? (
@@ -99,7 +120,7 @@ const MyProfile = () => {
                         info={info}
                         posts={profile}
                         setPage={setPage}
-                        onDelete={updatePost}
+                        onDelete={(id: number) => handleDelete(id)}
                     />
                     <EditProfileInfo
                         info={info}

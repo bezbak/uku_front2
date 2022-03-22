@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import "reflect-metadata";
+import "react-toastify/dist/ReactToastify.css";
 
 import { ApiClient, apiDIToken } from "@/lib/ApiClient";
 import { CONTENT_TYPE, CONTENT_TYPE_HEADER_NAME } from "@/constants/headers";
@@ -17,14 +18,15 @@ import {
 import type { AppProps } from "next/app";
 import AuthService from "@/services/AccountService";
 import CookiesManager from "@/lib/CookiesManager/CookiesManager";
+import LocationModal from "@/components/Location/LocationModal";
 import LocationService from "@/services/LocationService";
 import { NextPage } from "next";
-import PostModal from "@/components/Post/PostModal";
 import ProfileService from "@/services/ProfileService";
 import { Provider } from "react-redux";
 import PublicationService from "@/services/PublicationService";
 import SearchService from "@/services/SearchService";
 import SystemService from "@/services/SystemService";
+import { ToastContainer } from "react-toastify";
 import { container } from "tsyringe";
 import store from "../app/store";
 
@@ -65,7 +67,19 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         <Provider store={store}>
             {getLayout(
                 <>
-                    <Component {...pageProps} /> <PostModal />
+                    <Component {...pageProps} />
+                    <LocationModal />
+                    <ToastContainer
+                        position="top-center"
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        limit={1}
+                    />
                 </>
             )}
         </Provider>

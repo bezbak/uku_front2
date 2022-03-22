@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 
 import AddImageIcon from "../icons/AddImageIcon";
 import Button from "../Buttons/Button";
@@ -7,18 +7,24 @@ import Icon from "../Icon";
 interface IPostFormProps {
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     onImage?: (event: ChangeEvent<HTMLInputElement>) => void;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    onInput?: (text: string) => void;
     imageInput?: boolean;
     description?: string;
+    defaultText?: string;
 }
 
 export default function PostForm({
     onSubmit,
     onImage,
-    onChange,
+    onInput,
     imageInput = false,
-    description,
+    defaultText = "",
 }: IPostFormProps) {
+    const [text, setText] = useState(defaultText);
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setText(event.currentTarget.value);
+        if (onInput) onInput(text);
+    };
     return (
         <form className="post-form" onSubmit={(event) => onSubmit(event)}>
             {imageInput && (
@@ -42,8 +48,8 @@ export default function PostForm({
                 placeholder="Введите описание объявления"
                 className="post-form__input"
                 name="text"
-                value={description}
-                onChange={onChange}
+                value={text}
+                onChange={handleInputChange}
                 required
             />
             <Button

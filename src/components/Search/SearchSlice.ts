@@ -32,6 +32,18 @@ export const searchAsync = createAsyncThunk(
     }
 );
 
+export const userSearchAsync = createAsyncThunk(
+    "search/user",
+    async (params?: { page?: number; q?: string }) => {
+        const searchService = container.resolve(searchServiceToken);
+        const request = searchService.serachUser(params);
+        if (!request) return;
+        const { response } = request;
+        const { data: search } = await response;
+        return search;
+    }
+);
+
 export const searchSlice = createSlice({
     name: "search",
     initialState,
