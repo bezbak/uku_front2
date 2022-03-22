@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAvatarAsync, selectAvatar } from "../MyProfile/ProfileSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Container from "../Container";
 import HeaderNavbar from "./HeaderNavbar";
@@ -9,15 +11,23 @@ import SearchIcon from "../icons/SearchIcon";
 import TopBar from "./TopBar";
 
 const Header = () => {
+    const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
+    const avatar = useAppSelector(selectAvatar);
+
     const handleChange = () => {
         setOpen(!open);
     };
+
+    useEffect(() => {
+        dispatch(getAvatarAsync());
+    }, []);
+
     return (
         <div className="header">
             <div className="header__main">
                 <TopBar />
-                <HeaderNavbar />
+                <HeaderNavbar avatar={avatar} />
             </div>
             <div className="header__mobile mobile">
                 <Container>
@@ -36,17 +46,23 @@ const Header = () => {
                         <Link href="/">
                             <h2 className="mobile__logo">Uku.kg</h2>
                         </Link>
-                        <button
-                            type="button"
-                            className="button-reset-default-styles"
-                        >
-                            <Icon width={24} height={24}>
-                                <SearchIcon />
-                            </Icon>
-                        </button>
+                        <Link href="/search/global">
+                            <button
+                                type="button"
+                                className="button-reset-default-styles"
+                            >
+                                <Icon width={24} height={24}>
+                                    <SearchIcon />
+                                </Icon>
+                            </button>
+                        </Link>
                     </div>
                 </Container>
-                <MobileNavigator open={open} setOpen={setOpen} />
+                <MobileNavigator
+                    open={open}
+                    setOpen={setOpen}
+                    avatar={avatar}
+                />
             </div>
             <style jsx>{`
                 .header {

@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/app/hooks";
 interface IPostViewprops {
     defaultFile: File;
     defaultImage: string;
+    defaultText: string;
     onClose: () => void;
     onSubmit: (text: string, images: number[]) => void;
 }
@@ -18,6 +19,7 @@ interface IPostViewprops {
 export default function PostView({
     defaultImage,
     defaultFile,
+    defaultText,
     onClose,
     onSubmit,
 }: IPostViewprops) {
@@ -103,7 +105,7 @@ export default function PostView({
                     </button>
                 ))}
             </div>
-            <PostForm onSubmit={handleSubmit} />
+            <PostForm onSubmit={handleSubmit} defaultText={defaultText} />
             <style jsx>{`
                 .post-view {
                     background: #ececec;

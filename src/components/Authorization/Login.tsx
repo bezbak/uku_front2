@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Button from "../Buttons/Button";
 import Link from "next/link";
 import PhoneInput from "react-phone-input-2";
-import Spinner from "../Spinner";
 import { newPhoneAsync } from "../MyProfile/ConfirmSlice";
 import { useRouter } from "next/router";
 
@@ -65,8 +64,13 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                     dropdownClass="login__form-dropdown"
                     onChange={(num) => onChangePhone(num)}
                 />
-                <Button type="submit" className="login__next">
-                    {status === "loading" ? <Spinner /> : "Далее"}
+                <Button
+                    type="submit"
+                    className="login__next"
+                    disable={phone.length < 1}
+                    loading={status === "loading"}
+                >
+                    Далее
                 </Button>
             </form>
             <style jsx global>{`

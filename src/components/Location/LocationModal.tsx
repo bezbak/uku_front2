@@ -1,54 +1,38 @@
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import React, {
-    Dispatch,
-    FC,
-    SetStateAction,
-    useEffect,
-    useState,
-} from "react";
-import Modal from "../Modal/Modal";
+import React, { FC, useEffect, useState } from "react";
 import { locationAsync, selectLocation } from "./locationSlice";
-import LocationList from "./LocationList";
-import { ILocation } from "@/services/types";
-import Scrollable from "../Scrollable";
-
-interface ILocationModalProps {
-    open: boolean;
-    title: string;
-    setLocation: Dispatch<
-        SetStateAction<{
-            id: number;
-            name: string;
-        }>
-    >;
-    setLocationModal: Dispatch<SetStateAction<boolean>>;
-}
-
-const LocationModal: FC<ILocationModalProps> = ({
-    open,
-    title,
+import {
+    selectOpenLocationModal,
     setLocation,
     setLocationModal,
-}) => {
-    const [selectedLocation, setSelectedLocation] = useState<ILocation>([]);
+} from "@/app/mainSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+
+import { ILocation } from "@/services/types";
+import LocationList from "./LocationList";
+import Modal from "../Modal/Modal";
+import Scrollable from "../Scrollable";
+import { UKU_LOCATION } from "@/constants/headers";
+
+const LocationModal: FC = () => {
+    const open = useAppSelector(selectOpenLocationModal);
+    const [selectedLocation, setSelectedLocation] = useState<ILocation[]>([]);
     const dispatch = useAppDispatch();
     const locations = useAppSelector(selectLocation);
 
+    const handleClose = () => {
+        dispatch(setLocationModal(false));
+        setSelectedLocation(locations);
+    };
+
     useEffect(() => {
-        if (open) {
-            dispatch(locationAsync());
-        }
-    }, [open]);
+        dispatch(locationAsync());
+        const location = localStorage.getItem(UKU_LOCATION);
+        if (location) dispatch(setLocation(JSON.parse(location)));
+    }, []);
 
     useEffect(() => {
         setSelectedLocation(locations);
     }, [locations]);
-
-    useEffect(() => {
-        if (!selectedLocation.length) {
-            setLocationModal(false);
-        }
-    }, [selectedLocation]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const enteredName = event.target.value;
@@ -58,11 +42,13 @@ const LocationModal: FC<ILocationModalProps> = ({
         <Modal open={open}>
             <div className="location-modal">
                 <div className="location-modal__header">
-                    <span className="location-modal__title">{title}</span>
+                    <span className="location-modal__title">
+                        Выберите расположение
+                    </span>
                     <button
                         type="button"
                         className="location-modal__close button-reset-default-styles"
-                        onClick={() => setLocationModal(false)}
+                        onClick={handleClose}
                     >
                         &times;
                     </button>
@@ -78,8 +64,8 @@ const LocationModal: FC<ILocationModalProps> = ({
                     <Scrollable>
                         <LocationList
                             items={selectedLocation}
-                            setLocation={setLocation}
-                            setSelectedLocation={setSelectedLocation}
+                            onSelect={setSelectedLocation}
+                            onClose={handleClose}
                         />
                     </Scrollable>
                 </div>
@@ -87,7 +73,7 @@ const LocationModal: FC<ILocationModalProps> = ({
                     .location-modal {
                         position: relative;
                         z-index: 2;
-                        width: 50%;
+                        width: 455px;
                         margin: 0.9em 0;
                         border-radius: 6px;
                         background-color: #fefefe;

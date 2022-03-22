@@ -2,6 +2,7 @@ import { FC, ReactNode } from "react";
 
 import CN from "classnames";
 import React from "react";
+import Spinner from "../Spinner";
 
 interface ButtonProps {
     type: "button" | "submit";
@@ -12,6 +13,7 @@ interface ButtonProps {
     disable?: boolean;
     buttonColor?: string;
     textColor?: string;
+    loading?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -23,6 +25,7 @@ const Button: FC<ButtonProps> = ({
     disable = false,
     buttonColor = "#e56366",
     textColor = "#fff",
+    loading = false,
 }) => {
     return (
         <button
@@ -32,13 +35,14 @@ const Button: FC<ButtonProps> = ({
                 {
                     "button--outline": outline,
                     "button--disable": disable,
+                    "button--loading": loading,
                 },
                 className
             )}
             onClick={onClick}
             disabled={disable}
         >
-            {children}
+            {loading ? <Spinner /> : children}
             <style jsx>{`
                 .button {
                     width: 100%;
@@ -48,6 +52,10 @@ const Button: FC<ButtonProps> = ({
                     color: ${textColor};
                     border: none;
                     cursor: pointer;
+                }
+
+                .button--loading {
+                    padding: 10px 16px;
                 }
 
                 .button--outline {

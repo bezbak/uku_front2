@@ -6,7 +6,6 @@ import type { AppState } from "../../app/store";
 import { NextRouter } from "next/router";
 import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { container } from "tsyringe";
-import { toast } from "react-toastify";
 
 export interface LocationState {
     profile: IProfileFeed | null;
@@ -14,6 +13,7 @@ export interface LocationState {
     page: number;
     info: IprofileInfo | null;
     profilePage: "main" | "newConfirm" | "oldConfirm" | "newPhone";
+    avatar: string;
 }
 
 const initialState: LocationState = {
@@ -22,6 +22,7 @@ const initialState: LocationState = {
     page: 1,
     info: null,
     profilePage: "main",
+    avatar: "",
 };
 
 export const profileAsync = createAsyncThunk(
@@ -83,6 +84,18 @@ export const updateAvatarAsync = createAsyncThunk(
             headers,
         });
         return await res.json();
+    }
+);
+
+export const getAvatarAsync = createAsyncThunk(
+    "profile/avatar/get",
+    async () => {
+        const profileService = container.resolve(publicationServiceToken);
+        const request = profileService.getAvatar();
+        if (!request) return;
+        const { response } = request;
+        const { data: feed } = await response;
+        return feed;
     }
 );
 
@@ -157,12 +170,8 @@ export const profileSlice = createSlice({
                 if (!payload) return;
                 state.info = payload;
             })
-            .addCase(sendSmsToOldPhoneAsync.fulfilled, (state, { payload }) => {
-                toast.success(payload?.message);
+            .addCase(sendSmsToOldPhoneAsync.fulfilled, (state) => {
                 state.profilePage = "oldConfirm";
-            })
-            .addCase(sendSmsToOldPhoneAsync.rejected, (_, { payload }) => {
-                toast.error(payload as string);
             })
             .addCase(updateProfileAsync.fulfilled, (state, { payload }) => {
                 if (!payload) return;
@@ -186,6 +195,10 @@ export const profileSlice = createSlice({
             .addCase(updateAvatarAsync.fulfilled, (state, { payload }) => {
                 if (!payload || state.info === null) return;
                 state.info = { ...state.info, avatar: payload.avatar };
+                state.avatar = payload.avatar;
+            })
+            .addCase(getAvatarAsync.fulfilled, (state, { payload }) => {
+                if (payload) state.avatar = payload.avatar;
             });
     },
 });
@@ -201,5 +214,7 @@ export const selectProfilePage = (state: AppState) =>
     state.profilePublication.profilePage;
 export const selectProfileStatus = (state: AppState) =>
     state.profilePublication.status;
+export const selectAvatar = (state: AppState) =>
+    state.profilePublication.avatar;
 
 export default profileSlice.reducer;

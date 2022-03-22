@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { AppState } from "../../app/store";
+import { ILocation } from "@/services/types";
 import { container } from "tsyringe";
 import { locationServiceToken } from "@/tokens";
-import { ILocation } from "@/services/types";
 
 export interface LocationState {
-    locations: ILocation;
+    locations: ILocation[];
     status: "idle" | "loading" | "failed";
 }
 

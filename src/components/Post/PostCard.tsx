@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { deletePostAsync, faveAsync, followAsync } from "./PostSlice";
+import { faveAsync, followAsync } from "./PostSlice";
 
 import CN from "classnames";
 import EditIcon from "../icons/EditIcon";
@@ -16,10 +16,13 @@ export interface IPostCardProps {
     item: IProfileFeedItem;
     onFollow?: () => void;
     onFave?: () => void;
-    onDelete?: () => void;
+    onDelete?: (id: number) => void;
+    onLoad?: () => void;
     faveEneble?: boolean;
     followEnable?: boolean;
     header?: boolean;
+    masonry?: boolean;
+    width?: number;
 }
 
 export default function PostCard({
@@ -27,9 +30,11 @@ export default function PostCard({
     onFollow,
     onFave,
     onDelete,
+    onLoad,
     faveEneble = true,
     followEnable = true,
     header = true,
+    masonry = false,
 }: IPostCardProps) {
     const dispatch = useAppDispatch();
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -59,10 +64,13 @@ export default function PostCard({
         }
     };
 
-    const handleDelete = async (event: any) => {
+    const handleDelete = (event: any) => {
         event.preventDefault();
-        await dispatch(deletePostAsync(item.id));
-        if (onDelete) onDelete();
+        if (onDelete) onDelete(item.id);
+    };
+
+    const handleLoad = () => {
+        if (onLoad) onLoad();
     };
 
     useEffect(() => {
@@ -71,7 +79,11 @@ export default function PostCard({
 
     return (
         <Link href={`/posts/${item.id}`}>
-            <article className="post-card">
+            <article
+                className={CN("post-card", {
+                    "post-card--masonry": masonry,
+                })}
+            >
                 {header &&
                     item.user &&
                     follow !== undefined &&
@@ -140,12 +152,14 @@ export default function PostCard({
                                 src={item.images[selectedIndex]?.image}
                                 className="post-card__image"
                                 alt=""
+                                onLoad={handleLoad}
                             />
                         ) : (
                             <img
                                 src="/images/noImage.png"
                                 className="post-card__image"
                                 alt=""
+                                onLoad={handleLoad}
                             />
                         )}
                     </div>
@@ -200,12 +214,17 @@ export default function PostCard({
                         cursor: pointer;
                     }
 
+                    .post-card--masonry {
+                        width: 370px;
+                    }
+
                     .post-card__images {
                         position: relative;
                     }
 
                     .post-card__image {
                         width: 100%;
+                        min-height: 190px;
                     }
 
                     .post-card__fav {
@@ -290,6 +309,12 @@ export default function PostCard({
 
                     .post-card:hover .post-card__actions {
                         display: flex;
+                    }
+
+                    @media all and (max-width: 390px) {
+                        .post-card--masonry {
+                            width: 300px;
+                        }
                     }
                 `}</style>
             </article>

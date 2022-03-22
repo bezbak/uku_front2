@@ -1,16 +1,21 @@
+import { ILocation, IPublication } from "@/services/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { AppState } from "./store";
-import { IPublication } from "@/services/types";
+import { UKU_LOCATION } from "@/constants/headers";
 
 export interface LocationState {
     categoryId: number | undefined;
     editPost: null | IPublication;
+    openLocationModal: boolean;
+    loaction: ILocation | null;
 }
 
 const initialState: LocationState = {
     categoryId: undefined,
     editPost: null,
+    openLocationModal: false,
+    loaction: null,
 };
 
 export const mainSlice = createSlice({
@@ -23,12 +28,23 @@ export const mainSlice = createSlice({
         editPost(state, action: PayloadAction<IPublication | null>) {
             state.editPost = action.payload;
         },
+        setLocationModal(state, action: PayloadAction<boolean>) {
+            state.openLocationModal = action.payload;
+        },
+        setLocation(state, action: PayloadAction<ILocation | null>) {
+            localStorage.setItem(UKU_LOCATION, JSON.stringify(action.payload));
+            state.loaction = action.payload;
+        },
     },
 });
 
-export const { setCategoryId, editPost } = mainSlice.actions;
+export const { setCategoryId, editPost, setLocationModal, setLocation } =
+    mainSlice.actions;
 
 export const selectCategoryId = (state: AppState) => state.main.categoryId;
 export const selectEditPost = (state: AppState) => state.main.editPost;
+export const selectOpenLocationModal = (state: AppState) =>
+    state.main.openLocationModal;
+export const selectLocation = (state: AppState) => state.main.loaction;
 
 export default mainSlice.reducer;

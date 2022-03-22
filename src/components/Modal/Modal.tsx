@@ -6,6 +6,7 @@ import Scrollable from "../Scrollable";
 export interface IModalProps {
     open: boolean;
     children: ReactNode;
+    scrollableClass?: string;
 }
 
 const ModalBackdrop = () => {
@@ -30,7 +31,7 @@ const ModalBackdrop = () => {
     );
 };
 
-const Modal: FC<IModalProps> = ({ open, children }) => {
+const Modal: FC<IModalProps> = ({ open, children, scrollableClass }) => {
     useEffect(() => {
         if (open) {
             document.body.classList.add("modal-open");
@@ -46,7 +47,9 @@ const Modal: FC<IModalProps> = ({ open, children }) => {
             })}
         >
             <ModalBackdrop />
-            <Scrollable _className="modal_scroll">{children}</Scrollable>
+            <Scrollable _className={CN("modal_scroll", scrollableClass)}>
+                {children}
+            </Scrollable>
             <style jsx global>{`
                 body.modal-open {
                     overflow: hidden;
