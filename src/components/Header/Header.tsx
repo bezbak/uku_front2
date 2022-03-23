@@ -10,18 +10,20 @@ import MobileNavigator from "./MobileNavigator";
 import SearchIcon from "../icons/SearchIcon";
 import TopBar from "./TopBar";
 import { setSearchOverlay } from "@/app/mainSlice";
+import { useGetToken } from "@/hooks/useGetToken";
 
 const Header = () => {
     const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
     const avatar = useAppSelector(selectAvatar);
+    const auth = useGetToken();
 
     const handleChange = () => {
         setOpen(!open);
     };
 
     useEffect(() => {
-        dispatch(getAvatarAsync());
+        if (auth) dispatch(getAvatarAsync());
     }, []);
 
     return (

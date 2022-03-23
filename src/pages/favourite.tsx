@@ -35,7 +35,7 @@ export default function Favourite() {
     }, [auth]);
 
     useEffect(() => {
-        dispatch(fovouriteAsync(page));
+        if (auth) dispatch(fovouriteAsync(page));
     }, [page]);
 
     useEffect(() => {

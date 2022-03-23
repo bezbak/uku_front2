@@ -28,7 +28,9 @@ export default function Comment({ comment, setAnswer }: ICommentProps) {
                     </Link>{" "}
                     {comment.text}
                 </p>
-                {comment.image ? <img src={comment.image} alt="#" /> : null}
+                {comment.image ? (
+                    <img src={comment.image} alt="#" className="comment__img" />
+                ) : null}
                 <div className="comment__action">
                     <span className="comment__created">
                         {comment.created_at}
@@ -103,6 +105,10 @@ export default function Comment({ comment, setAnswer }: ICommentProps) {
                     font-size: 14px;
                     color: #a5a5a5;
                     margin-top: 10px;
+                }
+
+                .comment__img {
+                    width: 100%;
                 }
             `}</style>
         </div>

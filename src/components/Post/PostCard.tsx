@@ -8,9 +8,9 @@ import Icon from "../Icon";
 import Link from "next/link";
 import PostHeader from "./PostHeader";
 import ViewedIcon from "../icons/ViewedIcon";
+import { setAuthConfirm } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
 import { useGetToken } from "@/hooks/useGetToken";
-import { useRouter } from "next/router";
 
 export interface IPostCardProps {
     item: IProfileFeedItem;
@@ -41,7 +41,6 @@ export default function PostCard({
     const [follow, setFollow] = useState(item.user?.following);
     const [inFave, setInFave] = useState(item.is_favorite);
     const auth = useGetToken();
-    const rout = useRouter();
     const handleFollow = async (event: any) => {
         event.preventDefault();
         if (auth && item.user) {
@@ -49,7 +48,7 @@ export default function PostCard({
             setFollow((payload as any).subscribe);
             if (onFollow) onFollow();
         } else {
-            rout.push("/login");
+            dispatch(setAuthConfirm(true));
         }
     };
 
@@ -60,7 +59,7 @@ export default function PostCard({
             setInFave(!inFave);
             if (onFave) onFave();
         } else {
-            rout.push("/login");
+            dispatch(setAuthConfirm(true));
         }
     };
 

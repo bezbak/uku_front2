@@ -9,6 +9,10 @@ module.exports = {
     async rewrites() {
         return [
             {
+                source: "/api/v1/publication/user/:slug/publications",
+                destination: `${API_URL}/api/v1/publication/user/:slug/publications`,
+            },
+            {
                 source: "/api/v1/publication/user/:slug",
                 destination: `${API_URL}/api/v1/publication/user/:slug`,
             },
