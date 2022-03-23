@@ -9,36 +9,42 @@ import { setCategoryId } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
 
 export interface ICategoryItemProps {
-    item: ICategoryList;
+    id: number;
+    child?: ICategoryList[];
+    image?: string | null;
+    name: string;
+    showArrow?: boolean;
 }
 
-export function CategoryItem({ item }: ICategoryItemProps) {
+export function CategoryItem({
+    id,
+    child = [],
+    image,
+    name,
+    showArrow = false,
+}: ICategoryItemProps) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useAppDispatch();
 
-    const handleClick = (item: ICategoryList, isOpeneble: boolean) => {
-        dispatch(setCategoryId(item.id));
+    const handleClick = (isOpeneble: boolean) => {
+        dispatch(setCategoryId(id));
         setOpen(!open);
     };
 
     return (
-        <li key={item.id} className="category__item">
+        <li key={id} className="category__item">
             <button
                 type="button"
                 className="button-reset-default-styles category__button"
-                onClick={() => handleClick(item, item.children.length > 0)}
+                onClick={() => handleClick(child.length > 0)}
             >
                 <div className="category__title">
-                    {item.image ? (
-                        <img
-                            src={item.image}
-                            alt=""
-                            className="category__img"
-                        />
-                    ) : null}
-                    {item.name}
+                    {!!image && (
+                        <img src={image} alt="" className="category__img" />
+                    )}
+                    {name}
                 </div>
-                {item.children.length > 0 && (
+                {(child.length > 0 || showArrow) && (
                     <Icon>
                         <RigthArrowIcon />
                     </Icon>
@@ -49,8 +55,8 @@ export function CategoryItem({ item }: ICategoryItemProps) {
                     "category_child--open": open,
                 })}
             >
-                {item.children.length > 0 && (
-                    <Category items={item.children as ICategoryList[]} />
+                {child.length > 0 && (
+                    <Category items={child as ICategoryList[]} />
                 )}
             </div>
             <style jsx>

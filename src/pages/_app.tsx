@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import "reflect-metadata";
 import "react-toastify/dist/ReactToastify.css";
+import "swiper/css";
 
 import { ApiClient, apiDIToken } from "@/lib/ApiClient";
 import { CONTENT_TYPE, CONTENT_TYPE_HEADER_NAME } from "@/constants/headers";
@@ -24,6 +25,7 @@ import { NextPage } from "next";
 import ProfileService from "@/services/ProfileService";
 import { Provider } from "react-redux";
 import PublicationService from "@/services/PublicationService";
+import SearchOverlay from "@/components/Search/Overlay";
 import SearchService from "@/services/SearchService";
 import SystemService from "@/services/SystemService";
 import { ToastContainer } from "react-toastify";
@@ -69,6 +71,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                 <>
                     <Component {...pageProps} />
                     <LocationModal />
+                    <SearchOverlay />
                     <ToastContainer
                         position="top-center"
                         hideProgressBar={false}

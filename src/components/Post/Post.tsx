@@ -1,3 +1,5 @@
+import "swiper/css/pagination";
+
 import React, {
     ChangeEvent,
     FormEvent,
@@ -5,6 +7,7 @@ import React, {
     useRef,
     useState,
 } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { commentAsync, publicationAsync } from "./PostSlice";
 
 import AddImageIcon from "../icons/AddImageIcon";
@@ -12,6 +15,7 @@ import CN from "classnames";
 import Comment from "../Comment";
 import { IPublication } from "@/services/types";
 import Icon from "../Icon";
+import { Pagination } from "swiper";
 import PostHeader from "./PostHeader";
 import { useAppDispatch } from "@/app/hooks";
 
@@ -70,11 +74,27 @@ export default function Post({ post }: { post: IPublication }) {
                             follow={false}
                             last_name={post.user.last_name}
                             location={post.location.name}
-                            handleFollow={() => console.log("tts")}
                             headerClass="post-view__header"
                         />
                         <div className="post-view__image-wrap">
-                            {post.images[0]?.image ? (
+                            {post.images.length > 1 ? (
+                                <Swiper
+                                    modules={[Pagination]}
+                                    pagination={{ clickable: true }}
+                                >
+                                    {post.images.map((image, index) => {
+                                        return (
+                                            <SwiperSlide key={index}>
+                                                <img
+                                                    src={image.image}
+                                                    alt="image"
+                                                    className="post-view__image"
+                                                />
+                                            </SwiperSlide>
+                                        );
+                                    })}
+                                </Swiper>
+                            ) : post.images[0]?.image ? (
                                 <img
                                     src={post.images[0]?.image}
                                     alt=""
@@ -191,7 +211,6 @@ export default function Post({ post }: { post: IPublication }) {
                     position: absolute;
                     height: 100%;
                     width: 100%;
-                    overflow: hidden;
                 }
 
                 .post-view__right {
@@ -328,10 +347,28 @@ export default function Post({ post }: { post: IPublication }) {
                 }
             `}</style>
             <style jsx global>{`
-                .post-view .post-view__header {
+                body .post-view .post-view__header {
                     border-top: 0;
-                    border-radius: 0;
                     border-left: 0;
+                    position: absolute;
+                    width: 100%;
+                    z-index: 2;
+                    background: #fff;
+                    border-radius: 0;
+                }
+
+                body .post-view .swiper-initialized {
+                    height: 100%;
+                }
+
+                body .post-view .swiper-pagination-bullet {
+                    background: #fff;
+                }
+
+                body
+                    .post-view
+                    .swiper-pagination-bullet.swiper-pagination-bullet-active {
+                    background: #e56366;
                 }
             `}</style>
         </>

@@ -11,7 +11,6 @@ import Header from "@/components/Header/Header";
 import Layout from "@/components/Layout";
 import Masonry from "@/components/Masonry/Masonry";
 import PostCard from "@/components/Post/PostCard";
-import PostList from "@/components/Post/PostList";
 import Wrapper from "@/components/Wrapper";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";

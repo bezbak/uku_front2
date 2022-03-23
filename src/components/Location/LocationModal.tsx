@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { locationAsync, selectLocation } from "./locationSlice";
 import {
     selectOpenLocationModal,
@@ -12,12 +12,15 @@ import LocationList from "./LocationList";
 import Modal from "../Modal/Modal";
 import Scrollable from "../Scrollable";
 import { UKU_LOCATION } from "@/constants/headers";
+import useDebounce from "@/hooks/useDebounce";
 
 const LocationModal: FC = () => {
     const open = useAppSelector(selectOpenLocationModal);
     const [selectedLocation, setSelectedLocation] = useState<ILocation[]>([]);
     const dispatch = useAppDispatch();
     const locations = useAppSelector(selectLocation);
+    const [searchParams, setSarchParams] = useState<string | null>(null);
+    const debouncedSearchTerm = useDebounce(searchParams, 300);
 
     const handleClose = () => {
         dispatch(setLocationModal(false));
@@ -34,9 +37,13 @@ const LocationModal: FC = () => {
         setSelectedLocation(locations);
     }, [locations]);
 
-    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const enteredName = event.target.value;
+    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+        setSarchParams(event.currentTarget.value);
     };
+
+    useEffect(() => {
+        console.log(debouncedSearchTerm);
+    }, [debouncedSearchTerm]);
 
     return (
         <Modal open={open}>
@@ -55,12 +62,12 @@ const LocationModal: FC = () => {
                 </div>
 
                 <div className="location-modal__body">
-                    {/* <input
-                        placeholder="Поиск"
+                    <input
+                        placeholder="Введите название страны"
                         type="text"
-                        className="registration__input"
+                        className="location-modal__input"
                         onChange={(event) => handleSearch(event)}
-                    /> */}
+                    />
                     <Scrollable>
                         <LocationList
                             items={selectedLocation}
@@ -100,6 +107,16 @@ const LocationModal: FC = () => {
                         font-size: 14px;
                         line-height: 1.5715;
                         word-wrap: break-word;
+                    }
+
+                    .location-modal__input {
+                        width: 100%;
+                        padding: 13px 14px;
+                        font-size: 14px;
+                        background: #f8f8f8;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 6px;
+                        margin-bottom: 13px;
                     }
                 `}</style>
             </div>

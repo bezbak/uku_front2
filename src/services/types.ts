@@ -8,6 +8,7 @@ import {
     ConfirmSchema,
     FollowSchema,
 } from "./schemas/AccountSchema";
+import { CategorySearchSchema, UserSearchSchema } from "./schemas/SearchSchema";
 import {
     CommentSchema,
     PublicationCreateSchema,
@@ -24,7 +25,6 @@ import {
 import { CategoryListSchema } from "./schemas/CategorySchema";
 import { Infer } from "superstruct";
 import LocationSchema from "./schemas/LocationSchema";
-import { UserSearchSchema } from "./schemas/SearchSchema";
 
 export type IAuth = Infer<typeof AuthSchema>;
 export type IConfirm = Infer<typeof ConfirmSchema>;
@@ -43,3 +43,4 @@ export type IPublication = Infer<typeof PublicationSchema>;
 export type IComment = Infer<typeof CommentSchema>;
 export type IPublicationCrate = Infer<typeof PublicationCreateSchema>;
 export type IUserSearch = Infer<typeof UserSearchSchema>;
+export type ICategorySearch = Infer<typeof CategorySearchSchema>;
