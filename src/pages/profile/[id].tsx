@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import {
+    publicationProfileFeed,
     publicationProfileInfo,
     selectProfile,
     selectProfileInfo,
@@ -11,6 +12,7 @@ import Header from "@/components/Header/Header";
 import Layout from "@/components/Layout";
 import { default as _Profile } from "@components/MyProfile/Profile";
 import { followAsync } from "@/components/Post/PostSlice";
+import { setAuthConfirm } from "@/app/mainSlice";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
 
@@ -35,7 +37,7 @@ export default function Profile() {
             );
             setFollow((payload as any).subscribe);
         } else {
-            rout.push("/login");
+            dispatch(setAuthConfirm(true));
         }
     };
 
@@ -46,6 +48,10 @@ export default function Profile() {
     useEffect(() => {
         if (info) setFollow(info.following);
     }, [info]);
+
+    useEffect(() => {
+        dispatch(publicationProfileFeed({ page, id: (rout.query as any).id }));
+    }, []);
 
     return (
         <_Profile

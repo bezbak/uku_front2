@@ -17,6 +17,7 @@ import {
 } from "@/tokens";
 
 import type { AppProps } from "next/app";
+import AuthConfirm from "@/components/Authorization/AuthConfirm";
 import AuthService from "@/services/AccountService";
 import CookiesManager from "@/lib/CookiesManager/CookiesManager";
 import LocationModal from "@/components/Location/LocationModal";
@@ -72,6 +73,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                     <Component {...pageProps} />
                     <LocationModal />
                     <SearchOverlay />
+                    <AuthConfirm />
                     <ToastContainer
                         position="top-center"
                         hideProgressBar={false}

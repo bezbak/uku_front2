@@ -17,7 +17,9 @@ import { IPublication } from "@/services/types";
 import Icon from "../Icon";
 import { Pagination } from "swiper";
 import PostHeader from "./PostHeader";
+import { setAuthConfirm } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
+import { useGetToken } from "@/hooks/useGetToken";
 
 export default function Post({ post }: { post: IPublication }) {
     const dispatch = useAppDispatch();
@@ -38,17 +40,22 @@ export default function Post({ post }: { post: IPublication }) {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        formData.append("id", `${post.id}`);
-        await dispatch(
-            commentAsync({
-                comment_id: answer?.id,
-                id: post.id,
-                formData,
-            })
-        );
-        reset();
-        if (answer?.id) dispatch(publicationAsync(post.id));
+        const auth = useGetToken();
+        if (!auth) {
+            dispatch(setAuthConfirm(true));
+        } else {
+            const formData = new FormData(event.currentTarget);
+            formData.append("id", `${post.id}`);
+            await dispatch(
+                commentAsync({
+                    comment_id: answer?.id,
+                    id: post.id,
+                    formData,
+                })
+            );
+            reset();
+            if (answer?.id) dispatch(publicationAsync(post.id));
+        }
     };
 
     const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +71,11 @@ export default function Post({ post }: { post: IPublication }) {
     }, [answer]);
     return (
         <>
-            <div className="post-view">
+            <div
+                className={CN("post-view", {
+                    "post-view--slider": post.images.length > 1,
+                })}
+            >
                 <div className="post-view__left">
                     <div className="post-view__left-inner">
                         <PostHeader
@@ -219,7 +230,7 @@ export default function Post({ post }: { post: IPublication }) {
                     padding-left: 0;
                 }
 
-                .post-view__image-wrap {
+                .post-view--slider .post-view__image-wrap {
                     height: 100%;
                 }
 
@@ -347,7 +358,7 @@ export default function Post({ post }: { post: IPublication }) {
                 }
             `}</style>
             <style jsx global>{`
-                body .post-view .post-view__header {
+                body .post-view--slider .post-view__header {
                     border-top: 0;
                     border-left: 0;
                     position: absolute;
