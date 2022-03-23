@@ -1,4 +1,8 @@
-import { selectLocation, setLocationModal } from "@/app/mainSlice";
+import {
+    selectLocation,
+    setLocationModal,
+    setSearchOverlay,
+} from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Avatar from "../Avatar";
@@ -46,20 +50,28 @@ export default function HeaderNavbar({ avatar }: { avatar: string }) {
                                 </li>
                             )}
                             <li>
-                                <Link
-                                    href={
-                                        router.route === "/search"
-                                            ? "/search/global"
-                                            : "/search"
-                                    }
-                                >
-                                    <a className="navbar__right-link link-reset-default-styles">
+                                {router.route === "/search" ? (
+                                    <a
+                                        className="navbar__right-link link-reset-default-styles"
+                                        onClick={() =>
+                                            dispatch(setSearchOverlay(true))
+                                        }
+                                    >
                                         <Icon width={18} height={18}>
                                             <SearchIcon />
                                         </Icon>
                                         <span>Поиск</span>
                                     </a>
-                                </Link>
+                                ) : (
+                                    <Link href={"/search"}>
+                                        <a className="navbar__right-link link-reset-default-styles">
+                                            <Icon width={18} height={18}>
+                                                <SearchIcon />
+                                            </Icon>
+                                            <span>Поиск</span>
+                                        </a>
+                                    </Link>
+                                )}
                             </li>
                             <li>
                                 <Link href="/favourite">

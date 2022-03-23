@@ -1,9 +1,14 @@
-import { ICategoryList, IProfileFeed, IUserSearch } from "./types";
+import { CategorySearchSchema, UserSearchSchema } from "./schemas/SearchSchema";
+import {
+    ICategoryList,
+    ICategorySearch,
+    IProfileFeed,
+    IUserSearch,
+} from "./types";
 
 import { ApiClientInterface } from "@/lib/ApiClient";
 import { CategoryListSchema } from "./schemas/CategorySchema";
 import { ProfileFeedSchema } from "./schemas/ProfileSchema";
-import { UserSearchSchema } from "./schemas/SearchSchema";
 import { array } from "superstruct";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
 
@@ -33,6 +38,16 @@ class SearchService {
             params: params,
         });
         assertApiResponse<IUserSearch>(request, UserSearchSchema);
+        return request;
+    }
+
+    searchCategory(params?: { page?: number; q?: string }) {
+        const request = this.api.get("/category/search/", {
+            params: params,
+        });
+
+        assertApiResponse<ICategorySearch>(request, CategorySearchSchema);
+        console.log(request);
         return request;
     }
 }

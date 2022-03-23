@@ -1,18 +1,22 @@
+import { ICategorySearch, IProfileFeed, IUserSearch } from "@/services/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { AppState } from "@/app/store";
-import { IProfileFeed } from "@/services/types";
 import { container } from "tsyringe";
 import { searchServiceToken } from "@/tokens";
 
 export interface LocationState {
     status: "idle" | "loading" | "failed";
     search: IProfileFeed | null;
+    users: IUserSearch | null;
+    category: ICategorySearch | null;
 }
 
 const initialState: LocationState = {
     status: "idle",
     search: null,
+    users: null,
+    category: null,
 };
 
 export const searchAsync = createAsyncThunk(
@@ -44,6 +48,18 @@ export const userSearchAsync = createAsyncThunk(
     }
 );
 
+export const categorySearchAsync = createAsyncThunk(
+    "search/category",
+    async (params?: { page?: number; q?: string }) => {
+        const searchService = container.resolve(searchServiceToken);
+        const request = searchService.searchCategory(params);
+        if (!request) return;
+        const { response } = request;
+        const { data: search } = await response;
+        return search;
+    }
+);
+
 export const searchSlice = createSlice({
     name: "search",
     initialState,
@@ -57,10 +73,22 @@ export const searchSlice = createSlice({
                 state.status = "idle";
                 if (!payload) return;
                 state.search = payload;
+            })
+            .addCase(userSearchAsync.fulfilled, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                state.users = payload;
+            })
+            .addCase(categorySearchAsync.fulfilled, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                state.category = payload;
             });
     },
 });
 
 export const selectSearch = (state: AppState) => state.search.search;
+export const selectSearchUsers = (state: AppState) => state.search.users;
+export const selectSearchCategory = (state: AppState) => state.search.category;
 
 export default searchSlice.reducer;

@@ -14,3 +14,16 @@ export const UserSearchSchema = object({
         })
     ),
 });
+
+export const CategorySearchSchema = object({
+    count: number(),
+    next: nullable(number()),
+    previous: nullable(number()),
+    results: array(
+        object({
+            id: number(),
+            name: string(),
+            image: nullable(string()),
+        })
+    ),
+});

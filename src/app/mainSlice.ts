@@ -9,6 +9,7 @@ export interface LocationState {
     editPost: null | IPublication;
     openLocationModal: boolean;
     loaction: ILocation | null;
+    searchVisible: boolean;
 }
 
 const initialState: LocationState = {
@@ -16,6 +17,7 @@ const initialState: LocationState = {
     editPost: null,
     openLocationModal: false,
     loaction: null,
+    searchVisible: false,
 };
 
 export const mainSlice = createSlice({
@@ -32,19 +34,34 @@ export const mainSlice = createSlice({
             state.openLocationModal = action.payload;
         },
         setLocation(state, action: PayloadAction<ILocation | null>) {
-            localStorage.setItem(UKU_LOCATION, JSON.stringify(action.payload));
-            state.loaction = action.payload;
+            if (action.payload) {
+                localStorage.setItem(
+                    UKU_LOCATION,
+                    JSON.stringify(action.payload)
+                );
+                state.loaction = action.payload;
+            }
+        },
+        setSearchOverlay(state, action: PayloadAction<boolean>) {
+            state.searchVisible = action.payload;
         },
     },
 });
 
-export const { setCategoryId, editPost, setLocationModal, setLocation } =
-    mainSlice.actions;
+export const {
+    setCategoryId,
+    editPost,
+    setLocationModal,
+    setLocation,
+    setSearchOverlay,
+} = mainSlice.actions;
 
 export const selectCategoryId = (state: AppState) => state.main.categoryId;
 export const selectEditPost = (state: AppState) => state.main.editPost;
 export const selectOpenLocationModal = (state: AppState) =>
     state.main.openLocationModal;
 export const selectLocation = (state: AppState) => state.main.loaction;
+export const selectSearchVisible = (state: AppState) =>
+    state.main.searchVisible;
 
 export default mainSlice.reducer;

@@ -11,7 +11,7 @@ export interface IPostHeaderProps {
     last_name: string;
     location: string;
     follow: boolean;
-    handleFollow: (event: any) => void;
+    handleFollow?: (event: any) => void;
     headerClass?: string;
     followEnable?: boolean;
 }
@@ -51,7 +51,9 @@ export default function PostHeader({
                                 "post-card__button--follow": !follow,
                             }
                         )}
-                        onClick={(event) => handleFollow(event)}
+                        onClick={(event) => {
+                            if (handleFollow) handleFollow(event);
+                        }}
                     >
                         {follow ? "Вы подписаны" : "Подписаться"}
                     </button>

@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
+import {
+    selectLocation,
+    setLocationModal,
+    setSearchOverlay,
+} from "@/app/mainSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Avatar from "../Avatar";
 import CN from "classnames";
 import { CategoryItem } from "../Search/Category/CategoryItem";
 import { HearIcon } from "../icons/HeartIcon";
+import { ICategoryList } from "@/services/types";
 import Icon from "../Icon";
 import Link from "next/link";
 import LocationIcon from "../icons/LocationIcon";
 import RigthArrowIcon from "../icons/RightArrowIcon";
 import SearchIcon from "../icons/SearchIcon";
 import { selectCategory } from "../Search/Category/CategorySlice";
-import { useAppSelector } from "@/app/hooks";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
 
@@ -27,6 +33,8 @@ function MobileNavigator({
     const rout = useRouter();
     const [category, setCategory] = useState(false);
     const items = useAppSelector(selectCategory);
+    const dispatch = useAppDispatch();
+    const location = useAppSelector(selectLocation);
 
     useEffect(() => {
         if (!open) setCategory(false);
@@ -39,9 +47,19 @@ function MobileNavigator({
             })}
         >
             {category ? (
-                items.map((item) => {
-                    return <CategoryItem item={item} key={item.id} />;
-                })
+                <div onClick={() => setOpen(false)}>
+                    {items.map((item) => {
+                        return (
+                            <CategoryItem
+                                key={item.id}
+                                id={item.id}
+                                name={item.name}
+                                image={item.image}
+                                child={item.children as ICategoryList[]}
+                            />
+                        );
+                    })}
+                </div>
             ) : (
                 <>
                     <Link href="/">
@@ -81,34 +99,48 @@ function MobileNavigator({
                             </li>
                             <li
                                 className="mobile-navigator__item"
-                                onClick={() => setOpen(false)}
+                                onClick={() => {
+                                    setOpen(false);
+                                    dispatch(setLocationModal(true));
+                                }}
                             >
                                 <Icon width={18} height={18}>
                                     <LocationIcon />
                                 </Icon>
-                                Уфа
+                                <span>
+                                    {location ? location.name : "Выбор"}
+                                </span>
                             </li>
                         </>
                     ) : (
                         <hr className="mobile-navigator__separet" />
                     )}
-                    <Link
-                        href={
-                            rout.route === "/search"
-                                ? "/search/global"
-                                : "/search"
-                        }
-                    >
+                    {rout.route === "/search" ? (
                         <li
                             className="mobile-navigator__item"
-                            onClick={() => setOpen(false)}
+                            onClick={() => {
+                                setOpen(false);
+                                dispatch(setSearchOverlay(true));
+                            }}
                         >
                             <Icon width={18} height={18}>
                                 <SearchIcon />
                             </Icon>
                             Поиск
                         </li>
-                    </Link>
+                    ) : (
+                        <Link href={"/search"}>
+                            <li
+                                className="mobile-navigator__item"
+                                onClick={() => setOpen(false)}
+                            >
+                                <Icon width={18} height={18}>
+                                    <SearchIcon />
+                                </Icon>
+                                Поиск
+                            </li>
+                        </Link>
+                    )}
 
                     <Link href="/favourite">
                         <li
@@ -186,6 +218,7 @@ function MobileNavigator({
                     font-size: 22px;
                     cursor: pointer;
                     display: flex;
+                    align-items: center;
                     column-gap: 10px;
                 }
 

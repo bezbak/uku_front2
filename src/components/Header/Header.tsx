@@ -9,6 +9,7 @@ import Link from "next/link";
 import MobileNavigator from "./MobileNavigator";
 import SearchIcon from "../icons/SearchIcon";
 import TopBar from "./TopBar";
+import { setSearchOverlay } from "@/app/mainSlice";
 
 const Header = () => {
     const dispatch = useAppDispatch();
@@ -46,16 +47,15 @@ const Header = () => {
                         <Link href="/">
                             <h2 className="mobile__logo">Uku.kg</h2>
                         </Link>
-                        <Link href="/search/global">
-                            <button
-                                type="button"
-                                className="button-reset-default-styles"
-                            >
-                                <Icon width={24} height={24}>
-                                    <SearchIcon />
-                                </Icon>
-                            </button>
-                        </Link>
+                        <button
+                            type="button"
+                            className="button-reset-default-styles"
+                            onClick={() => dispatch(setSearchOverlay(true))}
+                        >
+                            <Icon width={24} height={24}>
+                                <SearchIcon />
+                            </Icon>
+                        </button>
                     </div>
                 </Container>
                 <MobileNavigator
@@ -72,7 +72,7 @@ const Header = () => {
                 .header__mobile {
                     display: none;
                     position: fixed;
-                    z-index: 1;
+                    z-index: 2;
                     width: 100%;
                 }
 
