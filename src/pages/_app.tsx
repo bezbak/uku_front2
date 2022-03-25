@@ -20,6 +20,7 @@ import type { AppProps } from "next/app";
 import AuthConfirm from "@/components/Authorization/AuthConfirm";
 import AuthService from "@/services/AccountService";
 import CookiesManager from "@/lib/CookiesManager/CookiesManager";
+import Head from "next/head";
 import LocationModal from "@/components/Location/LocationModal";
 import LocationService from "@/services/LocationService";
 import { NextPage } from "next";
@@ -70,6 +71,9 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         <Provider store={store}>
             {getLayout(
                 <>
+                    <Head>
+                        <title>Uku.kg</title>
+                    </Head>
                     <Component {...pageProps} />
                     <LocationModal />
                     <SearchOverlay />

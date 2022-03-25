@@ -109,6 +109,8 @@ export default function Comment({ comment, setAnswer }: ICommentProps) {
 
                 .comment__img {
                     width: 100%;
+                    margin-top: 10px;
+                    border-radius: 2px;
                 }
             `}</style>
         </div>

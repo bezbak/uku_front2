@@ -310,7 +310,7 @@ export default function PostCard({
                         display: flex;
                     }
 
-                    @media all and (max-width: 390px) {
+                    @media all and (max-width: 410px) {
                         .post-card--masonry {
                             width: 300px;
                         }

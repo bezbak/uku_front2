@@ -21,7 +21,15 @@ import { setAuthConfirm } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
 import { useGetToken } from "@/hooks/useGetToken";
 
-export default function Post({ post }: { post: IPublication }) {
+export default function Post({
+    post,
+    onEdit,
+    onDelete,
+}: {
+    post: IPublication;
+    onEdit: () => void;
+    onDelete: () => void;
+}) {
     const dispatch = useAppDispatch();
     const [image, setImage] = useState<string | null>(null);
     const [answer, setAnswer] = useState<{ id: number; user: string } | null>(
@@ -69,6 +77,7 @@ export default function Post({ post }: { post: IPublication }) {
         if (answer) setComment(answer.user);
         inputEl.current?.focus();
     }, [answer]);
+
     return (
         <>
             <div
@@ -86,6 +95,9 @@ export default function Post({ post }: { post: IPublication }) {
                             last_name={post.user.last_name}
                             location={post.location.name}
                             headerClass="post-view__header"
+                            isOwner={post.is_owner}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
                         />
                         <div className="post-view__image-wrap">
                             {post.images.length > 1 ? (
@@ -183,6 +195,7 @@ export default function Post({ post }: { post: IPublication }) {
                                     className="post-view__input"
                                     name="text"
                                     ref={inputEl}
+                                    autoComplete="off"
                                     onChange={(event) =>
                                         setComment(event.currentTarget.value)
                                     }
@@ -273,6 +286,7 @@ export default function Post({ post }: { post: IPublication }) {
                     justify-content: space-between;
                     align-items: center;
                     color: #c5c5c5;
+                    column-gap: 14px;
                 }
 
                 .post-view__text {
@@ -365,6 +379,12 @@ export default function Post({ post }: { post: IPublication }) {
                     width: 100%;
                     z-index: 2;
                     background: #fff;
+                    border-radius: 0;
+                }
+
+                body .post-view .post-view__header {
+                    border-top: 0;
+                    border-left: 0;
                     border-radius: 0;
                 }
 

@@ -154,7 +154,13 @@ const Post = () => {
                             </div>
                         )}
                     </header>
-                    {!!post && <_Post post={post} />}
+                    {!!post && (
+                        <_Post
+                            post={post}
+                            onDelete={handleDeletePost}
+                            onEdit={handleEditPost}
+                        />
+                    )}
                     <ConfirmAlert
                         open={alert.open}
                         title={alert.title}
@@ -203,6 +209,12 @@ const Post = () => {
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                    }
+
+                    @media all and (max-width: 470px) {
+                        .post__actions {
+                            display: none;
+                        }
                     }
                 `}</style>
             </section>

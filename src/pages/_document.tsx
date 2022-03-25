@@ -6,7 +6,11 @@ class MyDocument extends Document {
     render() {
         return (
             <Html lang="en">
-                <Head></Head>
+                <Head>
+                    <link rel="icon" href="/images/_logo.png" />
+                    <meta name="description" content="Uku" />
+                    <meta name="keywords" content="Uku.kg, уку, uku" />
+                </Head>
                 <body className="main">
                     <Main />
                     <NextScript />

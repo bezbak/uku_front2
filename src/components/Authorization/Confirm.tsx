@@ -113,6 +113,7 @@ const Confirm: FC<IConfirmProps> = ({
                         "confirm__input--error": error.code,
                     })}
                     placeholder="Код"
+                    autoComplete="off"
                     name="code"
                 />
                 <Button

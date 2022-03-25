@@ -58,6 +58,7 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                         name: "phone",
                         autoFocus: true,
                         maxLength: 16,
+                        autoComplete: "off",
                     }}
                     placeholder="Номер"
                     inputClass="login__form-input"
