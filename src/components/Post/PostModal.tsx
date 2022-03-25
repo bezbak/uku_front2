@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
+import Actions from "../Actions";
 import AddImageIcon from "../icons/AddImageIcon";
 import Button from "../Buttons/Button";
 import CN from "classnames";
@@ -30,6 +31,7 @@ export default function PostModal({
     const [files, setFiles] = useState<File[]>([]);
     const [selectedImg, setSelectedImg] = useState<string | null>(null);
     const [text, setText] = useState(defaultText);
+    const [actions, setActions] = React.useState(false);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
@@ -47,6 +49,10 @@ export default function PostModal({
         event.preventDefault();
         const data = getFormDate(event.currentTarget);
         onSubmit(data.text as string, files);
+    };
+
+    const handleAction = (action: string) => {
+        setActions(false);
     };
 
     useEffect(() => {
@@ -73,7 +79,34 @@ export default function PostModal({
                         &times;
                     </button>
                     <span>Просмотр</span>
-                    <div className="post-view__header-mobile-actions">ss</div>
+                    <div className="post-view__header-mobile-actions">
+                        <button
+                            className="post-card__header-button button-reset-default-styles"
+                            onClick={() => setActions(!actions)}
+                        >
+                            <span className="post-card__header-dot"></span>
+                            <span className="post-card__header-dot"></span>
+                            <span className="post-card__header-dot"></span>
+                        </button>
+                        <Actions
+                            actions={[
+                                {
+                                    name: "edit",
+                                    text: categoryName
+                                        ? handleSliceText(categoryName)
+                                        : "",
+                                },
+                                {
+                                    name: "delete",
+                                    text: locationName
+                                        ? handleSliceText(locationName)
+                                        : "",
+                                },
+                            ]}
+                            open={actions}
+                            onAction={handleAction}
+                        />
+                    </div>
                 </div>
                 {descActions && (
                     <div className="post-view__header-right">
@@ -165,6 +198,7 @@ export default function PostModal({
 
                 .post-view__header-mobile-actions {
                     display: none;
+                    position: relative;
                 }
 
                 .post-view__header-right {
@@ -285,6 +319,23 @@ export default function PostModal({
                     .post-view__header-mobile-actions {
                         display: block;
                     }
+                }
+
+                .post-card__header-actions {
+                    display: none;
+                }
+
+                .post-card__header-dot {
+                    height: 4px;
+                    width: 4px;
+                    background-color: #000;
+                    border-radius: 50%;
+                    display: block;
+                    margin-bottom: 2px;
+                }
+
+                .post-card__header-button {
+                    padding: 10px;
                 }
             `}</style>
             <style jsx global>{`
