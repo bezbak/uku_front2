@@ -10,16 +10,11 @@ export default function Publications({ params }: { params: string | null }) {
     const posts = useAppSelector(selectSearch);
 
     useEffect(() => {
-        dispatch(searchAsync());
-    }, []);
-
-    useEffect(() => {
-        if (params !== null)
-            dispatch(
-                searchAsync({
-                    q: params,
-                })
-            );
+        dispatch(
+            searchAsync({
+                q: params || undefined,
+            })
+        );
     }, [params]);
 
     return (

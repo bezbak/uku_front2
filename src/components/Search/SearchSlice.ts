@@ -38,13 +38,17 @@ export const searchAsync = createAsyncThunk(
 
 export const userSearchAsync = createAsyncThunk(
     "search/user",
-    async (params?: { page?: number; q?: string }) => {
+    async (params: { page?: number; q?: string }, { rejectWithValue }) => {
         const searchService = container.resolve(searchServiceToken);
         const request = searchService.serachUser(params);
-        if (!request) return;
-        const { response } = request;
-        const { data: search } = await response;
-        return search;
+        try {
+            if (!request) return;
+            const { response } = request;
+            const { data: search } = await response;
+            return search;
+        } catch (error) {
+            return rejectWithValue((error as any).message);
+        }
     }
 );
 
@@ -78,6 +82,11 @@ export const searchSlice = createSlice({
                 state.status = "idle";
                 if (!payload) return;
                 state.users = payload;
+            })
+            .addCase(userSearchAsync.rejected, (state, { payload }) => {
+                state.status = "idle";
+                if (!payload) return;
+                state.users = null;
             })
             .addCase(categorySearchAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";

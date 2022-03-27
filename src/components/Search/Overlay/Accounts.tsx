@@ -11,16 +11,11 @@ export default function Accounts({ params }: { params: string | null }) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(userSearchAsync());
-    }, []);
-
-    useEffect(() => {
-        if (params !== null)
-            dispatch(
-                userSearchAsync({
-                    q: params,
-                })
-            );
+        dispatch(
+            userSearchAsync({
+                q: params || undefined,
+            })
+        );
     }, [params]);
 
     return (

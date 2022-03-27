@@ -20,7 +20,7 @@ export default function Footer() {
                     </ul>
                     <div className="footer_right">
                         <a
-                            href=""
+                            href="https://apps.apple.com/kg/app/uku-kg/id1606008627"
                             className="link-reset-default-styles footer_right-link"
                         >
                             <span>
@@ -34,7 +34,7 @@ export default function Footer() {
                             </span>
                         </a>
                         <a
-                            href=""
+                            href="https://play.google.com/store/apps/details?id=kg.uku.uku.kg&hl=ru&gl=US"
                             className="link-reset-default-styles footer_right-link"
                         >
                             <span>

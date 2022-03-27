@@ -132,8 +132,12 @@ const Search = () => {
                                                     <PostCard
                                                         key={item.id}
                                                         item={item}
-                                                        followEnable={false}
-                                                        faveEneble={false}
+                                                        followEnable={
+                                                            !item.is_owner
+                                                        }
+                                                        faveEneble={
+                                                            !item.is_owner
+                                                        }
                                                     />
                                                 );
                                             })}

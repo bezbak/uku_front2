@@ -41,10 +41,6 @@ const LocationModal: FC = () => {
         setSarchParams(event.currentTarget.value);
     };
 
-    useEffect(() => {
-        console.log(debouncedSearchTerm);
-    }, [debouncedSearchTerm]);
-
     return (
         <Modal open={open}>
             <div className="location-modal">

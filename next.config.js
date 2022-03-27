@@ -5,7 +5,7 @@ const API_URL =
         : "http://test.api.uku.kg/";
 module.exports = {
     reactStrictMode: true,
-    trailingSlash: false,
+    trailingSlash: true,
     async rewrites() {
         return [
             {
