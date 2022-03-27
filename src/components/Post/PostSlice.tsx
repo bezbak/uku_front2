@@ -56,8 +56,12 @@ export const commentAsync = createAsyncThunk(
         const request = publicationService.addComment(data);
         if (!request) return;
         const { response } = request;
-        const { data: publication } = await response;
-        return publication;
+        try {
+            const { data: publication } = await response;
+            return publication;
+        } catch (error) {
+            console.log(error, request);
+        }
     }
 );
 

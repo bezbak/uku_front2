@@ -70,7 +70,7 @@ class PublicationService {
             data.formData,
             {
                 headers: {
-                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+                    ["Authorization"]: `Token ${this.tokenManager.getToken()}`,
                 },
             }
         );

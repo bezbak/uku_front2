@@ -12,16 +12,11 @@ export default function Categories({ params }: { params: string | null }) {
     const rout = useRouter();
 
     useEffect(() => {
-        dispatch(categorySearchAsync());
-    }, []);
-
-    useEffect(() => {
-        if (params !== null)
-            dispatch(
-                categorySearchAsync({
-                    q: params,
-                })
-            );
+        dispatch(
+            categorySearchAsync({
+                q: params || undefined,
+            })
+        );
     }, [params]);
 
     const handleOpen = () => {
