@@ -21,8 +21,18 @@ export default function SearchOverlay() {
     const dispatch = useAppDispatch();
     const rout = useRouter();
 
+    const appHeight = () => {
+        const doc = document.body;
+        doc.style.setProperty("--app-height", `${window.innerHeight}px`);
+    };
+
     useEffect(() => {
         searchInput.current?.focus();
+        window.addEventListener("resize", appHeight);
+        appHeight();
+        return () => {
+            window.removeEventListener("resize", appHeight);
+        };
     }, []);
 
     useEffect(() => {
@@ -132,10 +142,10 @@ export default function SearchOverlay() {
                         position: fixed;
                         top: 0.25rem;
                         left: 0.25rem;
-                        width: calc(100vw - 0.5rem);
+                        width: 100vw;
                         z-index: 2000;
                         background: #f9fafb;
-                        height: calc(100vh - 0.5rem);
+                        height: var(--app-height, 100vh);
                         transform: scale(1.1);
                         border-radius: 5px;
                         overflow: hidden;

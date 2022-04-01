@@ -9,7 +9,10 @@ import { postImageUploadAsync } from "./PostSlice";
 import { useAppDispatch } from "@/app/hooks";
 
 interface IPostViewprops {
-    defaultFile: File;
+    defaultFile: {
+        link: string;
+        file: File;
+    };
     defaultImage: string;
     defaultText: string;
     onClose: () => void;
@@ -25,14 +28,19 @@ export default function PostView({
 }: IPostViewprops) {
     const [images, setImages] = useState([defaultImage]);
     const [selectedImg, setselectedImg] = useState<string>(defaultImage);
-    const [files, setFiles] = useState<File[]>([defaultFile]);
+    const [files, setFiles] = useState<
+        {
+            link: string;
+            file: File;
+        }[]
+    >([defaultFile]);
     const dispatch = useAppDispatch();
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = getFormDate(event.currentTarget);
         const images = new FormData();
         for (const file of files) {
-            images.append("images", file);
+            images.append("images", file.file);
         }
         dispatch(postImageUploadAsync(images)).then(({ payload }) => {
             onSubmit(form.text as string, payload as number[]);
@@ -42,8 +50,28 @@ export default function PostView({
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            setImages([URL.createObjectURL(file), ...images]);
-            setFiles([file, ...files]);
+            const link = URL.createObjectURL(file);
+            setImages([link, ...images]);
+            setFiles([
+                {
+                    link: link,
+                    file: file,
+                },
+                ...files,
+            ]);
+        }
+    };
+
+    const handleDeleteImage = (url: string) => {
+        const _images = images;
+        const _files = files;
+        const index = _images.findIndex((link) => link === url);
+        const fileindex = _files.findIndex((file) => file.link === url);
+        if (index !== -1) {
+            _images.splice(index, 1);
+            _files.splice(fileindex, 1);
+            setImages([..._images]);
+            setFiles([..._files]);
         }
     };
 
@@ -86,23 +114,37 @@ export default function PostView({
                     </div>
                 </label>
                 {images.map((link, index) => (
-                    <button
-                        className={CN(
-                            "post-view__image button-reset-default-styles",
-                            {
-                                "post-view__image--selected":
-                                    selectedImg === link,
-                            }
-                        )}
+                    <div
                         key={index + link}
-                        onClick={() => setselectedImg(link)}
+                        style={{
+                            position: "relative",
+                        }}
                     >
-                        <img
-                            src={link}
-                            alt=""
-                            className="post-view__image-img"
-                        />
-                    </button>
+                        <button
+                            type="button"
+                            className="post-modal__image-delete button-reset-default-styles"
+                            onClick={() => handleDeleteImage(link)}
+                        >
+                            &times;
+                        </button>
+                        <button
+                            className={CN(
+                                "post-view__image button-reset-default-styles",
+                                {
+                                    "post-view__image--selected":
+                                        selectedImg === link,
+                                }
+                            )}
+                            key={index + link}
+                            onClick={() => setselectedImg(link)}
+                        >
+                            <img
+                                src={link}
+                                alt=""
+                                className="post-view__image-img"
+                            />
+                        </button>
+                    </div>
                 ))}
             </div>
             <PostForm onSubmit={handleSubmit} defaultText={defaultText} />
@@ -172,6 +214,13 @@ export default function PostView({
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                }
+                .post-modal__image-delete {
+                    position: absolute;
+                    right: 5px;
+                    top: 0px;
+                    font-size: 17px;
+                    line-height: initial;
                 }
             `}</style>
         </div>

@@ -6,6 +6,7 @@ interface IMasonryProps {
     sizes: SizeDetail[];
     position?: boolean;
     onUpdate?: () => void;
+    onInit?: (masonry: Instance) => void;
 }
 
 export default function Masonry({
@@ -13,6 +14,7 @@ export default function Masonry({
     sizes,
     position = true,
     onUpdate,
+    onInit,
 }: IMasonryProps) {
     const [masonry, setMasonry] = useState<Instance | null>(null);
     const masonryElement = useRef<HTMLDivElement | null>(null);
@@ -33,6 +35,9 @@ export default function Masonry({
     const handleLoad = () => {
         if (onUpdate) onUpdate();
         masonry?.pack().resize(true).update();
+        if (masonry && onInit) {
+            onInit(masonry);
+        }
     };
 
     return (

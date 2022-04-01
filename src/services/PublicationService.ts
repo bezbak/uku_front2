@@ -24,7 +24,7 @@ class PublicationService {
         private readonly tokenManager: TokenManagerInterface
     ) {}
     getPublicationUser(id: string | number) {
-        const request = this.api.get(`/publication/user/${id}`, {
+        const request = this.api.get(`/publication/user/${id}/`, {
             headers: this.tokenManager.getToken()
                 ? {
                       [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
@@ -36,7 +36,7 @@ class PublicationService {
     }
 
     getPublicationUserPub(id: string | number, page: number) {
-        const request = this.api.get(`/publication/user/${id}/publications`, {
+        const request = this.api.get(`/publication/user/${id}/publications/`, {
             data: {
                 page,
             },
@@ -131,6 +131,18 @@ class PublicationService {
             },
         });
         assertApiResponse<number[]>(request, array(number()));
+        return request;
+    }
+
+    postImageDelete(id: number) {
+        const request = this.api.delete(`/publication/image/delete/${id}/`, {
+            data: {
+                id,
+            },
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
         return request;
     }
 

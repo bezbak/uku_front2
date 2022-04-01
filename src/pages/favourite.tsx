@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
+import { Instance } from "bricks.js";
 import Layout from "@/components/Layout";
 import Masonry from "@/components/Masonry/Masonry";
 import PostCard from "@/components/Post/PostCard";
@@ -23,6 +24,7 @@ export default function Favourite() {
     const fav = useAppSelector(selectFav);
     const status = useAppSelector(selectFavStatus);
     const [page, setPage] = useState(1);
+    const [masonry, setMasonry] = useState<Instance | null>(null);
     const sizes = [
         { columns: 1, gutter: 10 },
         { mq: "630px", columns: 2, gutter: 10 },
@@ -35,7 +37,7 @@ export default function Favourite() {
     }, [auth]);
 
     useEffect(() => {
-        if (auth) dispatch(fovouriteAsync(page));
+        handleFave();
     }, [page]);
 
     useEffect(() => {
@@ -59,13 +61,14 @@ export default function Favourite() {
         };
     }, [fav?.next]);
 
-    const handleFave = () => {
-        dispatch(fovouriteAsync(page));
+    const handleFave = async () => {
+        await dispatch(fovouriteAsync(page));
+        masonry?.pack().update();
     };
 
     return (
         <Wrapper title="Избранное">
-            <Masonry sizes={sizes}>
+            <Masonry sizes={sizes} onInit={(masonry) => setMasonry(masonry)}>
                 {fav?.results.map((item) => {
                     return (
                         <PostCard

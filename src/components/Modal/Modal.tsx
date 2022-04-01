@@ -57,7 +57,7 @@ const Modal: FC<IModalProps> = ({ open, children, scrollableClass }) => {
                 .modal {
                     display: none;
                     position: fixed;
-                    z-index: 10;
+                    z-index: 1000000;
                     top: 0;
                     left: 0;
                     width: 100%;

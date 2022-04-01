@@ -40,7 +40,7 @@ const Button: FC<ButtonProps> = ({
                 className
             )}
             onClick={onClick}
-            disabled={disable}
+            disabled={disable || loading}
         >
             {loading ? <Spinner /> : children}
             <style jsx>{`

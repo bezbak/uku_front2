@@ -116,7 +116,7 @@ class AuthService {
     }
 
     fave(id: number) {
-        const request = this.api.get(`/account/favorite/${id}`, {
+        const request = this.api.get(`/account/favorite/${id}/`, {
             headers: this.tokenManager.getToken()
                 ? {
                       [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,

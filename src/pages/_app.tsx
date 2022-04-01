@@ -5,7 +5,7 @@ import "swiper/css";
 
 import { ApiClient, apiDIToken } from "@/lib/ApiClient";
 import { CONTENT_TYPE, CONTENT_TYPE_HEADER_NAME } from "@/constants/headers";
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { TokenManager, TokenManagerDiToken } from "@/lib/TokenManager";
 import {
     authServiceToken,
@@ -16,11 +16,14 @@ import {
     systemServiceToken,
 } from "@/tokens";
 
+import ActionModal from "@/components/ActionModal/ActionModal";
 import type { AppProps } from "next/app";
 import AuthConfirm from "@/components/Authorization/AuthConfirm";
 import AuthService from "@/services/AccountService";
+import CN from "classnames";
 import CookiesManager from "@/lib/CookiesManager/CookiesManager";
 import Head from "next/head";
+import Link from "next/link";
 import LocationModal from "@/components/Location/LocationModal";
 import LocationService from "@/services/LocationService";
 import { NextPage } from "next";
@@ -48,13 +51,15 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     const defaultHeaders = {
         [CONTENT_TYPE_HEADER_NAME]: CONTENT_TYPE,
     };
+    const [showLink, setShowLink] = useState(true);
+    const [link, setLink] = useState<string | null>(null);
     const api = new ApiClient("/api/v1/", {
         headers: defaultHeaders,
     });
     const authService = new AuthService(api, tokenManager);
     const locationService = new LocationService(api);
     const profileService = new ProfileService(api, tokenManager);
-    const systemService = new SystemService(api);
+    const systemService = new SystemService(api, tokenManager);
     const searchService = new SearchService(api);
     const publicationService = new PublicationService(api, tokenManager);
 
@@ -67,6 +72,31 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     container.registerInstance(searchServiceToken, searchService);
     container.registerInstance(publicationServiceToken, publicationService);
     const getLayout = Component.getLayout ?? ((page) => page);
+    function getMobile() {
+        const ua = navigator.userAgent;
+        if (/android/i.test(ua)) {
+            return "Android";
+        } else if (
+            /iPad|iPhone|iPod/.test(ua) ||
+            (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+        ) {
+            return "iOS";
+        }
+        return "Other";
+    }
+
+    useEffect(() => {
+        if (getMobile() === "iOS") {
+            setLink("https://apps.apple.com/kg/app/uku-kg/id1606008627");
+        } else if (getMobile() === "Android") {
+            setLink(
+                "https://play.google.com/store/apps/details?id=kg.uku.uku.kg&hl=ru&gl=US"
+            );
+        } else {
+            setLink(null);
+        }
+    }, []);
+
     return (
         <Provider store={store}>
             {getLayout(
@@ -75,6 +105,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                         <title>Uku.kg</title>
                     </Head>
                     <Component {...pageProps} />
+                    <ActionModal />
                     <LocationModal />
                     <SearchOverlay />
                     <AuthConfirm />
@@ -89,6 +120,69 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                         pauseOnHover
                         limit={1}
                     />
+                    <div
+                        className={CN("footer__deeplink", {
+                            "footer__deeplink--hide": !showLink,
+                        })}
+                    >
+                        <div className="footer__deeplink-inner">
+                            <div className="footer__deeplink-text">
+                                <Link href={link || "/"}>
+                                    Использовать приложение
+                                </Link>
+                            </div>
+                            <div className="footer__deeplink-button">
+                                <button
+                                    type="button"
+                                    className="action-modal__close button-reset-default-styles"
+                                    onClick={() => setShowLink(false)}
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <style jsx>{`
+                        .footer__deeplink {
+                            position: fixed;
+                            bottom: 0;
+                            width: 100%;
+                            background: #fff;
+                        }
+
+                        .footer__deeplink-inner {
+                            position: relative;
+                            text-align: center;
+                        }
+
+                        .footer__deeplink-button {
+                            position: absolute;
+                            right: 10px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                        }
+
+                        .footer__deeplink-button button {
+                            font-size: 20px;
+                        }
+
+                        .footer__deeplink-text {
+                            font-size: 14px;
+                            color: #0095f6;
+                            padding: 10px;
+                            cursor: pointer;
+                        }
+
+                        .footer__deeplink--hide {
+                            display: none;
+                        }
+
+                        @media all and (min-width: 550px) {
+                            .footer__deeplink {
+                                display: none;
+                            }
+                        }
+                    `}</style>
                 </>
             )}
         </Provider>

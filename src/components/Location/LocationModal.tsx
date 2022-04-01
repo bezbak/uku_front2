@@ -19,7 +19,7 @@ const LocationModal: FC = () => {
     const [selectedLocation, setSelectedLocation] = useState<ILocation[]>([]);
     const dispatch = useAppDispatch();
     const locations = useAppSelector(selectLocation);
-    const [searchParams, setSarchParams] = useState<string | null>(null);
+    const [searchParams, setSarchParams] = useState<string>("");
     const debouncedSearchTerm = useDebounce(searchParams, 300);
 
     const handleClose = () => {
@@ -66,7 +66,11 @@ const LocationModal: FC = () => {
                     />
                     <Scrollable>
                         <LocationList
-                            items={selectedLocation}
+                            items={selectedLocation.filter((item) =>
+                                item.name
+                                    .toLowerCase()
+                                    .includes(debouncedSearchTerm.toLowerCase())
+                            )}
                             onSelect={setSelectedLocation}
                             onClose={handleClose}
                         />

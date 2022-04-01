@@ -1,11 +1,15 @@
+import React, { useCallback, useState } from "react";
+
 import Avatar from "../Avatar";
 import Button from "../Buttons/Button";
 import Icon from "../Icon";
+import ImageViewer from "react-simple-image-viewer";
 import InstagramIcon from "../icons/InstagramIcon";
 import { IprofileInfo } from "@/services/types";
-import React from "react";
 import TelagramIcon from "../icons/TelegramIcon";
 import WhatsAppIcon from "../icons/WhatsAppIcon";
+import { selectFollowStatus } from "../Post/PostSlice";
+import { useAppSelector } from "@/app/hooks";
 
 export interface IProfileInfoProps {
     info: IprofileInfo | null;
@@ -20,9 +24,26 @@ export default function ProfileInfo({
     page,
     follow,
 }: IProfileInfoProps) {
+    const followStatus = useAppSelector(selectFollowStatus);
+    const [currentImage, setCurrentImage] = useState(0);
+    const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+    const openImageViewer = useCallback((index) => {
+        setCurrentImage(index);
+        setIsViewerOpen(true);
+    }, []);
+
+    const closeImageViewer = () => {
+        setCurrentImage(0);
+        setIsViewerOpen(false);
+    };
+
     return (
         <div className="profile-info">
-            <div className="profile-info__header">
+            <div
+                className="profile-info__header"
+                onClick={() => openImageViewer(0)}
+            >
                 <Avatar
                     width={140}
                     height={140}
@@ -65,6 +86,7 @@ export default function ProfileInfo({
                     type="button"
                     onClick={onEdit}
                     buttonColor={follow ? "#24475A" : undefined}
+                    loading={followStatus === "loading"}
                 >
                     {page === "my"
                         ? "Редактировать"
@@ -120,6 +142,16 @@ export default function ProfileInfo({
                         </Icon>
                     </a>
                 </div>
+            )}
+
+            {isViewerOpen && info && info.avatar && (
+                <ImageViewer
+                    src={[info.avatar]}
+                    currentIndex={currentImage}
+                    disableScroll={false}
+                    closeOnClickOutside={true}
+                    onClose={closeImageViewer}
+                />
             )}
 
             <style jsx>{`

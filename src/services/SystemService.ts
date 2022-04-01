@@ -5,12 +5,17 @@ import {
 } from "./schemas/SystemSchema";
 import { IAgreemnet, IContact, IFaq } from "./types";
 
+import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
+import { TokenManagerInterface } from "@/lib/TokenManager";
 import { array } from "superstruct";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
 
 class SystemService {
-    constructor(private readonly api: ApiClientInterface) {}
+    constructor(
+        private readonly api: ApiClientInterface,
+        private readonly tokenManager: TokenManagerInterface
+    ) {}
 
     getFaq() {
         const request = this.api.get("/system/faq/");
@@ -32,6 +37,16 @@ class SystemService {
 
     getContact() {
         const request = this.api.get("/system/contact/");
+        assertApiResponse<IContact>(request, ContactSchema);
+        return request;
+    }
+
+    sendComplain(data: { id: number; complaint_type: string; text?: string }) {
+        const request = this.api.post(`/system/complaint/${data.id}/`, data, {
+            headers: {
+                [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
+            },
+        });
         assertApiResponse<IContact>(request, ContactSchema);
         return request;
     }

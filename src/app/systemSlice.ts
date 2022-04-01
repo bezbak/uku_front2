@@ -58,6 +58,18 @@ export const contactAsync = createAsyncThunk("system/contact", async () => {
     return contact;
 });
 
+export const complainAsync = createAsyncThunk(
+    "system/complain",
+    async (data: { id: number; complaint_type: string; text?: string }) => {
+        const systemService = container.resolve(systemServiceToken);
+        const request = systemService.sendComplain(data);
+        if (!request) return;
+        const { response } = request;
+        const { data: contact } = await response;
+        return contact;
+    }
+);
+
 export const systemSlice = createSlice({
     name: "system",
     initialState,

@@ -4,6 +4,8 @@ import Actions from "../Actions";
 import Avatar from "../Avatar";
 import CN from "classnames";
 import Link from "next/link";
+import { setActionModal } from "@/app/mainSlice";
+import { useAppDispatch } from "@/app/hooks";
 
 export interface IPostHeaderProps {
     userLink: string;
@@ -18,9 +20,11 @@ export interface IPostHeaderProps {
     isOwner?: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
+    postId: number;
 }
 
 export default function PostHeader({
+    postId,
     userLink,
     avatar,
     first_name,
@@ -35,6 +39,7 @@ export default function PostHeader({
     onDelete,
 }: IPostHeaderProps) {
     const [actions, setActions] = React.useState(false);
+    const dispatch = useAppDispatch();
 
     const handleAction = (action: string) => {
         if (action === "edit") {
@@ -59,8 +64,8 @@ export default function PostHeader({
                 </div>
             </Link>
 
-            {followEnable && (
-                <div className="post-card__header-right">
+            <div className="post-card__header-right">
+                {followEnable && (
                     <button
                         type="button"
                         className={CN(
@@ -75,8 +80,21 @@ export default function PostHeader({
                     >
                         {follow ? "Вы подписаны" : "Подписаться"}
                     </button>
+                )}
+                <div className="">
+                    <button
+                        className="post-card__header-button button-reset-default-styles"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            dispatch(setActionModal(postId));
+                        }}
+                    >
+                        <span className="post-card__header-dot"></span>
+                        <span className="post-card__header-dot"></span>
+                        <span className="post-card__header-dot"></span>
+                    </button>
                 </div>
-            )}
+            </div>
 
             {isOwner && (
                 <div className="post-card__header-actions">
@@ -104,6 +122,7 @@ export default function PostHeader({
                     />
                 </div>
             )}
+
             <style jsx>{`
                 .post-card__header {
                     padding: 12px 16px;
@@ -134,6 +153,7 @@ export default function PostHeader({
 
                 .post-card__button--follow {
                     color: #e56366;
+                    padding: 10px;
                 }
 
                 .post-card__header-actions {
@@ -151,6 +171,11 @@ export default function PostHeader({
 
                 .post-card__header-button {
                     padding: 10px;
+                }
+
+                .post-card__header-right {
+                    display: flex;
+                    align-items: center;
                 }
 
                 @media all and (max-width: 470px) {
