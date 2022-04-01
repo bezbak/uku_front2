@@ -29,6 +29,7 @@ export default function CreatePostModal({
             onSubmit(text);
         }
     };
+
     return (
         <Modal open={open} scrollableClass="post-modal__scroleble">
             <PostModal

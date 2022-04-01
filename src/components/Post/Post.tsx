@@ -3,20 +3,23 @@ import "swiper/css/pagination";
 import React, {
     ChangeEvent,
     FormEvent,
+    useCallback,
     useEffect,
     useRef,
     useState,
 } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { commentAsync, publicationAsync } from "./PostSlice";
+import { commentAsync, followAsync, publicationAsync } from "./PostSlice";
 
 import AddImageIcon from "../icons/AddImageIcon";
 import CN from "classnames";
 import Comment from "../Comment";
 import { IPublication } from "@/services/types";
 import Icon from "../Icon";
+import ImageViewer from "react-simple-image-viewer";
 import { Pagination } from "swiper";
 import PostHeader from "./PostHeader";
+import ViewedIcon from "../icons/ViewedIcon";
 import { setAuthConfirm } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
 import { useGetToken } from "@/hooks/useGetToken";
@@ -36,8 +39,11 @@ export default function Post({
         null
     );
     const [comment, setComment] = useState("");
+    const [follow, setFollow] = useState(post.user?.following);
     const inputEl = useRef<HTMLInputElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
+    const [currentImage, setCurrentImage] = useState(0);
+    const [isViewerOpen, setIsViewerOpen] = useState(false);
 
     const reset = () => {
         setAnswer(null);
@@ -66,6 +72,17 @@ export default function Post({
         }
     };
 
+    const handleFollow = async (event: any) => {
+        event.preventDefault();
+        const auth = useGetToken();
+        if (auth && post.user) {
+            const { payload } = await dispatch(followAsync(post.user.id));
+            setFollow((payload as any).subscribe);
+        } else {
+            dispatch(setAuthConfirm(true));
+        }
+    };
+
     const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
@@ -73,10 +90,24 @@ export default function Post({
         }
     };
 
+    const openImageViewer = useCallback((index) => {
+        setCurrentImage(index);
+        setIsViewerOpen(true);
+    }, []);
+
+    const closeImageViewer = () => {
+        setCurrentImage(0);
+        setIsViewerOpen(false);
+    };
+
     useEffect(() => {
         if (answer) setComment(answer.user);
         inputEl.current?.focus();
     }, [answer]);
+
+    useEffect(() => {
+        setFollow(post.user?.following);
+    }, [post]);
 
     return (
         <>
@@ -87,18 +118,24 @@ export default function Post({
             >
                 <div className="post-view__left">
                     <div className="post-view__left-inner">
-                        <PostHeader
-                            userLink={`${post.user.id}`}
-                            avatar={post.user.avatar}
-                            first_name={post.user.first_name}
-                            follow={false}
-                            last_name={post.user.last_name}
-                            location={post.location.name}
-                            headerClass="post-view__header"
-                            isOwner={post.is_owner}
-                            onDelete={onDelete}
-                            onEdit={onEdit}
-                        />
+                        {!post.is_owner && (
+                            <PostHeader
+                                userLink={`${post.user.id}`}
+                                avatar={post.user.avatar}
+                                first_name={post.user.first_name}
+                                follow={follow}
+                                followEnable={true}
+                                last_name={post.user.last_name}
+                                location={post.location.name}
+                                headerClass="post-view__header"
+                                isOwner={post.is_owner}
+                                onDelete={onDelete}
+                                onEdit={onEdit}
+                                handleFollow={handleFollow}
+                                postId={post.id}
+                            />
+                        )}
+
                         <div className="post-view__image-wrap">
                             {post.images.length > 1 ? (
                                 <Swiper
@@ -112,6 +149,9 @@ export default function Post({
                                                     src={image.image}
                                                     alt="image"
                                                     className="post-view__image"
+                                                    onClick={() =>
+                                                        openImageViewer(index)
+                                                    }
                                                 />
                                             </SwiperSlide>
                                         );
@@ -122,6 +162,7 @@ export default function Post({
                                     src={post.images[0]?.image}
                                     alt=""
                                     className="post-view__image"
+                                    onClick={() => openImageViewer(0)}
                                 />
                             ) : (
                                 <img
@@ -136,8 +177,18 @@ export default function Post({
                 <div className="post-view__right">
                     <p className="post-view__category">{post.category.name}</p>
                     <div>
-                        <h4 className="post-view__title">{post.title}</h4>
                         <p className="post-view__desc">{post.description}</p>
+                    </div>
+                    <div className="post-view_time">
+                        <span className="post-view__create-at">
+                            {post.created_at}
+                        </span>
+                        <div>
+                            <Icon width={18} height={12}>
+                                <ViewedIcon />
+                            </Icon>
+                            <span>{post.viewed}</span>
+                        </div>
                     </div>
                     <div className="post-view__comments">
                         <h4 className="post-view__title">
@@ -218,6 +269,18 @@ export default function Post({
                     </footer>
                 </div>
             </div>
+            {isViewerOpen && (
+                <ImageViewer
+                    src={post.images.reduce<string[]>(
+                        (prev, image) => [...prev, image.image],
+                        []
+                    )}
+                    currentIndex={currentImage}
+                    disableScroll={false}
+                    closeOnClickOutside={true}
+                    onClose={closeImageViewer}
+                />
+            )}
             <style jsx>{`
                 .post-view {
                     display: flex;
@@ -256,18 +319,20 @@ export default function Post({
                 .post-view__category {
                     font-size: 14px;
                     color: #818181;
-                    margin-bottom: 24px;
-                }
-
-                .post-view__title {
-                    font-weight: 500;
-                    font-size: 24px;
-                    line-height: 29px;
-                    margin-bottom: 12px;
+                    margin-bottom: 8px;
                 }
 
                 .post-view__desc {
-                    margin-bottom: 24px;
+                    margin-bottom: 8px;
+                }
+
+                .post-view_time {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 25px;
+                    font-size: 14px;
+                    color: #a5a5a5;
                 }
 
                 .post-view__comments-inner {
@@ -372,12 +437,12 @@ export default function Post({
                 }
             `}</style>
             <style jsx global>{`
-                body .post-view--slider .post-view__header {
+                body .post-view .post-view__header {
                     border-top: 0;
                     border-left: 0;
                     position: absolute;
                     width: 100%;
-                    z-index: 2;
+                    z-index: 1;
                     background: #fff;
                     border-radius: 0;
                 }
@@ -388,7 +453,8 @@ export default function Post({
                     border-radius: 0;
                 }
 
-                body .post-view .swiper-initialized {
+                body .post-view .swiper-initialized,
+                body .post-view .post-view__image-wrap {
                     height: 100%;
                 }
 

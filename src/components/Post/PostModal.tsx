@@ -11,6 +11,7 @@ import getFormDate from "@/utils/getFormData";
 interface IPostModalProps {
     onClose: () => void;
     onSubmit: (text: string, images: File[]) => void;
+    onImageDelete?: (url: string) => void;
     defaultImages?: string[];
     defaultText?: string;
     descActions?: boolean;
@@ -21,6 +22,7 @@ interface IPostModalProps {
 export default function PostModal({
     onClose,
     onSubmit,
+    onImageDelete,
     defaultImages = [],
     defaultText = "",
     descActions = false,
@@ -28,7 +30,12 @@ export default function PostModal({
     locationName,
 }: IPostModalProps) {
     const [images, setImages] = useState<string[]>(defaultImages);
-    const [files, setFiles] = useState<File[]>([]);
+    const [files, setFiles] = useState<
+        {
+            link: string;
+            file: File;
+        }[]
+    >([]);
     const [selectedImg, setSelectedImg] = useState<string | null>(null);
     const [text, setText] = useState(defaultText);
     const [actions, setActions] = React.useState(false);
@@ -36,8 +43,15 @@ export default function PostModal({
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            setImages([URL.createObjectURL(file), ...images]);
-            setFiles([file, ...files]);
+            const link = URL.createObjectURL(file);
+            setImages([...images, link]);
+            setFiles([
+                ...files,
+                {
+                    link: link,
+                    file: file,
+                },
+            ]);
         }
     };
 
@@ -48,11 +62,28 @@ export default function PostModal({
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = getFormDate(event.currentTarget);
-        onSubmit(data.text as string, files);
+        onSubmit(
+            data.text as string,
+            files.reduce<File[]>((cur, prev) => [...cur, prev.file], [])
+        );
     };
 
-    const handleAction = (action: string) => {
+    const handleAction = () => {
         setActions(false);
+    };
+
+    const handleDeleteImage = (url: string) => {
+        const _images = images;
+        const _files = files;
+        const index = _images.findIndex((link) => link === url);
+        const fileindex = _files.findIndex((file) => file.link === url);
+        if (index !== -1) {
+            _images.splice(index, 1);
+            _files.splice(fileindex, 1);
+            setImages([..._images]);
+            setFiles([..._files]);
+            if (onImageDelete) onImageDelete(url);
+        }
     };
 
     useEffect(() => {
@@ -136,23 +167,36 @@ export default function PostModal({
                 </div>
                 <div className="post-modal__images">
                     {images?.map((image, index) => (
-                        <button
-                            className={CN(
-                                "post-modal__image button-reset-default-styles",
-                                {
-                                    "post-modal__image--selected":
-                                        selectedImg === image,
-                                }
-                            )}
+                        <div
                             key={index + image}
-                            onClick={() => setSelectedImg(image)}
+                            style={{
+                                position: "relative",
+                            }}
                         >
-                            <img
-                                src={image}
-                                alt=""
-                                className="post-modal__image-img"
-                            />
-                        </button>
+                            <button
+                                type="button"
+                                className="post-modal__image-delete button-reset-default-styles"
+                                onClick={() => handleDeleteImage(image)}
+                            >
+                                &times;
+                            </button>
+                            <button
+                                className={CN(
+                                    "post-modal__image button-reset-default-styles",
+                                    {
+                                        "post-modal__image--selected":
+                                            selectedImg === image,
+                                    }
+                                )}
+                                onClick={() => setSelectedImg(image)}
+                            >
+                                <img
+                                    src={image}
+                                    alt=""
+                                    className="post-modal__image-img"
+                                />
+                            </button>
+                        </div>
                     ))}
                     <label className="post-modal__text-label">
                         <input
@@ -268,6 +312,14 @@ export default function PostModal({
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                }
+
+                .post-modal__image-delete {
+                    position: absolute;
+                    right: 5px;
+                    top: 0px;
+                    font-size: 17px;
+                    line-height: initial;
                 }
 
                 @media all and (max-width: 490px) {

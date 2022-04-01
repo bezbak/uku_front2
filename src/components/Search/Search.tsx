@@ -115,7 +115,10 @@ const Search = () => {
                                     defaultImage={image}
                                     onClose={() => setImage(null)}
                                     onSubmit={createPost}
-                                    defaultFile={file}
+                                    defaultFile={{
+                                        link: image,
+                                        file: file,
+                                    }}
                                     defaultText={text}
                                 />
                             ) : (

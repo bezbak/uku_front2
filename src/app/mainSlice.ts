@@ -11,6 +11,7 @@ export interface LocationState {
     loaction: ILocation | null;
     searchVisible: boolean;
     authConfirm: boolean;
+    actionModal: number | null;
 }
 
 const initialState: LocationState = {
@@ -20,6 +21,7 @@ const initialState: LocationState = {
     loaction: null,
     searchVisible: false,
     authConfirm: false,
+    actionModal: null,
 };
 
 export const mainSlice = createSlice({
@@ -50,6 +52,9 @@ export const mainSlice = createSlice({
         setAuthConfirm(state, action: PayloadAction<boolean>) {
             state.authConfirm = action.payload;
         },
+        setActionModal(state, action: PayloadAction<number | null>) {
+            state.actionModal = action.payload;
+        },
     },
 });
 
@@ -60,6 +65,7 @@ export const {
     setLocation,
     setSearchOverlay,
     setAuthConfirm,
+    setActionModal,
 } = mainSlice.actions;
 
 export const selectCategoryId = (state: AppState) => state.main.categoryId;
@@ -70,5 +76,6 @@ export const selectLocation = (state: AppState) => state.main.loaction;
 export const selectSearchVisible = (state: AppState) =>
     state.main.searchVisible;
 export const selectAuthConfrim = (state: AppState) => state.main.authConfirm;
+export const selectActionmodal = (state: AppState) => state.main.actionModal;
 
 export default mainSlice.reducer;

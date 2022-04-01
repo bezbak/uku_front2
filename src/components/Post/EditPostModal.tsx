@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { editPost, selectCategoryId, selectEditPost } from "@/app/mainSlice";
-import { postImageUploadAsync, updatePostAsync } from "./PostSlice";
+import {
+    postImageDeleteAsync,
+    postImageUploadAsync,
+    updatePostAsync,
+} from "./PostSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Modal from "../Modal/Modal";
@@ -49,6 +53,14 @@ export default function EditPostModal() {
         }
     };
 
+    const handleDeleteImage = (url: string) => {
+        if (!post) return;
+        const image = post.images.find((image) => image.image === url);
+        if (image) {
+            dispatch(postImageDeleteAsync(image.id));
+        }
+    };
+
     useEffect(() => {
         const images = editingPost?.images.reduce<string[]>((prev, curr) => {
             return [...prev, curr.image];
@@ -61,14 +73,17 @@ export default function EditPostModal() {
 
     return (
         <Modal open={!!editingPost} scrollableClass="post-modal__scroleble">
-            <PostModal
-                defaultImages={images}
-                onClose={onClose}
-                onSubmit={handleSubmit}
-                defaultText={post?.description}
-                categoryName={post?.category.name}
-                locationName={post?.location.name}
-            />
+            {!!post && (
+                <PostModal
+                    defaultImages={images}
+                    onClose={onClose}
+                    onSubmit={handleSubmit}
+                    onImageDelete={handleDeleteImage}
+                    defaultText={post.description}
+                    categoryName={post.category.name}
+                    locationName={post.location.name}
+                />
+            )}
         </Modal>
     );
 }

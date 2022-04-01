@@ -10,6 +10,7 @@ export interface PostState {
     message: string;
     status: "idle" | "loading" | "failed";
     publication: IPublication | null;
+    followStatus: "idle" | "loading" | "failed";
 }
 
 const initialState: PostState = {
@@ -17,6 +18,7 @@ const initialState: PostState = {
     status: "idle",
     message: "",
     publication: null,
+    followStatus: "idle",
 };
 
 export const followAsync = createAsyncThunk("follow", async (id: number) => {
@@ -94,6 +96,19 @@ export const postImageUploadAsync = createAsyncThunk(
     }
 );
 
+export const postImageDeleteAsync = createAsyncThunk(
+    "post/image/delete",
+    async (id: number) => {
+        const publicationService = container.resolve(publicationServiceToken);
+        const request = publicationService.postImageDelete(id);
+        console.log(request);
+        if (!request) return;
+        const { response } = request;
+        const { data: post } = await response;
+        return post;
+    }
+);
+
 export const updatePostAsync = createAsyncThunk(
     "post/update",
     async (data: {
@@ -117,7 +132,6 @@ export const deletePostAsync = createAsyncThunk(
     async (postId: number) => {
         const publicationService = container.resolve(publicationServiceToken);
         const request = publicationService.deletePost(postId);
-        console.log(request);
         if (!request) return;
         const { response } = request;
         const { data: post } = await response;
@@ -132,10 +146,10 @@ export const postSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(followAsync.pending, (state) => {
-                state.status = "loading";
+                state.followStatus = "loading";
             })
             .addCase(followAsync.fulfilled, (state, { payload }) => {
-                state.status = "idle";
+                state.followStatus = "idle";
                 if (!payload) return;
                 state.following = payload.subscribe;
                 state.message = payload.message;
@@ -158,5 +172,6 @@ export const postSlice = createSlice({
 });
 
 export const selectPublication = (state: AppState) => state.post.publication;
+export const selectFollowStatus = (state: AppState) => state.post.followStatus;
 
 export default postSlice.reducer;

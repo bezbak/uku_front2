@@ -40,6 +40,7 @@ export default function PostCard({
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [follow, setFollow] = useState(item.user?.following);
     const [inFave, setInFave] = useState(item.is_favorite);
+
     const auth = useGetToken();
     const handleFollow = async (event: any) => {
         event.preventDefault();
@@ -83,21 +84,19 @@ export default function PostCard({
                     "post-card--masonry": masonry,
                 })}
             >
-                {header &&
-                    item.user &&
-                    follow !== undefined &&
-                    !item.is_owner && (
-                        <PostHeader
-                            handleFollow={handleFollow}
-                            userLink={`${item.user.id}`}
-                            avatar={item.user.avatar}
-                            first_name={item.user.first_name}
-                            last_name={item.user.last_name}
-                            follow={follow}
-                            location={item.location.name}
-                            followEnable={followEnable}
-                        />
-                    )}
+                {header && item.user && follow !== undefined && (
+                    <PostHeader
+                        handleFollow={handleFollow}
+                        userLink={`${item.user.id}`}
+                        avatar={item.user.avatar}
+                        first_name={item.user.first_name}
+                        last_name={item.user.last_name}
+                        follow={follow}
+                        location={item.location.name}
+                        followEnable={followEnable && !item.is_owner}
+                        postId={item.id}
+                    />
+                )}
                 <section className={CN("post-card__body")}>
                     <div className="post-card__images">
                         {faveEneble && !item.is_owner && (
