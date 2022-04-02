@@ -3,6 +3,9 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import AddImageIcon from "../icons/AddImageIcon";
 import Button from "../Buttons/Button";
 import Icon from "../Icon";
+import { setAuthConfirm } from "@/app/mainSlice";
+import { useAppDispatch } from "@/app/hooks";
+import { useGetToken } from "@/hooks/useGetToken";
 
 interface IPostFormProps {
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -21,12 +24,22 @@ export default function PostForm({
     defaultText = "",
 }: IPostFormProps) {
     const [text, setText] = useState(defaultText);
+    const dispatch = useAppDispatch();
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setText(event.currentTarget.value);
         if (onInput) onInput(text);
     };
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const auth = useGetToken();
+        if (auth) {
+            onSubmit(event);
+        } else {
+            dispatch(setAuthConfirm(true));
+        }
+    };
     return (
-        <form className="post-form" onSubmit={(event) => onSubmit(event)}>
+        <form className="post-form" onSubmit={handleSubmit}>
             {imageInput && (
                 <label className="post-form__text-label">
                     <input

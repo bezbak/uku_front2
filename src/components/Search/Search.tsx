@@ -100,6 +100,10 @@ const Search = () => {
         }
     };
 
+    useEffect(() => {
+        console.log("sdds");
+    });
+
     return (
         <>
             <section className="search">

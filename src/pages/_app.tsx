@@ -111,13 +111,11 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                     <AuthConfirm />
                     <ToastContainer
                         position="top-center"
-                        hideProgressBar={false}
+                        hideProgressBar={true}
                         newestOnTop={false}
                         closeOnClick
                         rtl={false}
-                        pauseOnFocusLoss
                         draggable
-                        pauseOnHover
                         limit={1}
                     />
                     <div

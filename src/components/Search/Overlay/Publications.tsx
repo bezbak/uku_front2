@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import PostCard from "@/components/Post/PostCard";
 import PostList from "@/components/Post/PostList";
-import { useGetToken } from "@/hooks/useGetToken";
 
 export default function Publications({ params }: { params: string | null }) {
     const dispatch = useAppDispatch();

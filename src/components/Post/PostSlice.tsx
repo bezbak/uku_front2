@@ -101,7 +101,6 @@ export const postImageDeleteAsync = createAsyncThunk(
     async (id: number) => {
         const publicationService = container.resolve(publicationServiceToken);
         const request = publicationService.postImageDelete(id);
-        console.log(request);
         if (!request) return;
         const { response } = request;
         const { data: post } = await response;

@@ -1,10 +1,15 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { selectSearchVisible, setSearchOverlay } from "@/app/mainSlice";
+import {
+    selectSearchVisible,
+    setCategoryId,
+    setSearchOverlay,
+} from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Accounts from "./Accounts";
 import CN from "classnames";
 import Categories from "./Categories";
+import Header from "@/components/Header/Header";
 import Icon from "@/components/Icon";
 import Publications from "./Publications";
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -30,6 +35,7 @@ export default function SearchOverlay() {
         searchInput.current?.focus();
         window.addEventListener("resize", appHeight);
         appHeight();
+        dispatch(setCategoryId(undefined));
         return () => {
             window.removeEventListener("resize", appHeight);
         };
@@ -64,6 +70,7 @@ export default function SearchOverlay() {
             >
                 <div className="search-overlay__inner">
                     <div className="search-overlay__header search-header">
+                        <Header />
                         <div className="search-header__inner">
                             <div className="search-header__wrapper">
                                 <div className="search-header__inner-wrap">
@@ -112,25 +119,29 @@ export default function SearchOverlay() {
                             onTab={(tab) => setTab(tab)}
                         />
                         <div className="search-overlay__content">
-                            {
-                                {
-                                    publication: (
-                                        <Publications
-                                            params={debouncedSearchTerm}
-                                        />
-                                    ),
-                                    account: (
-                                        <Accounts
-                                            params={debouncedSearchTerm}
-                                        />
-                                    ),
-                                    category: (
-                                        <Categories
-                                            params={debouncedSearchTerm}
-                                        />
-                                    ),
-                                }[tab]
-                            }
+                            {visible && (
+                                <>
+                                    {
+                                        {
+                                            publication: (
+                                                <Publications
+                                                    params={debouncedSearchTerm}
+                                                />
+                                            ),
+                                            account: (
+                                                <Accounts
+                                                    params={debouncedSearchTerm}
+                                                />
+                                            ),
+                                            category: (
+                                                <Categories
+                                                    params={debouncedSearchTerm}
+                                                />
+                                            ),
+                                        }[tab]
+                                    }
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -228,9 +239,6 @@ export default function SearchOverlay() {
 
                     .search-overlay__body {
                         padding: 20px;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
                         width: 100vw;
                         height: calc(100vh - 60px);
                         overflow: auto;

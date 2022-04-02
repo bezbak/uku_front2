@@ -110,7 +110,6 @@ export const authSlice = createSlice({
                 if (!payload) return;
                 const tokenManager = container.resolve(TokenManagerDiToken);
                 tokenManager.setToken(payload.token);
-                console.log(payload.token);
                 if (!payload.is_profile_completed) {
                     state.value = "register";
                 } else {
