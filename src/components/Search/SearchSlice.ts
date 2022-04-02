@@ -54,13 +54,17 @@ export const userSearchAsync = createAsyncThunk(
 
 export const categorySearchAsync = createAsyncThunk(
     "search/category",
-    async (params?: { page?: number; q?: string }) => {
+    async (params: { page?: number; q?: string }, { rejectWithValue }) => {
         const searchService = container.resolve(searchServiceToken);
         const request = searchService.searchCategory(params);
-        if (!request) return;
-        const { response } = request;
-        const { data: search } = await response;
-        return search;
+        try {
+            if (!request) return;
+            const { response } = request;
+            const { data: search } = await response;
+            return search;
+        } catch (error) {
+            return rejectWithValue((error as any).message);
+        }
     }
 );
 
@@ -83,15 +87,18 @@ export const searchSlice = createSlice({
                 if (!payload) return;
                 state.users = payload;
             })
-            .addCase(userSearchAsync.rejected, (state, { payload }) => {
+            .addCase(userSearchAsync.rejected, (state) => {
                 state.status = "idle";
-                if (!payload) return;
                 state.users = null;
             })
             .addCase(categorySearchAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
                 if (!payload) return;
                 state.category = payload;
+            })
+            .addCase(categorySearchAsync.rejected, (state) => {
+                state.status = "idle";
+                state.category = null;
             });
     },
 });

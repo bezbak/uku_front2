@@ -7,6 +7,7 @@ import Icon from "@/components/Icon";
 import RigthArrowIcon from "@/components/icons/RightArrowIcon";
 import { setCategoryId } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
+import { useRouter } from "next/router";
 
 export interface ICategoryItemProps {
     id: number;

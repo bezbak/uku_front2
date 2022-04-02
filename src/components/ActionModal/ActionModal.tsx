@@ -6,7 +6,7 @@ import {
     TelegramIcon,
     TelegramShareButton,
 } from "react-share";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
     selectActionmodal,
     setActionModal,
@@ -41,8 +41,13 @@ const ActionModal = () => {
         setShare(false);
     };
 
-    const handleLink = () => {
-        navigator.clipboard.writeText(`${location.origin}/posts/${open}/`);
+    const handleLink = async () => {
+        const text = `${location.origin}/posts/${open}/`;
+        if ("clipboard" in navigator) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            document.execCommand("copy", true, text);
+        }
         toast.success("Ссылка скопированно");
         dispatch(setActionModal(null));
     };
@@ -64,6 +69,7 @@ const ActionModal = () => {
             }
         } else {
             dispatch(setAuthConfirm(true));
+            dispatch(setActionModal(null));
         }
         dispatch(setActionModal(null));
     };
@@ -126,6 +132,14 @@ const ActionModal = () => {
             icon: OtherIcon,
         },
     ];
+
+    useEffect(() => {
+        if (!open) {
+            setShare(false);
+            setOther(false);
+            setComplaint(false);
+        }
+    }, [open]);
 
     return (
         <Modal open={!!open}>

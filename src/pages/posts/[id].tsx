@@ -8,6 +8,7 @@ import {
 import { editPost, setAuthConfirm } from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
+import Actions from "@/components/Actions";
 import CN from "classnames";
 import ConfirmAlert from "@/components/Alert/ConfirmAlert";
 import Container from "@/components/Container";
@@ -50,6 +51,7 @@ const Post = () => {
     const post = useAppSelector(selectPublication);
     const [alert, setAlert] = useState<IConfirmAlert>(confirmAlertInitial);
     const [inFave, setInFave] = useState(post?.is_favorite);
+    const [actions, setActions] = React.useState(false);
 
     useEffect(() => {
         dispatch(publicationAsync(postId as string));
@@ -88,6 +90,15 @@ const Post = () => {
         router.push("/");
     };
 
+    const handleAction = (action: string) => {
+        if (action === "edit") {
+            handleEditPost();
+        } else if (action === "delete") {
+            handleDeletePost();
+        }
+        setActions(false);
+    };
+
     return (
         <>
             <section className="post">
@@ -104,22 +115,48 @@ const Post = () => {
                             <span>Назад</span>
                         </button>
                         {post?.is_owner ? (
-                            <div className="post__actions">
-                                <button
-                                    type="button"
-                                    className="button-reset-default-styles post__prev"
-                                    onClick={handleEditPost}
-                                >
-                                    <span>Редактировать</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="button-reset-default-styles post__prev"
-                                    onClick={handleDeletePost}
-                                >
-                                    <span>Удалить</span>
-                                </button>
-                            </div>
+                            <>
+                                <div className="post__actions">
+                                    <button
+                                        type="button"
+                                        className="button-reset-default-styles post__prev"
+                                        onClick={handleEditPost}
+                                    >
+                                        <span>Редактировать</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="button-reset-default-styles post__prev"
+                                        onClick={handleDeletePost}
+                                    >
+                                        <span>Удалить</span>
+                                    </button>
+                                </div>
+                                <div className="post__actions-mobile">
+                                    <button
+                                        className="post__actions-mobile-button button-reset-default-styles"
+                                        onClick={() => setActions(!actions)}
+                                    >
+                                        <span className="post__actions-mobile-dot"></span>
+                                        <span className="post__actions-mobile-dot"></span>
+                                        <span className="post__actions-mobile-dot"></span>
+                                    </button>
+                                    <Actions
+                                        actions={[
+                                            {
+                                                name: "edit",
+                                                text: "Редактировать",
+                                            },
+                                            {
+                                                name: "delete",
+                                                text: "Удалить",
+                                            },
+                                        ]}
+                                        open={actions}
+                                        onAction={handleAction}
+                                    />
+                                </div>
+                            </>
                         ) : (
                             <>
                                 <div className="post__left">
@@ -272,9 +309,30 @@ const Post = () => {
                         color: #e56366;
                     }
 
+                    .post__actions-mobile {
+                        display: none;
+                    }
+
+                    .post__actions-mobile-dot {
+                        height: 4px;
+                        width: 4px;
+                        background-color: #000;
+                        border-radius: 50%;
+                        display: block;
+                        margin-bottom: 2px;
+                    }
+
+                    .post__actions-mobile-button {
+                        padding: 10px;
+                    }
+
                     @media all and (max-width: 470px) {
                         .post__actions {
                             display: none;
+                        }
+                        .post__actions-mobile {
+                            display: block;
+                            position: relative;
                         }
                     }
                 `}</style>

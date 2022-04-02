@@ -47,7 +47,6 @@ class SearchService {
         });
 
         assertApiResponse<ICategorySearch>(request, CategorySearchSchema);
-        console.log(request);
         return request;
     }
 }

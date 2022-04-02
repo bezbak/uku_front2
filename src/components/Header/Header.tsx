@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAvatarAsync, selectAvatar } from "../MyProfile/ProfileSlice";
+import { setCategoryId, setSearchOverlay } from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Container from "../Container";
@@ -9,14 +10,15 @@ import Link from "next/link";
 import MobileNavigator from "./MobileNavigator";
 import SearchIcon from "../icons/SearchIcon";
 import TopBar from "./TopBar";
-import { setSearchOverlay } from "@/app/mainSlice";
 import { useGetToken } from "@/hooks/useGetToken";
+import { useRouter } from "next/router";
 
 const Header = () => {
     const dispatch = useAppDispatch();
     const [open, setOpen] = useState(false);
     const avatar = useAppSelector(selectAvatar);
     const auth = useGetToken();
+    const router = useRouter();
 
     const handleChange = () => {
         setOpen(!open);
@@ -25,6 +27,12 @@ const Header = () => {
     useEffect(() => {
         if (auth) dispatch(getAvatarAsync());
     }, []);
+
+    useEffect(() => {
+        if (router.pathname !== "/search") {
+            dispatch(setCategoryId(undefined));
+        }
+    }, [router.pathname]);
 
     return (
         <div className="header">
@@ -74,7 +82,7 @@ const Header = () => {
                 .header__mobile {
                     display: none;
                     position: fixed;
-                    z-index: 10;
+                    z-index: 50;
                     width: 100%;
                 }
 

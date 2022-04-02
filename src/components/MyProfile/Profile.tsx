@@ -77,9 +77,9 @@ export default function Profile({
                                         <PostCard
                                             key={item.id}
                                             item={item}
-                                            header={false}
-                                            faveEneble={false}
-                                            followEnable={false}
+                                            header={!item.is_owner}
+                                            faveEneble={!item.is_owner}
+                                            followEnable={!item.is_owner}
                                             onDelete={(id) => {
                                                 if (onDelete) onDelete(id);
                                             }}
