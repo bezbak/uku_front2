@@ -14,6 +14,7 @@ interface ButtonProps {
     buttonColor?: string;
     textColor?: string;
     loading?: boolean;
+    fullWidth?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -26,6 +27,7 @@ const Button: FC<ButtonProps> = ({
     buttonColor = "#e56366",
     textColor = "#fff",
     loading = false,
+    fullWidth = true,
 }) => {
     return (
         <button
@@ -36,6 +38,7 @@ const Button: FC<ButtonProps> = ({
                     "button--outline": outline,
                     "button--disable": disable,
                     "button--loading": loading,
+                    "button--full-width": fullWidth,
                 },
                 className
             )}
@@ -45,13 +48,16 @@ const Button: FC<ButtonProps> = ({
             {loading ? <Spinner /> : children}
             <style jsx>{`
                 .button {
-                    width: 100%;
                     padding: 13px 16px;
                     border-radius: 6px;
                     background-color: ${buttonColor};
                     color: ${textColor};
                     border: none;
                     cursor: pointer;
+                }
+
+                .button--full-width {
+                    width: 100%;
                 }
 
                 .button--loading {

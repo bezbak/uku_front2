@@ -57,7 +57,6 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                         required: true,
                         name: "phone",
                         autoFocus: true,
-                        maxLength: 16,
                         autoComplete: "off",
                     }}
                     placeholder="Номер"
