@@ -7,7 +7,6 @@ import Icon from "@/components/Icon";
 import RigthArrowIcon from "@/components/icons/RightArrowIcon";
 import { setCategoryId } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
-import { useRouter } from "next/router";
 
 export interface ICategoryItemProps {
     id: number;
@@ -27,7 +26,11 @@ export function CategoryItem({
     const [open, setOpen] = React.useState(false);
     const dispatch = useAppDispatch();
 
-    const handleClick = (isOpeneble: boolean) => {
+    const handleClick = (
+        event: React.MouseEvent<HTMLButtonElement>,
+        isOpeneble: boolean
+    ) => {
+        if (isOpeneble) event.stopPropagation();
         dispatch(setCategoryId(id));
         setOpen(!open);
     };
@@ -37,7 +40,7 @@ export function CategoryItem({
             <button
                 type="button"
                 className="button-reset-default-styles category__button"
-                onClick={() => handleClick(child.length > 0)}
+                onClick={(event) => handleClick(event, child.length > 0)}
             >
                 <div className="category__title">
                     {!!image && (

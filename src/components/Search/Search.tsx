@@ -7,7 +7,11 @@ import React, {
 } from "react";
 import { categoryAsync, selectCategory } from "./Category/CategorySlice";
 import { searchAsync, selectSearch } from "./SearchSlice";
-import { selectCategoryId, selectLocation } from "@/app/mainSlice";
+import {
+    selectCategoryId,
+    selectLocation,
+    setAuthConfirm,
+} from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Category from "./Category";
@@ -21,6 +25,7 @@ import { createPostAsync } from "../Post/PostSlice";
 import getFormDate from "@/utils/getFormData";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { useGetToken } from "@/hooks/useGetToken";
 
 const Search = () => {
     const dispatch = useAppDispatch();
@@ -41,6 +46,7 @@ const Search = () => {
     }, []);
 
     useEffect(() => {
+        setPage(1);
         dispatch(searchAsync({ page, category_id: categoryId }));
     }, [page, categoryId]);
 
@@ -88,8 +94,13 @@ const Search = () => {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const form = getFormDate(event.currentTarget);
-        createPost(form.text as string);
+        const auth = useGetToken();
+        if (auth) {
+            const form = getFormDate(event.currentTarget);
+            createPost(form.text as string);
+        } else {
+            dispatch(setAuthConfirm(true));
+        }
     };
 
     const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -100,9 +111,14 @@ const Search = () => {
         }
     };
 
-    useEffect(() => {
-        console.log("sdds");
-    });
+    const handleModal = () => {
+        const auth = useGetToken();
+        if (auth) {
+            setOpenModal(true);
+        } else {
+            dispatch(setAuthConfirm(true));
+        }
+    };
 
     return (
         <>
@@ -149,45 +165,105 @@ const Search = () => {
                                                 );
                                             })}
                                         </PostList>
-                                        <div ref={ref} />
-                                    </div>
-                                    {!!categoryId && (
-                                        <div className="search__footer">
-                                            <div className="search__footer__mobile">
-                                                <button
-                                                    className="search__footer__mobile-button button-reset-default-styles"
-                                                    onClick={() =>
-                                                        setOpenModal(!openModal)
-                                                    }
+                                        <div
+                                            ref={ref}
+                                            style={{
+                                                marginBottom: 40,
+                                            }}
+                                        />
+                                        {!!categoryId && (
+                                            <div className="search__footer">
+                                                <form
+                                                    className="search__footer__mobile"
+                                                    onSubmit={handleSubmit}
                                                 >
-                                                    <svg
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleModal}
+                                                        className="search__footer-button"
                                                     >
-                                                        <path
-                                                            d="M22.7999 10.8002L13.2001 10.8002V1.20017C13.2001 0.537915 12.6624 0.000244141 11.9999 0.000244141C11.3377 0.000244141 10.8 0.537915 10.8 1.20017V10.8002H1.19993C0.537671 10.8002 0 11.3379 0 12.0002C0 12.6626 0.537671 13.2003 1.19993 13.2003H10.8L10.8 22.8002C10.8 23.4626 11.3377 24.0003 11.9999 24.0003C12.6624 24.0003 13.2001 23.4626 13.2001 22.8002L13.2001 13.2003L22.7999 13.2003C23.4624 13.2003 24.0001 12.6626 24.0001 12.0002C24.0001 11.3379 23.4624 10.8002 22.7999 10.8002Z"
-                                                            fill="white"
-                                                        />
-                                                    </svg>
-                                                </button>
+                                                        <svg
+                                                            width="22"
+                                                            height="22"
+                                                            viewBox="0 0 22 22"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M10.9996 7.32715V14.6535"
+                                                                stroke="white"
+                                                                strokeWidth="1.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                            <path
+                                                                d="M14.6663 10.9904H7.33301"
+                                                                stroke="white"
+                                                                strokeWidth="1.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                clipRule="evenodd"
+                                                                d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
+                                                                stroke="white"
+                                                                strokeWidth="1.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Описание объявления"
+                                                        required
+                                                        className="search__footer-input"
+                                                        value={text}
+                                                        onChange={(event) =>
+                                                            setText(
+                                                                event
+                                                                    .currentTarget
+                                                                    .value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        className="search__footer-button"
+                                                    >
+                                                        <svg
+                                                            width="20"
+                                                            height="20"
+                                                            viewBox="0 0 20 20"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M13.8554 6.12111L8.1916 11.8227L1.56064 7.74147C0.691759 7.20657 0.867871 5.88697 1.8467 5.60287L17.5022 1.04743C18.3925 0.789782 19.2156 1.62446 18.949 2.51889L14.304 18.1582C14.013 19.1369 12.7082 19.3064 12.1809 18.4325L8.1916 11.8227"
+                                                                stroke="white"
+                                                                strokeWidth="1.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                <div className="search__footer__desc">
+                                                    <PostForm
+                                                        onSubmit={(event) =>
+                                                            handleSubmit(event)
+                                                        }
+                                                        onImage={handleImage}
+                                                        imageInput={true}
+                                                        onInput={(text) =>
+                                                            setText(text)
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="search__footer__desc">
-                                                <PostForm
-                                                    onSubmit={(event) =>
-                                                        handleSubmit(event)
-                                                    }
-                                                    onImage={handleImage}
-                                                    imageInput={true}
-                                                    onInput={(text) =>
-                                                        setText(text)
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
                                 </>
                             )}
                         </main>
@@ -225,10 +301,10 @@ const Search = () => {
                     }
 
                     .search__footer {
-                        position: sticky;
+                        position: absolute;
+                        width: 100%;
                         z-index: 10;
                         bottom: 0;
-                        right: 20px;
                         margin-top: 10px;
                         padding: 16px;
                         background: #ececec;
@@ -251,6 +327,20 @@ const Search = () => {
                         background: #e56366;
                         border-radius: 53px;
                         margin-left: auto;
+                    }
+
+                    .search__footer-button {
+                        padding: 10px 12px;
+                        border-radius: 6px;
+                        background-color: #e56366;
+                        color: #fff;
+                        border: none;
+                        cursor: pointer;
+                    }
+
+                    .search__body {
+                        height: 100%;
+                        position: relative;
                     }
 
                     @media all and (max-width: 960px) {
@@ -277,8 +367,8 @@ const Search = () => {
 
                     @media all and (max-width: 490px) {
                         .search__footer {
-                            background: transparent;
-                            padding: 0;
+                            background: #fff;
+                            padding: 10px;
                             bottom: 10%;
                             z-index: 1;
                         }
@@ -288,7 +378,15 @@ const Search = () => {
                         }
 
                         .search__footer__mobile {
-                            display: block;
+                            display: flex;
+                            column-gap: 10px;
+                        }
+
+                        .search__footer-input {
+                            width: 100%;
+                            padding: 5px;
+                            border-radius: 5px;
+                            border: 1px solid #cfc8c8;
                         }
                     }
                 `}</style>
@@ -297,6 +395,7 @@ const Search = () => {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
                 onSubmit={(text, images?: number[]) => createPost(text, images)}
+                defaultText={text}
             />
         </>
     );

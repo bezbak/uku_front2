@@ -6,12 +6,14 @@ import { useAppDispatch } from "@/app/hooks";
 
 interface ICreatePostModal {
     open: boolean;
+    defaultText?: string;
     onClose: () => void;
     onSubmit: (text: string, images?: number[]) => void;
 }
 
 export default function CreatePostModal({
     open,
+    defaultText,
     onClose,
     onSubmit,
 }: ICreatePostModal) {
@@ -32,11 +34,14 @@ export default function CreatePostModal({
 
     return (
         <Modal open={open} scrollableClass="post-modal__scroleble">
-            <PostModal
-                defaultImages={[]}
-                onClose={onClose}
-                onSubmit={handleSubmit}
-            />
+            {!!open && (
+                <PostModal
+                    defaultImages={[]}
+                    onClose={onClose}
+                    onSubmit={handleSubmit}
+                    defaultText={defaultText}
+                />
+            )}
         </Modal>
     );
 }
