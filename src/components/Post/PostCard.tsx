@@ -78,7 +78,7 @@ export default function PostCard({
     }, [item]);
 
     return (
-        <Link href={`/posts/${item.id}`}>
+        <Link href={`/detail/${item.id}`}>
             <article
                 className={CN("post-card", {
                     "post-card--masonry": masonry,

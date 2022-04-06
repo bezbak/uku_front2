@@ -6,7 +6,6 @@ export default function Layout({ children }: { children: ReactNode }) {
             <main className="main">{children}</main>
             <style jsx>{`
                 .main {
-                    min-height: 100vh;
                     position: relative;
                 }
             `}</style>

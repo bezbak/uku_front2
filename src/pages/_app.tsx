@@ -36,6 +36,7 @@ import SystemService from "@/services/SystemService";
 import { ToastContainer } from "react-toastify";
 import { container } from "tsyringe";
 import store from "../app/store";
+import MobileMenu from "@/components/MobileMenu";
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -140,12 +141,14 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                             </div>
                         </div>
                     </div>
+                    <MobileMenu />
                     <style jsx>{`
                         .footer__deeplink {
                             position: fixed;
-                            bottom: 0;
+                            bottom: 9%;
                             width: 100%;
                             background: #fff;
+                            z-index: 100;
                         }
 
                         .footer__deeplink-inner {
@@ -175,7 +178,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                             display: none;
                         }
 
-                        @media all and (min-width: 550px) {
+                        @media all and (min-width: 710px) {
                             .footer__deeplink {
                                 display: none;
                             }

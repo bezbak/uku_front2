@@ -26,6 +26,7 @@ import getFormDate from "@/utils/getFormData";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useGetToken } from "@/hooks/useGetToken";
+import CN from "classnames";
 
 const Search = () => {
     const dispatch = useAppDispatch();
@@ -50,27 +51,6 @@ const Search = () => {
         dispatch(searchAsync({ page, category_id: categoryId }));
     }, [page, categoryId]);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && search?.next) {
-                    setPage(search?.next);
-                }
-            },
-            {
-                root: null,
-                rootMargin: "0px",
-                threshold: 1.0,
-            }
-        );
-        if (ref && ref.current && search?.next) {
-            observer.observe(ref.current);
-        }
-        return () => {
-            ref.current ? observer.unobserve(ref.current) : undefined;
-        };
-    }, [search?.next, categoryId]);
-
     const createPost = async (text: string, images?: number[]) => {
         if (location) {
             try {
@@ -83,7 +63,7 @@ const Search = () => {
                     })
                 );
                 if ((payload as any).is_created) {
-                    rout.push(`/posts/${(payload as any).publication_id}`);
+                    rout.push(`/detail/${(payload as any).publication_id}`);
                 }
                 setImage(null);
             } catch (error: unknown) {}
@@ -125,11 +105,19 @@ const Search = () => {
             <section className="search">
                 <Container>
                     <div className="search__inner">
-                        <aside className="search__aside">
+                        <aside
+                            className={CN("search__aside", {
+                                "search__aside--hide": categoryId !== undefined,
+                            })}
+                        >
                             <h3 className="search__category">Категории</h3>
                             <Category items={items} />
                         </aside>
-                        <main className="search__main">
+                        <main
+                            className={CN("search__main", {
+                                "search__main--show": categoryId !== undefined,
+                            })}
+                        >
                             {!!image && categoryId && file ? (
                                 <PostView
                                     defaultImage={image}
@@ -168,7 +156,7 @@ const Search = () => {
                                         <div
                                             ref={ref}
                                             style={{
-                                                marginBottom: 40,
+                                                marginBottom: 100,
                                             }}
                                         />
                                         {!!categoryId && (
@@ -220,6 +208,7 @@ const Search = () => {
                                                         required
                                                         className="search__footer-input"
                                                         value={text}
+                                                        name="text"
                                                         onChange={(event) =>
                                                             setText(
                                                                 event
@@ -301,10 +290,11 @@ const Search = () => {
                     }
 
                     .search__footer {
-                        position: absolute;
-                        width: 100%;
+                        position: fixed;
+                        width: 76%;
+                        right: 20px;
                         z-index: 10;
-                        bottom: 0;
+                        bottom: 10%;
                         margin-top: 10px;
                         padding: 16px;
                         background: #ececec;
@@ -347,21 +337,41 @@ const Search = () => {
                         .search__aside {
                             width: 30%;
                         }
+                        .search__footer {
+                            width: 67%;
+                        }
                     }
 
                     @media all and (max-width: 710px) {
                         .search__aside {
-                            width: 40%;
-                        }
-                    }
-
-                    @media all and (max-width: 630px) {
-                        .search__aside {
-                            display: none;
+                            width: 100%;
+                            margin-top: 10px;
                         }
 
                         .search__main {
                             width: 100%;
+                            display: none;
+                        }
+
+                        .search {
+                            padding: 0;
+                        }
+
+                        .search__main--show {
+                            display: block;
+                        }
+                        .search__aside--hide {
+                            display: none;
+                        }
+                        .search__header,
+                        .search__category {
+                            display: none;
+                        }
+                        .search__footer {
+                            position: fixed;
+                            left: 0;
+                            width: 100%;
+                            bottom: 0;
                         }
                     }
 
@@ -369,7 +379,6 @@ const Search = () => {
                         .search__footer {
                             background: #fff;
                             padding: 10px;
-                            bottom: 10%;
                             z-index: 1;
                         }
 

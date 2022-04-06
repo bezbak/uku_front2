@@ -42,7 +42,7 @@ const ActionModal = () => {
     };
 
     const handleLink = async () => {
-        const text = `${location.origin}/posts/${open}/`;
+        const text = `${location.origin}/detail/${open}/`;
         if ("clipboard" in navigator) {
             await navigator.clipboard.writeText(text);
         } else {
@@ -162,7 +162,7 @@ const ActionModal = () => {
                             <ul className="list-reset-default-styles">
                                 <li className="action-modal__coplain">
                                     <FacebookShareButton
-                                        url={`${location.origin}/posts/${open}`}
+                                        url={`${location.origin}/detail/${open}`}
                                         quote="Uku"
                                         className="Demo__some-network__share-button"
                                     >
@@ -181,7 +181,7 @@ const ActionModal = () => {
                                 </li>
                                 <li className="action-modal__coplain">
                                     <TelegramShareButton
-                                        url={`${location.origin}/posts/${open}`}
+                                        url={`${location.origin}/detail/${open}`}
                                         title="Uku"
                                         className="Demo__some-network__share-button"
                                     >
@@ -200,7 +200,7 @@ const ActionModal = () => {
                                 </li>
                                 <li className="action-modal__coplain">
                                     <EmailShareButton
-                                        url={`${location.origin}/posts/${open}`}
+                                        url={`${location.origin}/detail/${open}`}
                                         title="Uku"
                                         className="Demo__some-network__share-button"
                                     >

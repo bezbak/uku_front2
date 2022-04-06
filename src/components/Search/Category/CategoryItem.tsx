@@ -5,8 +5,8 @@ import Category from ".";
 import { ICategoryList } from "@/services/types";
 import Icon from "@/components/Icon";
 import RigthArrowIcon from "@/components/icons/RightArrowIcon";
-import { setCategoryId } from "@/app/mainSlice";
-import { useAppDispatch } from "@/app/hooks";
+import { selectCategoryId, setCategoryId } from "@/app/mainSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 export interface ICategoryItemProps {
     id: number;
@@ -25,13 +25,16 @@ export function CategoryItem({
 }: ICategoryItemProps) {
     const [open, setOpen] = React.useState(false);
     const dispatch = useAppDispatch();
+    const categoryId = useAppSelector(selectCategoryId);
 
     const handleClick = (
         event: React.MouseEvent<HTMLButtonElement>,
         isOpeneble: boolean
     ) => {
         if (isOpeneble) event.stopPropagation();
-        dispatch(setCategoryId(id));
+        if (!isOpeneble) {
+            dispatch(setCategoryId(id));
+        }
         setOpen(!open);
     };
 
@@ -39,7 +42,9 @@ export function CategoryItem({
         <li key={id} className="category__item">
             <button
                 type="button"
-                className="button-reset-default-styles category__button"
+                className={CN("button-reset-default-styles category__button", {
+                    "category__button--active": categoryId === id,
+                })}
                 onClick={(event) => handleClick(event, child.length > 0)}
             >
                 <div className="category__title">
@@ -59,9 +64,7 @@ export function CategoryItem({
                     "category_child--open": open,
                 })}
             >
-                {child.length > 0 && (
-                    <Category items={child as ICategoryList[]} />
-                )}
+                {child.length > 0 && <Category items={child} />}
             </div>
             <style jsx>
                 {`
@@ -73,6 +76,7 @@ export function CategoryItem({
                         justify-content: space-between;
                         line-height: initial;
                         text-align: start;
+                        padding: 10px 0;
                     }
 
                     .category__title {
@@ -85,17 +89,16 @@ export function CategoryItem({
                         width: 24px;
                     }
 
-                    .category__item {
-                        margin-bottom: 27px;
-                    }
-
                     .category_child {
                         display: none;
-                        margin-top: 20px;
                     }
 
                     .category_child--open {
                         display: block;
+                    }
+
+                    .category__button--active {
+                        color: #e56366;
                     }
                 `}
             </style>
