@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getAvatarAsync, selectAvatar } from "../MyProfile/ProfileSlice";
-import { setCategoryId, setSearchOverlay } from "@/app/mainSlice";
+import {
+    selectCategoryId,
+    selectLocation,
+    setCategoryId,
+    setLocationModal,
+    setSearchOverlay,
+} from "@/app/mainSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Container from "../Container";
@@ -12,6 +18,8 @@ import SearchIcon from "../icons/SearchIcon";
 import TopBar from "./TopBar";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
+import LocationIcon from "../icons/LocationIcon";
+import RigthArrowIcon from "../icons/RightArrowIcon";
 
 const Header = () => {
     const dispatch = useAppDispatch();
@@ -19,10 +27,8 @@ const Header = () => {
     const avatar = useAppSelector(selectAvatar);
     const auth = useGetToken();
     const router = useRouter();
-
-    const handleChange = () => {
-        setOpen(!open);
-    };
+    const location = useAppSelector(selectLocation);
+    const categoryId = useAppSelector(selectCategoryId);
 
     useEffect(() => {
         if (auth) dispatch(getAvatarAsync());
@@ -34,6 +40,14 @@ const Header = () => {
         }
     }, [router.pathname]);
 
+    const handleBack = () => {
+        if (categoryId === undefined) {
+            router.back();
+        } else {
+            dispatch(setCategoryId(undefined));
+        }
+    };
+
     return (
         <div className="header">
             <div className="header__main">
@@ -43,20 +57,38 @@ const Header = () => {
             <div className="header__mobile mobile">
                 <Container>
                     <div className="mobile__inner">
-                        <label className="burger">
-                            <input
-                                type="checkbox"
-                                className="hide-elements burger__checkbox"
-                                onChange={handleChange}
-                                checked={open}
-                            />
-                            <span className="burger__item" />
-                            <span className="burger__item" />
-                            <span className="burger__item" />
-                        </label>
-                        <Link href="/">
-                            <h2 className="mobile__logo">Uku.kg</h2>
-                        </Link>
+                        {router.pathname !== "/search" && (
+                            <Link href="/">
+                                <h2 className="mobile__logo">Uku.kg</h2>
+                            </Link>
+                        )}
+                        {router.pathname === "/search" && (
+                            <>
+                                <button
+                                    type="button"
+                                    className="mobile__back button-reset-default-styles"
+                                    onClick={handleBack}
+                                >
+                                    <Icon width={24} height={24}>
+                                        <RigthArrowIcon />
+                                    </Icon>
+                                </button>
+                                <button
+                                    className="button-reset-default-styles mobile__location"
+                                    onClick={() => {
+                                        setOpen(false);
+                                        dispatch(setLocationModal(true));
+                                    }}
+                                >
+                                    <Icon width={18} height={18}>
+                                        <LocationIcon />
+                                    </Icon>
+                                    <span>
+                                        {location ? location.name : "Выбор"}
+                                    </span>
+                                </button>
+                            </>
+                        )}
                         <button
                             type="button"
                             className="button-reset-default-styles"
@@ -100,42 +132,19 @@ const Header = () => {
                     cursor: pointer;
                 }
 
-                .burger {
-                    width: 40px;
-                    height: 32px;
+                .mobile__location {
+                    padding: 10px 0;
                     cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    column-gap: 10px;
                 }
 
-                .burger__item {
-                    display: block;
-                    width: 33px;
-                    height: 4px;
-                    margin-bottom: 5px;
-                    background: #000000;
-                    border-radius: 3px;
-                    z-index: 1;
-                    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-                        opacity 0.55s ease;
+                .mobile__back {
+                    transform: rotate(180deg);
                 }
 
-                .burger__checkbox ~ .burger__item {
-                    transform-origin: 0% 100%;
-                    opacity: 1;
-                }
-
-                .burger__checkbox:checked ~ .burger__item:nth-child(2) {
-                    transform: rotate(45deg) translate(0px, 0px);
-                }
-
-                .burger__checkbox:checked ~ .burger__item:nth-child(3) {
-                    opacity: 0;
-                }
-
-                .burger__checkbox:checked ~ .burger__item:nth-child(4) {
-                    transform: rotate(-45deg) translate(-2px, 5px);
-                }
-
-                @media all and (max-width: 960px) {
+                @media all and (max-width: 710px) {
                     .header__main {
                         display: none;
                     }

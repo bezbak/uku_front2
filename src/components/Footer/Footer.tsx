@@ -4,10 +4,22 @@ import GooglePlayIcon from "../icons/GooglePlayIcon";
 import Icon from "../Icon";
 import Link from "next/link";
 import React from "react";
+import CN from "classnames";
+import { useAppSelector } from "@/app/hooks";
+import { selectCategoryId } from "@/app/mainSlice";
+import { useRouter } from "next/router";
 
 export default function Footer() {
+    const categoryId = useAppSelector(selectCategoryId);
+    const router = useRouter();
+
     return (
-        <div className="footer">
+        <div
+            className={CN("footer", {
+                "footer--no-space": categoryId !== undefined,
+                "footer--hide": router.pathname === "/search",
+            })}
+        >
             <Container>
                 <div className="footer__inner">
                     <ul className="footer__list list-reset-default-styles">
@@ -101,6 +113,20 @@ export default function Footer() {
 
                 .footer_right-app {
                     font-size: 11px;
+                }
+
+                @media all and (max-width: 710px) {
+                    .footer {
+                        margin-bottom: 70px;
+                    }
+
+                    .footer--no-space {
+                        margin-bottom: 0;
+                    }
+
+                    .footer--hide {
+                        display: none;
+                    }
                 }
             `}</style>
         </div>
