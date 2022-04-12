@@ -103,7 +103,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
             {getLayout(
                 <>
                     <Head>
-                        <title>Uku.kg</title>
+                        <title>uku.kg</title>
                     </Head>
                     <Component {...pageProps} />
                     <ActionModal />
@@ -145,7 +145,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                     <style jsx>{`
                         .footer__deeplink {
                             position: fixed;
-                            bottom: 9%;
+                            bottom: 70px;
                             width: 100%;
                             background: #fff;
                             z-index: 100;
