@@ -137,6 +137,7 @@ export default function MobileMenu() {
                     padding: 15px 0 15px;
                     transition: 0.5s;
                     z-index: 99;
+                    height: 70px;
                 }
 
                 .footer-menu__list {
