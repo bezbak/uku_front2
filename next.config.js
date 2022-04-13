@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
-const API_URL =
-    process.env.APP_ENV === "prod"
-        ? "https://api.uku.kg/"
-        : "http://test.api.uku.kg/";
+const API_URL = "https://api.uku.kg/"
 module.exports = {
     reactStrictMode: true,
     trailingSlash: true,

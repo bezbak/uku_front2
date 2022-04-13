@@ -119,28 +119,31 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                         draggable
                         limit={1}
                     />
-                    <div
-                        className={CN("footer__deeplink", {
-                            "footer__deeplink--hide": !showLink,
-                        })}
-                    >
-                        <div className="footer__deeplink-inner">
-                            <div className="footer__deeplink-text">
-                                <Link href={link || "/"}>
-                                    Использовать приложение
-                                </Link>
-                            </div>
-                            <div className="footer__deeplink-button">
-                                <button
-                                    type="button"
-                                    className="action-modal__close button-reset-default-styles"
-                                    onClick={() => setShowLink(false)}
-                                >
-                                    &times;
-                                </button>
+                    {!!link && (
+                        <div
+                            className={CN("footer__deeplink", {
+                                "footer__deeplink--hide": !showLink,
+                            })}
+                        >
+                            <div className="footer__deeplink-inner">
+                                <div className="footer__deeplink-text">
+                                    <Link href={link || "/"}>
+                                        Использовать приложение
+                                    </Link>
+                                </div>
+                                <div className="footer__deeplink-button">
+                                    <button
+                                        type="button"
+                                        className="action-modal__close button-reset-default-styles"
+                                        onClick={() => setShowLink(false)}
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
+
                     <MobileMenu />
                     <style jsx>{`
                         .footer__deeplink {

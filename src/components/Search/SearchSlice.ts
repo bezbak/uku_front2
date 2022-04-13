@@ -80,12 +80,26 @@ export const searchSlice = createSlice({
             .addCase(searchAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
                 if (!payload) return;
-                state.search = payload;
+                if (state.search === null || payload.previous === null) {
+                    state.search = payload || null;
+                } else {
+                    state.search = {
+                        ...payload,
+                        results: [...state.search.results, ...payload.results],
+                    };
+                }
             })
             .addCase(userSearchAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
                 if (!payload) return;
-                state.users = payload;
+                if (state.users === null || payload.previous === null) {
+                    state.users = payload || null;
+                } else {
+                    state.users = {
+                        ...payload,
+                        results: [...state.users.results, ...payload.results],
+                    };
+                }
             })
             .addCase(userSearchAsync.rejected, (state) => {
                 state.status = "idle";

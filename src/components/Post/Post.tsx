@@ -23,6 +23,9 @@ import ViewedIcon from "../icons/ViewedIcon";
 import { setAuthConfirm } from "@/app/mainSlice";
 import { useAppDispatch } from "@/app/hooks";
 import { useGetToken } from "@/hooks/useGetToken";
+import TelagramIcon from "../icons/TelegramIcon";
+import WhatsAppIcon from "../icons/WhatsAppIcon";
+import InstagramIcon from "../icons/InstagramIcon";
 
 export default function Post({
     post,
@@ -141,6 +144,7 @@ export default function Post({
                                 <Swiper
                                     modules={[Pagination]}
                                     pagination={{ clickable: true }}
+                                    autoplay={true}
                                 >
                                     {post.images.map((image, index) => {
                                         return (
@@ -189,6 +193,60 @@ export default function Post({
                             </Icon>
                             <span>{post.viewed}</span>
                         </div>
+                    </div>
+                    <div className="post-view__contact">
+                        <div className="post__icons">
+                            <a
+                                href={`http://t.me/${post?.user.telegram}`}
+                                type="button"
+                                className="post__social"
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{
+                                    backgroundColor: "#039BE5",
+                                }}
+                            >
+                                <Icon width={32} height={32}>
+                                    <TelagramIcon />
+                                </Icon>
+                            </a>
+                            <a
+                                href={`https://wa.me/${post?.user.whatsapp
+                                    ?.split(" ")
+                                    .join("")}`}
+                                type="button"
+                                className="post__social"
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{
+                                    backgroundColor: "#1BD741",
+                                }}
+                            >
+                                <Icon width={32} height={32}>
+                                    <WhatsAppIcon />
+                                </Icon>
+                            </a>
+                            <a
+                                href={`https://instagram.com/${post?.user.instagram}`}
+                                type="button"
+                                className="post__social"
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{
+                                    backgroundColor: "#B06DB5",
+                                }}
+                            >
+                                <Icon width={32} height={32}>
+                                    <InstagramIcon />
+                                </Icon>
+                            </a>
+                        </div>
+                        <a
+                            href={`tel:${post.user.phone}`}
+                            className="post-view__tel"
+                        >
+                            {post.user.phone}
+                        </a>
                     </div>
                     <div className="post-view__comments">
                         <h4 className="post-view__title">
@@ -391,6 +449,35 @@ export default function Post({
                     object-fit: cover;
                 }
 
+                .post__icons {
+                    display: flex;
+                    column-gap: 12px;
+                }
+
+                .post__social {
+                    background: #039be5;
+                    border-radius: 6px;
+                    width: 42px;
+                    height: 42px;
+                    border: none;
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .post-view__contact {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 12px;
+                }
+
+                .post-view__tel {
+                    color: #000;
+                    text-decoration: none;
+                }
+
                 @media all and (max-width: 900px) {
                     .post-view {
                         position: relative;
@@ -419,6 +506,9 @@ export default function Post({
                         min-height: 250px;
                         height: auto;
                     }
+                    .post-view__image {
+                        max-height: 430px;
+                    }
                 }
 
                 @media all and (max-width: 500px) {
@@ -438,16 +528,10 @@ export default function Post({
             `}</style>
             <style jsx global>{`
                 body .post-view .post-view__header {
-                    border-top: 0;
-                    border-left: 0;
                     position: absolute;
                     width: 100%;
-                    z-index: 1;
+                    z-index: 2;
                     background: #fff;
-                    border-radius: 0;
-                }
-
-                body .post-view .post-view__header {
                     border-top: 0;
                     border-left: 0;
                     border-radius: 0;

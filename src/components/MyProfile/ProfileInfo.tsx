@@ -95,54 +95,59 @@ export default function ProfileInfo({
                         : "Подписаться"}
                 </Button>
             </div>
-            {!!info && (
-                <div className="profile-info__icons">
-                    <a
-                        href={`http://t.me/${info.telegram}`}
-                        type="button"
-                        className="profile-info__social"
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                            backgroundColor: "#039BE5",
-                        }}
-                    >
-                        <Icon width={29} height={29}>
-                            <TelagramIcon />
-                        </Icon>
-                    </a>
-                    <a
-                        href={`https://wa.me/${info.whatsapp
-                            ?.split(" ")
-                            .join("")}`}
-                        type="button"
-                        className="profile-info__social"
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                            backgroundColor: "#1BD741",
-                        }}
-                    >
-                        <Icon width={29} height={29}>
-                            <WhatsAppIcon />
-                        </Icon>
-                    </a>
-                    <a
-                        href={`https://instagram.com/${info.instagram}`}
-                        type="button"
-                        className="profile-info__social"
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                            backgroundColor: "#B06DB5",
-                        }}
-                    >
-                        <Icon width={29} height={29}>
-                            <InstagramIcon />
-                        </Icon>
-                    </a>
-                </div>
-            )}
+            <div className="profile-info__contact">
+                {!!info && (
+                    <div className="profile-info__icons">
+                        <a
+                            href={`http://t.me/${info.telegram}`}
+                            type="button"
+                            className="profile-info__social"
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                backgroundColor: "#039BE5",
+                            }}
+                        >
+                            <Icon width={29} height={29}>
+                                <TelagramIcon />
+                            </Icon>
+                        </a>
+                        <a
+                            href={`https://wa.me/${info.whatsapp
+                                ?.split(" ")
+                                .join("")}`}
+                            type="button"
+                            className="profile-info__social"
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                backgroundColor: "#1BD741",
+                            }}
+                        >
+                            <Icon width={29} height={29}>
+                                <WhatsAppIcon />
+                            </Icon>
+                        </a>
+                        <a
+                            href={`https://instagram.com/${info.instagram}`}
+                            type="button"
+                            className="profile-info__social"
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                backgroundColor: "#B06DB5",
+                            }}
+                        >
+                            <Icon width={29} height={29}>
+                                <InstagramIcon />
+                            </Icon>
+                        </a>
+                    </div>
+                )}
+                <a href={`tel:${info?.phone}`} className="profile-info__tel">
+                    {info?.phone}
+                </a>
+            </div>
 
             {isViewerOpen && info && info.avatar && (
                 <ImageViewer
@@ -209,6 +214,12 @@ export default function ProfileInfo({
                 .profile-info__icons {
                     display: flex;
                     column-gap: 12px;
+                }
+
+                .profile-info__contact {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
                     margin-top: 12px;
                 }
 
@@ -222,6 +233,11 @@ export default function ProfileInfo({
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                }
+
+                .profile-info__tel {
+                    color: #000;
+                    text-decoration: none;
                 }
             `}</style>
         </div>

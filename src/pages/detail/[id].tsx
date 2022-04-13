@@ -16,11 +16,8 @@ import EditPostModal from "@/components/Post/EditPostModal";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import Icon from "@/components/Icon";
-import InstagramIcon from "@/components/icons/InstagramIcon";
 import Layout from "@/components/Layout";
 import PrevIcon from "@/components/icons/PrevIcon";
-import TelagramIcon from "@/components/icons/TelegramIcon";
-import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 import { default as _Post } from "@components/Post/Post";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
@@ -192,52 +189,6 @@ const Post = () => {
                                             </Icon>
                                         </button>
                                     </div>
-                                    <div className="post__icons">
-                                        <a
-                                            href={`http://t.me/${post?.user.telegram}`}
-                                            type="button"
-                                            className="post__social"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            style={{
-                                                backgroundColor: "#039BE5",
-                                            }}
-                                        >
-                                            <Icon width={32} height={32}>
-                                                <TelagramIcon />
-                                            </Icon>
-                                        </a>
-                                        <a
-                                            href={`https://wa.me/${post?.user.whatsapp
-                                                ?.split(" ")
-                                                .join("")}`}
-                                            type="button"
-                                            className="post__social"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            style={{
-                                                backgroundColor: "#1BD741",
-                                            }}
-                                        >
-                                            <Icon width={32} height={32}>
-                                                <WhatsAppIcon />
-                                            </Icon>
-                                        </a>
-                                        <a
-                                            href={`https://instagram.com/${post?.user.instagram}`}
-                                            type="button"
-                                            className="post__social"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            style={{
-                                                backgroundColor: "#B06DB5",
-                                            }}
-                                        >
-                                            <Icon width={32} height={32}>
-                                                <InstagramIcon />
-                                            </Icon>
-                                        </a>
-                                    </div>
                                 </div>
                             </>
                         )}
@@ -281,24 +232,6 @@ const Post = () => {
                         display: flex;
                         column-gap: 12px;
                     }
-
-                    .post__icons {
-                        display: flex;
-                        column-gap: 12px;
-                    }
-
-                    .post__social {
-                        background: #039be5;
-                        border-radius: 6px;
-                        width: 42px;
-                        height: 42px;
-                        border: none;
-                        color: #fff;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-
                     .post__left {
                         display: flex;
                         column-gap: 12px;

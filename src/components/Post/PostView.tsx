@@ -213,6 +213,7 @@ export default function PostView({
                 .post-view__image-img {
                     width: 100%;
                     height: 100%;
+                    max-height: 430px;
                     object-fit: cover;
                 }
                 .post-modal__image-delete {

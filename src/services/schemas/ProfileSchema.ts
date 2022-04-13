@@ -19,7 +19,7 @@ export const ProfileFeedItemSchema = object({
             first_name: string(),
             last_name: string(),
             avatar: nullable(string()),
-            location: string(),
+            location: optional(string()),
             following: boolean(),
         })
     ),

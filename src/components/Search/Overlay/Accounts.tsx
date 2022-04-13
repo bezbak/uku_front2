@@ -3,20 +3,49 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
 import Avatar from "@/components/Avatar";
 import Link from "next/link";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 
 export default function Accounts({ params }: { params: string | null }) {
     const users = useAppSelector(selectSearchUsers);
     const dispatch = useAppDispatch();
+    const [page, setPage] = useState(0);
+    const ref = useRef(null);
 
     useEffect(() => {
-        dispatch(
-            userSearchAsync({
-                q: params || undefined,
-            })
-        );
+        setPage(1);
     }, [params]);
+
+    useEffect(() => {
+        if (page)
+            dispatch(
+                userSearchAsync({
+                    q: params || undefined,
+                    page: page,
+                })
+            );
+    }, [page, params]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting && users?.next) {
+                    setPage(users?.next);
+                }
+            },
+            {
+                root: null,
+                rootMargin: "0px",
+                threshold: 1.0,
+            }
+        );
+        if (ref && ref.current && users?.next) {
+            observer.observe(ref.current);
+        }
+        return () => {
+            ref.current ? observer.unobserve(ref.current) : undefined;
+        };
+    }, [users?.next]);
 
     return (
         <div className="search-accounts">
@@ -37,6 +66,7 @@ export default function Accounts({ params }: { params: string | null }) {
                     </Link>
                 );
             })}
+            <div ref={ref} />
             <style jsx>{`
                 .search-accounts__account {
                     display: flex;

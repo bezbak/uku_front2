@@ -48,8 +48,14 @@ const Search = () => {
 
     useEffect(() => {
         setPage(1);
-        dispatch(searchAsync({ page, category_id: categoryId }));
-    }, [page, categoryId]);
+        dispatch(
+            searchAsync({
+                page,
+                category_id: categoryId,
+                location_id: location?.id,
+            })
+        );
+    }, [page, categoryId, location]);
 
     const createPost = async (text: string, images?: number[]) => {
         if (location) {

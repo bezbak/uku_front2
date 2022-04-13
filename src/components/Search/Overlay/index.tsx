@@ -240,13 +240,13 @@ export default function SearchOverlay() {
                     .search-overlay__body {
                         padding: 20px;
                         width: 100vw;
-                        height: calc(100vh - 60px);
+                        height: 75vh;
                         overflow: auto;
                         padding-top: 2rem;
                     }
 
                     .search-overlay__content {
-                        padding: 20px;
+                        padding: 20px 0;
                     }
                 `}
             </style>
