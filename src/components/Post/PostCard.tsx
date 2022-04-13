@@ -252,6 +252,8 @@ export default function PostCard({
                         font-weight: normal;
                         font-size: 14px;
                         margin-bottom: 12px;
+                        max-height: 50px;
+                        overflow: hidden;
                     }
 
                     .post-card__comments {

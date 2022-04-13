@@ -3,8 +3,16 @@ import {
     EmailShareButton,
     FacebookIcon,
     FacebookShareButton,
+    OKIcon,
+    OKShareButton,
     TelegramIcon,
     TelegramShareButton,
+    TwitterIcon,
+    TwitterShareButton,
+    ViberIcon,
+    ViberShareButton,
+    VKIcon,
+    VKShareButton,
 } from "react-share";
 import React, { FormEvent, useEffect, useState } from "react";
 import {
@@ -161,23 +169,42 @@ const ActionModal = () => {
                             </div>
                             <ul className="list-reset-default-styles">
                                 <li className="action-modal__coplain">
-                                    <FacebookShareButton
+                                    <VKShareButton
                                         url={`${location.origin}/detail/${open}`}
-                                        quote="Uku"
+                                        title="Uku"
                                         className="Demo__some-network__share-button"
                                     >
                                         <div className="action-modal__share-button">
                                             <div className="action-modal__coplain-icon">
-                                                <FacebookIcon size={32} round />
+                                                <VKIcon size={32} round />
                                             </div>
 
                                             <div>
                                                 <h3 className="action-modal__coplain-title">
-                                                    Поделиться на Facebook
+                                                    Поделиться на ВКонтакте
                                                 </h3>
                                             </div>
                                         </div>
-                                    </FacebookShareButton>
+                                    </VKShareButton>
+                                </li>
+                                <li className="action-modal__coplain">
+                                    <OKShareButton
+                                        url={`${location.origin}/detail/${open}`}
+                                        title="Uku"
+                                        className="Demo__some-network__share-button"
+                                    >
+                                        <div className="action-modal__share-button">
+                                            <div className="action-modal__coplain-icon">
+                                                <OKIcon size={32} round />
+                                            </div>
+
+                                            <div>
+                                                <h3 className="action-modal__coplain-title">
+                                                    Поделиться на Одноклассники
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </OKShareButton>
                                 </li>
                                 <li className="action-modal__coplain">
                                     <TelegramShareButton
@@ -199,6 +226,25 @@ const ActionModal = () => {
                                     </TelegramShareButton>
                                 </li>
                                 <li className="action-modal__coplain">
+                                    <ViberShareButton
+                                        url={`${location.origin}/detail/${open}`}
+                                        title="Uku"
+                                        className="Demo__some-network__share-button"
+                                    >
+                                        <div className="action-modal__share-button">
+                                            <div className="action-modal__coplain-icon">
+                                                <ViberIcon size={32} round />
+                                            </div>
+
+                                            <div>
+                                                <h3 className="action-modal__coplain-title">
+                                                    Поделиться на Viber
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </ViberShareButton>
+                                </li>
+                                <li className="action-modal__coplain">
                                     <EmailShareButton
                                         url={`${location.origin}/detail/${open}`}
                                         title="Uku"
@@ -217,6 +263,44 @@ const ActionModal = () => {
                                             </div>
                                         </div>
                                     </EmailShareButton>
+                                </li>
+                                <li className="action-modal__coplain">
+                                    <FacebookShareButton
+                                        url={`${location.origin}/detail/${open}`}
+                                        quote="Uku"
+                                        className="Demo__some-network__share-button"
+                                    >
+                                        <div className="action-modal__share-button">
+                                            <div className="action-modal__coplain-icon">
+                                                <FacebookIcon size={32} round />
+                                            </div>
+
+                                            <div>
+                                                <h3 className="action-modal__coplain-title">
+                                                    Поделиться на Facebook
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </FacebookShareButton>
+                                </li>
+                                <li className="action-modal__coplain">
+                                    <TwitterShareButton
+                                        url={`${location.origin}/detail/${open}`}
+                                        title="Uku"
+                                        className="Demo__some-network__share-button"
+                                    >
+                                        <div className="action-modal__share-button">
+                                            <div className="action-modal__coplain-icon">
+                                                <TwitterIcon size={32} round />
+                                            </div>
+
+                                            <div>
+                                                <h3 className="action-modal__coplain-title">
+                                                    Поделиться на Twitter
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </TwitterShareButton>
                                 </li>
                             </ul>
                         </>
@@ -427,6 +511,7 @@ const ActionModal = () => {
 
                     .action-modal__close {
                         font-size: 25px;
+                        color: #000;
                     }
 
                     .action-modal__body {
@@ -491,10 +576,12 @@ const ActionModal = () => {
                         font-size: 14px;
                         margin-bottom: 5px;
                         font-weight: 400;
+                        color: #000;
                     }
 
                     .action-modal__coplain-location {
                         font-weight: 300;
+                        color: #000;
                     }
 
                     .action-modal__form-title {
