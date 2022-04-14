@@ -86,9 +86,15 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         return "Other";
     }
 
-    useEffect(() => {
+    const handleOpenApp = () => {
         if (getMobile() === "iOS") {
-            setLink("https://apps.apple.com/kg/app/uku-kg/id1606008627");
+            window.location.replace("uku://");
+
+            setTimeout(() => {
+                window.location.replace(
+                    "https://apps.apple.com/kg/app/uku-kg/id1606008627"
+                );
+            }, 10000);
         } else if (getMobile() === "Android") {
             setLink(
                 "https://play.google.com/store/apps/details?id=kg.uku.uku.kg&hl=ru&gl=US"
@@ -96,7 +102,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         } else {
             setLink(null);
         }
-    }, []);
+    };
 
     return (
         <Provider store={store}>
@@ -126,10 +132,11 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                             })}
                         >
                             <div className="footer__deeplink-inner">
-                                <div className="footer__deeplink-text">
-                                    <Link href={link || "/"}>
-                                        Использовать приложение
-                                    </Link>
+                                <div
+                                    className="footer__deeplink-text"
+                                    onClick={handleOpenApp}
+                                >
+                                    Открыть приложение
                                 </div>
                                 <div className="footer__deeplink-button">
                                     <button

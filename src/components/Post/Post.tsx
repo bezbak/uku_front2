@@ -121,7 +121,7 @@ export default function Post({
             >
                 <div className="post-view__left">
                     <div className="post-view__left-inner">
-                        {!post.is_owner && (
+                        {!post.is_owner && !isViewerOpen && (
                             <PostHeader
                                 userLink={`${post.user.id}`}
                                 avatar={post.user.avatar}
