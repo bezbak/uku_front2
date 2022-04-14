@@ -5,7 +5,7 @@ import "swiper/css";
 
 import { ApiClient, apiDIToken } from "@/lib/ApiClient";
 import { CONTENT_TYPE, CONTENT_TYPE_HEADER_NAME } from "@/constants/headers";
-import React, { ReactElement, ReactNode, useEffect, useState } from "react";
+import React, { ReactElement, ReactNode, useState } from "react";
 import { TokenManager, TokenManagerDiToken } from "@/lib/TokenManager";
 import {
     authServiceToken,
@@ -53,7 +53,6 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         [CONTENT_TYPE_HEADER_NAME]: CONTENT_TYPE,
     };
     const [showLink, setShowLink] = useState(true);
-    const [link, setLink] = useState<string | null>(null);
     const api = new ApiClient("/api/v1/", {
         headers: defaultHeaders,
     });
@@ -96,11 +95,9 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                 );
             }, 10000);
         } else if (getMobile() === "Android") {
-            setLink(
+            window.location.replace(
                 "https://play.google.com/store/apps/details?id=kg.uku.uku.kg&hl=ru&gl=US"
             );
-        } else {
-            setLink(null);
         }
     };
 
@@ -125,31 +122,29 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                         draggable
                         limit={1}
                     />
-                    {!!link && (
-                        <div
-                            className={CN("footer__deeplink", {
-                                "footer__deeplink--hide": !showLink,
-                            })}
-                        >
-                            <div className="footer__deeplink-inner">
-                                <div
-                                    className="footer__deeplink-text"
-                                    onClick={handleOpenApp}
+                    <div
+                        className={CN("footer__deeplink", {
+                            "footer__deeplink--hide": !showLink,
+                        })}
+                    >
+                        <div className="footer__deeplink-inner">
+                            <div
+                                className="footer__deeplink-text"
+                                onClick={handleOpenApp}
+                            >
+                                Открыть приложение
+                            </div>
+                            <div className="footer__deeplink-button">
+                                <button
+                                    type="button"
+                                    className="action-modal__close button-reset-default-styles"
+                                    onClick={() => setShowLink(false)}
                                 >
-                                    Открыть приложение
-                                </div>
-                                <div className="footer__deeplink-button">
-                                    <button
-                                        type="button"
-                                        className="action-modal__close button-reset-default-styles"
-                                        onClick={() => setShowLink(false)}
-                                    >
-                                        &times;
-                                    </button>
-                                </div>
+                                    &times;
+                                </button>
                             </div>
                         </div>
-                    )}
+                    </div>
 
                     <MobileMenu />
                     <style jsx>{`
