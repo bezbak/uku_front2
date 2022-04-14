@@ -23,7 +23,6 @@ import AuthService from "@/services/AccountService";
 import CN from "classnames";
 import CookiesManager from "@/lib/CookiesManager/CookiesManager";
 import Head from "next/head";
-import Link from "next/link";
 import LocationModal from "@/components/Location/LocationModal";
 import LocationService from "@/services/LocationService";
 import { NextPage } from "next";
@@ -96,7 +95,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
             }, 10000);
         } else if (getMobile() === "Android") {
             window.location.replace(
-                "https://play.google.com/store/apps/details?id=kg.uku.uku.kg&hl=ru&gl=US"
+                "intent://uku.kg/#Intent;scheme=https;package=kg.uku.uku.kg;end"
             );
         }
     };

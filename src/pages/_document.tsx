@@ -10,10 +10,6 @@ class MyDocument extends Document {
                     <link rel="icon" href="/images/_logo.png" />
                     <meta name="description" content="Uku" />
                     <meta name="keywords" content="Uku.kg, уку, uku" />
-                    <meta
-                        httpEquiv="Content-Security-Policy"
-                        content="upgrade-insecure-requests"
-                    ></meta>
                 </Head>
                 <body className="main">
                     <Main />
