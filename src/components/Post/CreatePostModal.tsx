@@ -7,6 +7,8 @@ import { useAppDispatch } from "@/app/hooks";
 interface ICreatePostModal {
     open: boolean;
     defaultText?: string;
+    defaultImage?: string | null;
+    defaultFile?: File | null;
     onClose: () => void;
     onSubmit: (text: string, images?: number[]) => void;
 }
@@ -14,6 +16,8 @@ interface ICreatePostModal {
 export default function CreatePostModal({
     open,
     defaultText,
+    defaultImage,
+    defaultFile,
     onClose,
     onSubmit,
 }: ICreatePostModal) {
@@ -23,6 +27,9 @@ export default function CreatePostModal({
             const formData = new FormData();
             for (const file of images) {
                 formData.append("images", file);
+            }
+            if (defaultFile) {
+                formData.append("images", defaultFile);
             }
             dispatch(postImageUploadAsync(formData)).then(({ payload }) => {
                 onSubmit(text, payload as number[]);
@@ -36,7 +43,7 @@ export default function CreatePostModal({
         <Modal open={open} scrollableClass="post-modal__scroleble">
             {!!open && (
                 <PostModal
-                    defaultImages={[]}
+                    defaultImages={defaultImage ? [defaultImage] : []}
                     onClose={onClose}
                     onSubmit={handleSubmit}
                     defaultText={defaultText}

@@ -50,7 +50,7 @@ export const profileFeedSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(profileFeedAsync.pending, (state) => {
-                state.status = "loading";
+                if (state.feed === null) state.status = "loading";
             })
             .addCase(profileFeedAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
@@ -65,7 +65,7 @@ export const profileFeedSlice = createSlice({
                 }
             })
             .addCase(fovouriteAsync.pending, (state) => {
-                state.favStatus = "loading";
+                if (state.fovourite === null) state.favStatus = "loading";
             })
             .addCase(fovouriteAsync.fulfilled, (state, { payload }) => {
                 state.favStatus = "idle";

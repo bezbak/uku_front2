@@ -551,6 +551,10 @@ export default function Post({
                     .swiper-pagination-bullet.swiper-pagination-bullet-active {
                     background: #e56366;
                 }
+
+                body .react-simple-image-viewer__modal {
+                    z-index: 1000;
+                }
             `}</style>
         </>
     );

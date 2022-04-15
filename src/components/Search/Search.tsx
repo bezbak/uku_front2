@@ -41,6 +41,7 @@ const Search = () => {
     const location = useAppSelector(selectLocation);
     const [text, setText] = useState("");
     const [openModal, setOpenModal] = useState(false);
+    const [mobile, setMobile] = useState(false);
 
     useEffect(() => {
         dispatch(categoryAsync());
@@ -97,13 +98,17 @@ const Search = () => {
         }
     };
 
-    const handleModal = () => {
+    const checkLogin = () => {
         const auth = useGetToken();
-        if (auth) {
-            setOpenModal(true);
-        } else {
+        if (!auth) {
             dispatch(setAuthConfirm(true));
         }
+    };
+
+    const handleModal = (event: ChangeEvent<HTMLInputElement>) => {
+        setMobile(true);
+        handleImage(event);
+        setOpenModal(true);
     };
 
     return (
@@ -124,7 +129,7 @@ const Search = () => {
                                 "search__main--show": categoryId !== undefined,
                             })}
                         >
-                            {!!image && categoryId && file ? (
+                            {!!image && categoryId && file && !mobile ? (
                                 <PostView
                                     defaultImage={image}
                                     onClose={() => setImage(null)}
@@ -171,11 +176,22 @@ const Search = () => {
                                                     className="search__footer__mobile"
                                                     onSubmit={handleSubmit}
                                                 >
-                                                    <button
-                                                        type="button"
-                                                        onClick={handleModal}
+                                                    <label
                                                         className="search__footer-button"
+                                                        onClick={checkLogin}
                                                     >
+                                                        <input
+                                                            type="file"
+                                                            accept="image/png, image/jpeg"
+                                                            className="hide-elements"
+                                                            name="image"
+                                                            disabled={
+                                                                !useGetToken()
+                                                            }
+                                                            onChange={
+                                                                handleModal
+                                                            }
+                                                        />
                                                         <svg
                                                             width="22"
                                                             height="22"
@@ -207,7 +223,7 @@ const Search = () => {
                                                                 strokeLinejoin="round"
                                                             />
                                                         </svg>
-                                                    </button>
+                                                    </label>
                                                     <input
                                                         type="text"
                                                         placeholder="Описание объявления"
@@ -411,6 +427,8 @@ const Search = () => {
                 onClose={() => setOpenModal(false)}
                 onSubmit={(text, images?: number[]) => createPost(text, images)}
                 defaultText={text}
+                defaultImage={image}
+                defaultFile={file}
             />
         </>
     );

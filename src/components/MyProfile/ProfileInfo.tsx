@@ -113,9 +113,11 @@ export default function ProfileInfo({
                             </Icon>
                         </a>
                         <a
-                            href={`https://wa.me/${info.whatsapp
-                                ?.split(" ")
-                                .join("")}`}
+                            href={`https://wa.me/${
+                                info.whatsapp
+                                    ? info.whatsapp?.split(" ").join("")
+                                    : info.phone
+                            }`}
                             type="button"
                             className="profile-info__social"
                             target="_blank"

@@ -116,6 +116,7 @@ const Header = () => {
                     position: fixed;
                     z-index: 50;
                     width: 100%;
+                    background: #fff;
                 }
 
                 .mobile__inner {
