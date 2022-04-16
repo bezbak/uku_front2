@@ -93,15 +93,26 @@ const Header = () => {
                                 )}
                             </>
                         )}
-                        <button
-                            type="button"
-                            className="button-reset-default-styles"
-                            onClick={() => dispatch(setSearchOverlay(true))}
-                        >
-                            <Icon width={24} height={24}>
-                                <SearchIcon />
-                            </Icon>
-                        </button>
+                        {router.pathname !== "/search" ? (
+                            <Link href="/search">
+                                <button
+                                    type="button"
+                                    className="button-reset-default-styles mobile__add"
+                                >
+                                    +
+                                </button>
+                            </Link>
+                        ) : (
+                            <button
+                                type="button"
+                                className="button-reset-default-styles"
+                                onClick={() => dispatch(setSearchOverlay(true))}
+                            >
+                                <Icon width={24} height={24}>
+                                    <SearchIcon />
+                                </Icon>
+                            </button>
+                        )}
                     </div>
                 </Container>
                 <MobileNavigator
@@ -159,6 +170,13 @@ const Header = () => {
                     .header__mobile {
                         display: block;
                     }
+                }
+
+                .mobile__add {
+                    font-size: 45px;
+                    font-weight: 100;
+                    line-height: 30px;
+                    cursor: pointer;
                 }
             `}</style>
         </div>

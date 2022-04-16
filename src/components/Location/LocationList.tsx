@@ -61,7 +61,7 @@ const LocationList: FC<ILocationlistProps> = ({ items, onSelect, onClose }) => {
                 })}
             <style jsx>{`
                 .location-list {
-                    max-height: 500px;
+                    max-height: 350px;
                 }
 
                 .location-list__location {

@@ -147,7 +147,11 @@ export default function PostView({
                     </div>
                 ))}
             </div>
-            <PostForm onSubmit={handleSubmit} defaultText={defaultText} />
+            <PostForm
+                onSubmit={handleSubmit}
+                defaultText={defaultText}
+                key={defaultText}
+            />
             <style jsx>{`
                 .post-view {
                     background: #ececec;

@@ -111,6 +111,13 @@ const Search = () => {
         setOpenModal(true);
     };
 
+    const clear = () => {
+        setText("");
+        setImage(null);
+        setFile(null);
+        setMobile(false);
+    };
+
     return (
         <>
             <section className="search">
@@ -132,7 +139,10 @@ const Search = () => {
                             {!!image && categoryId && file && !mobile ? (
                                 <PostView
                                     defaultImage={image}
-                                    onClose={() => setImage(null)}
+                                    onClose={() => {
+                                        setImage(null);
+                                        setText("");
+                                    }}
                                     onSubmit={createPost}
                                     defaultFile={{
                                         link: image,
@@ -191,6 +201,7 @@ const Search = () => {
                                                             onChange={
                                                                 handleModal
                                                             }
+                                                            key={`${openModal}`}
                                                         />
                                                         <svg
                                                             width="22"
@@ -426,7 +437,7 @@ const Search = () => {
                 open={openModal}
                 onClose={() => {
                     setOpenModal(false);
-                    setMobile(false);
+                    clear();
                 }}
                 onSubmit={(text, images?: number[]) => createPost(text, images)}
                 defaultText={text}

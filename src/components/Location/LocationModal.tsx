@@ -13,6 +13,8 @@ import Modal from "../Modal/Modal";
 import Scrollable from "../Scrollable";
 import { UKU_LOCATION } from "@/constants/headers";
 import useDebounce from "@/hooks/useDebounce";
+import Icon from "../Icon";
+import RigthArrowIcon from "../icons/RightArrowIcon";
 
 const LocationModal: FC = () => {
     const open = useAppSelector(selectOpenLocationModal);
@@ -41,10 +43,23 @@ const LocationModal: FC = () => {
         setSarchParams(event.currentTarget.value);
     };
 
+    const handleBack = () => {
+        setSelectedLocation(locations);
+    };
+
     return (
         <Modal open={open}>
             <div className="location-modal">
                 <div className="location-modal__header">
+                    <button
+                        type="button"
+                        className="location-modal__back button-reset-default-styles"
+                        onClick={handleBack}
+                    >
+                        <Icon width={16} height={16}>
+                            <RigthArrowIcon />
+                        </Icon>
+                    </button>
                     <span className="location-modal__title">
                         Выберите расположение
                     </span>
@@ -96,6 +111,7 @@ const LocationModal: FC = () => {
                         background: #fff;
                         border-bottom: 1px solid #f0f0f0;
                         border-radius: 2px 2px 0 0;
+                        align-items: center;
                     }
 
                     .location-modal__close {
@@ -117,6 +133,11 @@ const LocationModal: FC = () => {
                         border: 1px solid #e0e0e0;
                         border-radius: 6px;
                         margin-bottom: 13px;
+                    }
+
+                    .location-modal__back {
+                        transform: rotate(180deg);
+                        color: #000;
                     }
                 `}</style>
             </div>
