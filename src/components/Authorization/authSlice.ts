@@ -2,7 +2,6 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { AppState } from "../../app/store";
 import { IRegisterSchema } from "./types";
-import { NextRouter } from "next/router";
 import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { authServiceToken } from "@/tokens";
 import { container } from "tsyringe";
@@ -46,7 +45,7 @@ export const loginAsync = createAsyncThunk(
 export const confirmAsync = createAsyncThunk(
     "auth/confirm",
     async (
-        data: { phone: string; confirmCode: string; rout: NextRouter },
+        data: { phone: string; confirmCode: string },
         { rejectWithValue }
     ) => {
         const authService = container.resolve(authServiceToken);
@@ -55,7 +54,6 @@ export const confirmAsync = createAsyncThunk(
             if (!request) return;
             const { response } = request;
             const { data: confirm } = await response;
-            data.rout.push("/");
             return confirm;
         } catch (error) {
             return rejectWithValue((error as any).message);
@@ -98,6 +96,7 @@ export const authSlice = createSlice({
             .addCase(loginAsync.fulfilled, (state) => {
                 state.value = "confirm";
                 state.status = "idle";
+                state.message = "";
             })
             .addCase(loginAsync.rejected, (state, { payload }) => {
                 state.message = payload as string;
@@ -116,6 +115,7 @@ export const authSlice = createSlice({
                     state.region_detail = payload?.region_detail || null;
                 }
                 state.confrimStatus = "idle";
+                state.message = "";
             })
             .addCase(confirmAsync.rejected, (state, { payload }) => {
                 state.message = payload as string;
@@ -130,6 +130,7 @@ export const authSlice = createSlice({
                     tokenManager.setToken(payload.token);
                 }
                 state.status = "idle";
+                state.message = "";
             })
             .addCase(registerAsync.rejected, (state, { payload }) => {
                 state.message = payload as string;

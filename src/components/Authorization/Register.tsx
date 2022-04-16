@@ -48,10 +48,8 @@ const Register: FC<IRegisterProps> = ({ status }) => {
         try {
             if (location) data.region = location.id;
             assert(data, registerFormSchema);
-            const { payload } = await dispatch(registerAsync(data));
-            if ((payload as any)?.is_profile_completed) {
-                rout.push("/");
-            }
+            await dispatch(registerAsync(data));
+            rout.push("/");
         } catch (error: unknown) {
             if (error instanceof StructError) {
                 const errors = error.failures().reduce((acc, err) => {

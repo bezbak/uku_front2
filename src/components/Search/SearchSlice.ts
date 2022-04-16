@@ -108,7 +108,17 @@ export const searchSlice = createSlice({
             .addCase(categorySearchAsync.fulfilled, (state, { payload }) => {
                 state.status = "idle";
                 if (!payload) return;
-                state.category = payload;
+                if (state.category === null || payload.previous === null) {
+                    state.category = payload || null;
+                } else {
+                    state.category = {
+                        ...payload,
+                        results: [
+                            ...state.category.results,
+                            ...payload.results,
+                        ],
+                    };
+                }
             })
             .addCase(categorySearchAsync.rejected, (state) => {
                 state.status = "idle";

@@ -555,6 +555,11 @@ export default function Post({
                 body .react-simple-image-viewer__modal {
                     z-index: 1000;
                 }
+
+                body .react-simple-image-viewer__next,
+                body .react-simple-image-viewer__previous {
+                    opacity: 1;
+                }
             `}</style>
         </>
     );

@@ -36,20 +36,22 @@ const Confirm: FC<IConfirmProps> = ({
     const rout = useRouter();
     const dispatch = useAppDispatch();
     const phone = useAppSelector(selectPhone);
-    const handleConfirm = (event: FormEvent<HTMLFormElement>) => {
+    const handleConfirm = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = getFormDate(event.currentTarget);
         setError({});
         try {
             assert(data, confirmFormSchema);
             if (type === "login") {
-                dispatch(
+                const { payload } = await dispatch(
                     confirmAsync({
                         phone,
                         confirmCode: data.code,
-                        rout,
                     })
                 );
+                if ((payload as any)?.is_profile_completed) {
+                    rout.push("/");
+                }
             } else {
                 dispatch(
                     phoneConfirmAsync({
