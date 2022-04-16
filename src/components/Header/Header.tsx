@@ -3,6 +3,7 @@ import { getAvatarAsync, selectAvatar } from "../MyProfile/ProfileSlice";
 import {
     selectCategoryId,
     selectLocation,
+    selectSearchVisible,
     setCategoryId,
     setLocationModal,
     setSearchOverlay,
@@ -29,6 +30,7 @@ const Header = () => {
     const router = useRouter();
     const location = useAppSelector(selectLocation);
     const categoryId = useAppSelector(selectCategoryId);
+    const visible = useAppSelector(selectSearchVisible);
 
     useEffect(() => {
         if (auth) dispatch(getAvatarAsync());
@@ -73,20 +75,22 @@ const Header = () => {
                                         <RigthArrowIcon />
                                     </Icon>
                                 </button>
-                                <button
-                                    className="button-reset-default-styles mobile__location"
-                                    onClick={() => {
-                                        setOpen(false);
-                                        dispatch(setLocationModal(true));
-                                    }}
-                                >
-                                    <Icon width={18} height={18}>
-                                        <LocationIcon />
-                                    </Icon>
-                                    <span>
-                                        {location ? location.name : "Выбор"}
-                                    </span>
-                                </button>
+                                {!visible && (
+                                    <button
+                                        className="button-reset-default-styles mobile__location"
+                                        onClick={() => {
+                                            setOpen(false);
+                                            dispatch(setLocationModal(true));
+                                        }}
+                                    >
+                                        <Icon width={18} height={18}>
+                                            <LocationIcon />
+                                        </Icon>
+                                        <span>
+                                            {location ? location.name : "Выбор"}
+                                        </span>
+                                    </button>
+                                )}
                             </>
                         )}
                         <button
@@ -139,10 +143,12 @@ const Header = () => {
                     display: flex;
                     align-items: center;
                     column-gap: 10px;
+                    color: #000;
                 }
 
                 .mobile__back {
                     transform: rotate(180deg);
+                    color: #000;
                 }
 
                 @media all and (max-width: 710px) {

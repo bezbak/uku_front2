@@ -91,6 +91,7 @@ export function CategoryItem({
 
                     .category_child {
                         display: none;
+                        margin-left: 15px;
                     }
 
                     .category_child--open {

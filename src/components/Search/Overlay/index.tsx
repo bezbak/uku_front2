@@ -98,26 +98,28 @@ export default function SearchOverlay() {
                                 </div>
                             </div>
                         </div>
+                        <div className="search-header__tabs">
+                            <Tabs
+                                tabs={[
+                                    {
+                                        name: "publication",
+                                        text: "Публикации",
+                                    },
+                                    {
+                                        name: "account",
+                                        text: "Аккаунты",
+                                    },
+                                    {
+                                        name: "category",
+                                        text: "Категории",
+                                    },
+                                ]}
+                                active={tab}
+                                onTab={(tab) => setTab(tab)}
+                            />
+                        </div>
                     </div>
                     <div className="search-overlay__body">
-                        <Tabs
-                            tabs={[
-                                {
-                                    name: "publication",
-                                    text: "Публикации",
-                                },
-                                {
-                                    name: "account",
-                                    text: "Аккаунты",
-                                },
-                                {
-                                    name: "category",
-                                    text: "Категории",
-                                },
-                            ]}
-                            active={tab}
-                            onTab={(tab) => setTab(tab)}
-                        />
                         <div className="search-overlay__content">
                             {visible && (
                                 <>
@@ -245,8 +247,9 @@ export default function SearchOverlay() {
                         padding-top: 2rem;
                     }
 
-                    .search-overlay__content {
-                        padding: 20px 0;
+                    .search-header__tabs {
+                        padding: 0 20px;
+                        background: #fff;
                     }
                 `}
             </style>

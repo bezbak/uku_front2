@@ -1,7 +1,7 @@
 import "react-day-picker/lib/style.css";
 
 import { IErroType, registerFormSchema } from "./types";
-import React, { FC, FormEvent, useState } from "react";
+import React, { FC, FormEvent, ReactNode, useState } from "react";
 import { StructError, assert } from "superstruct";
 import { formatDate, parseDate } from "@/utils/formatDate";
 import { registerAsync, selectPhone } from "./authSlice";
@@ -20,6 +20,27 @@ import Select from "react-select";
 import dateFnsFormat from "date-fns/format";
 import getFormDate from "@/utils/getFormData";
 import { useRouter } from "next/router";
+
+function CustomOverlay({
+    classNames,
+    selectedDay,
+    children,
+    ...props
+}: {
+    classNames: any;
+    selectedDay: Date;
+    children: ReactNode;
+}) {
+    return (
+        <div
+            className={classNames.overlayWrapper}
+            style={{ marginLeft: -100, zIndex: 10000 }}
+            {...props}
+        >
+            <div className={classNames.overlay}>{children}</div>
+        </div>
+    );
+}
 
 interface IRegisterProps {
     status: string;
@@ -115,6 +136,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                             new Date(),
                             DATE_FORMAT
                         )}*`}
+                        overlayComponent={CustomOverlay}
                         inputProps={{
                             name: "birth_date",
                             readOnly: true,
@@ -129,7 +151,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                         }
                         type="text"
                         className={CN("registration__input", {
-                            "registration__input--error": error.regionText,
+                            "registration__input--error": error.region,
                         })}
                         readOnly={true}
                         value={location?.name || ""}
@@ -196,7 +218,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                 }
 
                 .registration__input--custom .uku__control {
-                    padding: 3px 5px;
+                    padding: 5px 5px;
                     border-radius: 8px;
                     border-color: #cacaca;
                     box-shadow: unset;

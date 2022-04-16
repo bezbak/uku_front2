@@ -3,6 +3,9 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import AddImageIcon from "../icons/AddImageIcon";
 import Button from "../Buttons/Button";
 import Icon from "../Icon";
+import { useGetToken } from "@/hooks/useGetToken";
+import { useAppDispatch } from "@/app/hooks";
+import { setAuthConfirm } from "@/app/mainSlice";
 
 interface IPostFormProps {
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -21,6 +24,7 @@ export default function PostForm({
     defaultText = "",
 }: IPostFormProps) {
     const [text, setText] = useState(defaultText);
+    const dispatch = useAppDispatch();
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setText(event.currentTarget.value);
         if (onInput) onInput(text);
@@ -29,15 +33,24 @@ export default function PostForm({
         event.preventDefault();
         onSubmit(event);
     };
+
+    const checkLogin = () => {
+        const auth = useGetToken();
+        if (!auth) {
+            dispatch(setAuthConfirm(true));
+        }
+    };
+
     return (
         <form className="post-form" onSubmit={handleSubmit}>
             {imageInput && (
-                <label className="post-form__text-label">
+                <label className="post-form__text-label" onClick={checkLogin}>
                     <input
                         type="file"
                         accept="image/png, image/jpeg"
                         className="hide-elements"
                         name="image"
+                        disabled={!useGetToken()}
                         onChange={onImage}
                     />
                     <div className="post-form__image-input">
