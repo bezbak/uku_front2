@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useGetToken } from "@/hooks/useGetToken";
 import CN from "classnames";
+import compressFile from "@/utils/compressFile";
 
 const Search = () => {
     const dispatch = useAppDispatch();
@@ -90,11 +91,20 @@ const Search = () => {
         }
     };
 
-    const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleImage = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            setImage(URL.createObjectURL(file));
-            setFile(file);
+            try {
+                const compressedFile = await compressFile(file);
+                if (compressedFile.size / 1024 >= 1000) {
+                    toast.error("Слишком большой размер фото!");
+                } else {
+                    setImage(URL.createObjectURL(file));
+                    setFile(file);
+                }
+            } catch (error) {
+                toast.error("Что то пошло не так! попробуйте позже");
+            }
         }
     };
 

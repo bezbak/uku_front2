@@ -39,15 +39,15 @@ export default function EditPostModal() {
         } catch (error: unknown) {}
     };
 
-    const handleSubmit = (text: string, images: File[]) => {
+    const handleSubmit = async (text: string, images: File[]) => {
         if (images.length > 0) {
             const formData = new FormData();
             for (const file of images) {
                 formData.append("images", file);
             }
-            dispatch(postImageUploadAsync(formData)).then(({ payload }) => {
+            const { payload } = await dispatch(postImageUploadAsync(formData));
+            if (Array.isArray(payload as any))
                 updatePost(text, payload as number[]);
-            });
         } else {
             updatePost(text);
         }

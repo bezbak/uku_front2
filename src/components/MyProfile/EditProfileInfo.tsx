@@ -14,6 +14,8 @@ import { container } from "tsyringe";
 import { updateAvatarAsync } from "./ProfileSlice";
 import { useAppDispatch } from "@/app/hooks";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import compressFile from "@/utils/compressFile";
 
 export interface IEditProfileInfoProps {
     info: IprofileInfo | null;
@@ -44,11 +46,20 @@ export default function EditProfileInfo({
         router.push("/login");
     };
 
-    const handleImageChange = (event: any) => {
+    const handleImageChange = async (event: any) => {
         const formData = new FormData();
         const file = event.target.files[0];
-        formData.append("avatar", file);
-        dispatch(updateAvatarAsync(formData));
+        try {
+            const compressedFile = await compressFile(file);
+            if (compressedFile.size / 1024 >= 1000) {
+                toast.error("Слишком большой размер фото!");
+            } else {
+                formData.append("avatar", compressedFile);
+                dispatch(updateAvatarAsync(formData));
+            }
+        } catch (error) {
+            toast.error("Что то пошло не так! попробуйте позже");
+        }
     };
 
     React.useEffect(() => {

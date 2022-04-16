@@ -242,6 +242,11 @@ export default function ProfileInfo({
                     text-decoration: none;
                 }
             `}</style>
+            <style jsx global>{`
+                body .react-simple-image-viewer__modal {
+                    z-index: 1000;
+                }
+            `}</style>
         </div>
     );
 }

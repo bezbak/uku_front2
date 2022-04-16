@@ -22,7 +22,7 @@ export default function CreatePostModal({
     onSubmit,
 }: ICreatePostModal) {
     const dispatch = useAppDispatch();
-    const handleSubmit = (text: string, images: File[]) => {
+    const handleSubmit = async (text: string, images: File[]) => {
         if (images.length > 0) {
             const formData = new FormData();
             for (const file of images) {
@@ -31,9 +31,9 @@ export default function CreatePostModal({
             if (defaultFile) {
                 formData.append("images", defaultFile);
             }
-            dispatch(postImageUploadAsync(formData)).then(({ payload }) => {
+            const { payload } = await dispatch(postImageUploadAsync(formData));
+            if (Array.isArray(payload as any))
                 onSubmit(text, payload as number[]);
-            });
         } else {
             onSubmit(text);
         }

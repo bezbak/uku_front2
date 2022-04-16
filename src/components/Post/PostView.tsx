@@ -7,6 +7,8 @@ import PostForm from "./PostForm";
 import getFormDate from "@/utils/getFormData";
 import { postImageUploadAsync } from "./PostSlice";
 import { useAppDispatch } from "@/app/hooks";
+import { toast } from "react-toastify";
+import compressFile from "@/utils/compressFile";
 
 interface IPostViewprops {
     defaultFile: {
@@ -35,30 +37,39 @@ export default function PostView({
         }[]
     >([defaultFile]);
     const dispatch = useAppDispatch();
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = getFormDate(event.currentTarget);
         const images = new FormData();
         for (const file of files) {
             images.append("images", file.file);
         }
-        dispatch(postImageUploadAsync(images)).then(({ payload }) => {
+        const { payload } = await dispatch(postImageUploadAsync(images));
+        if (Array.isArray(payload as any))
             onSubmit(form.text as string, payload as number[]);
-        });
     };
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            const link = URL.createObjectURL(file);
-            setImages([link, ...images]);
-            setFiles([
-                {
-                    link: link,
-                    file: file,
-                },
-                ...files,
-            ]);
+            try {
+                const compressedFile = await compressFile(file);
+                if (compressedFile.size / 1024 >= 1000) {
+                    toast.error("Слишком большой размер фото!");
+                } else {
+                    const link = URL.createObjectURL(compressedFile);
+                    setImages([link, ...images]);
+                    setFiles([
+                        {
+                            link: link,
+                            file: compressedFile,
+                        },
+                        ...files,
+                    ]);
+                }
+            } catch (error) {
+                toast.error("Что то пошло не так! попробуйте позже");
+            }
         }
     };
 

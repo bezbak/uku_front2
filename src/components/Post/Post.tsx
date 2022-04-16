@@ -26,6 +26,8 @@ import { useGetToken } from "@/hooks/useGetToken";
 import TelagramIcon from "../icons/TelegramIcon";
 import WhatsAppIcon from "../icons/WhatsAppIcon";
 import InstagramIcon from "../icons/InstagramIcon";
+import { toast } from "react-toastify";
+import compressFile from "@/utils/compressFile";
 
 export default function Post({
     post,
@@ -86,10 +88,19 @@ export default function Post({
         }
     };
 
-    const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleImage = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            setImage(URL.createObjectURL(file));
+            try {
+                const compressedFile = await compressFile(file);
+                if (compressedFile.size / 1024 >= 1000) {
+                    toast.error("Слишком большой размер фото!");
+                } else {
+                    setImage(URL.createObjectURL(compressedFile));
+                }
+            } catch (error) {
+                toast.error("Что то пошло не так! попробуйте позже");
+            }
         }
     };
 

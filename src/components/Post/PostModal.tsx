@@ -7,6 +7,8 @@ import CN from "classnames";
 import Icon from "../Icon";
 import PostForm from "./PostForm";
 import getFormDate from "@/utils/getFormData";
+import { toast } from "react-toastify";
+import compressFile from "@/utils/compressFile";
 
 interface IPostModalProps {
     onClose: () => void;
@@ -40,18 +42,27 @@ export default function PostModal({
     const [text, setText] = useState(defaultText);
     const [actions, setActions] = React.useState(false);
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
-            const link = URL.createObjectURL(file);
-            setImages([...images, link]);
-            setFiles([
-                ...files,
-                {
-                    link: link,
-                    file: file,
-                },
-            ]);
+            try {
+                const compressedFile = await compressFile(file);
+                if (compressedFile.size / 1024 >= 1000) {
+                    toast.error("Слишком большой размер фото!");
+                } else {
+                    const link = URL.createObjectURL(compressedFile);
+                    setImages([...images, link]);
+                    setFiles([
+                        ...files,
+                        {
+                            link: link,
+                            file: compressedFile,
+                        },
+                    ]);
+                }
+            } catch (error) {
+                toast.error("Что то пошло не так! попробуйте позже");
+            }
         }
     };
 
