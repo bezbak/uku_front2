@@ -25,11 +25,12 @@ export default function Favourite() {
     const status = useAppSelector(selectFavStatus);
     const [page, setPage] = useState(1);
     const [masonry, setMasonry] = useState<Instance | null>(null);
+    const gutter = 10;
     const sizes = [
-        { columns: 1, gutter: 10 },
-        { mq: "630px", columns: 2, gutter: 10 },
-        { mq: "1155px", columns: 3, gutter: 10 },
-        { mq: "1540px", columns: 4, gutter: 10 },
+        { columns: 1, gutter: gutter },
+        { mq: "780px", columns: 2, gutter: gutter },
+        { mq: "1155px", columns: 3, gutter: gutter },
+        { mq: "1540px", columns: 4, gutter: gutter },
     ];
 
     useEffect(() => {

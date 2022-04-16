@@ -38,7 +38,32 @@ export default function Masonry({
         if (masonry && onInit) {
             onInit(masonry);
         }
+        destroy(window.innerWidth);
     };
+
+    const destroy = (width: number) => {
+        if (width <= 460) {
+            masonry?.resize(false);
+            masonryElement.current?.removeAttribute("style");
+            if (masonryElement.current)
+                Array.from(masonryElement.current.children).forEach(
+                    (element) => {
+                        element.removeAttribute("style");
+                    }
+                );
+        } else {
+            setTimeout(() => {
+                masonry?.resize(true).pack();
+            }, 0);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener("resize", (event: Event) => {
+            const target = event.target as Window;
+            destroy(target.innerWidth);
+        });
+    }, []);
 
     return (
         <>
@@ -55,6 +80,14 @@ export default function Masonry({
                 {`
                     .gw-masonry__list {
                         margin: 0 auto;
+                    }
+
+                    @media all and (max-width: 460px) {
+                        .gw-masonry__list {
+                            display: flex;
+                            flex-wrap: wrap;
+                            row-gap: 20px;
+                        }
                     }
                 `}
             </style>

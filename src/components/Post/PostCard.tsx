@@ -187,7 +187,7 @@ export default function PostCard({
                         <p className="post-card__categories">
                             {item.categories}
                         </p>
-                        <h4 className="post-card__title">{item.title}</h4>
+                        <h4 className="post-card__title">{item.description}</h4>
                         {item.comment_count > 0 && (
                             <button className="button-reset-default-styles post-card__comments">
                                 Посмотреть все комментарии ({item.comment_count}
@@ -311,9 +311,9 @@ export default function PostCard({
                         display: flex;
                     }
 
-                    @media all and (max-width: 410px) {
+                    @media all and (max-width: 460px) {
                         .post-card--masonry {
-                            width: 350px;
+                            width: 100%;
                         }
                     }
                 `}</style>
