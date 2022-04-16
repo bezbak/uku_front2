@@ -70,7 +70,6 @@ export default function SearchOverlay() {
             >
                 <div className="search-overlay__inner">
                     <div className="search-overlay__header search-header">
-                        <Header />
                         <div className="search-header__inner">
                             <div className="search-header__wrapper">
                                 <div className="search-header__inner-wrap">
@@ -250,6 +249,15 @@ export default function SearchOverlay() {
                     .search-header__tabs {
                         padding: 0 20px;
                         background: #fff;
+                    }
+
+                    @media all and (max-width: 450px) {
+                        .search-header__inner-wrap {
+                            height: 40px;
+                        }
+                        .search-header__input {
+                            height: 40px;
+                        }
                     }
                 `}
             </style>

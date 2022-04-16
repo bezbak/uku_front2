@@ -38,6 +38,12 @@ export default function Tabs({ tabs, onTab, active }: ITabsProps) {
                 .tabs {
                     background: #fff;
                 }
+
+                @media all and (max-width: 450px) {
+                    .tabs__button {
+                        font-size: 13px;
+                    }
+                }
             `}</style>
         </div>
     );
