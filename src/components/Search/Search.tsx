@@ -424,7 +424,10 @@ const Search = () => {
             </section>
             <CreatePostModal
                 open={openModal}
-                onClose={() => setOpenModal(false)}
+                onClose={() => {
+                    setOpenModal(false);
+                    setMobile(false);
+                }}
                 onSubmit={(text, images?: number[]) => createPost(text, images)}
                 defaultText={text}
                 defaultImage={image}

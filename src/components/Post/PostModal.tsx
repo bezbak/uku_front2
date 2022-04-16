@@ -395,15 +395,6 @@ export default function PostModal({
                     .modal .post-modal__scroleble {
                         align-items: end !important;
                     }
-
-                    .post-modal .post-form {
-                        flex-wrap: wrap;
-                        gap: 10px;
-                    }
-
-                    .modal .post-modal .post-form__button {
-                        width: 100%;
-                    }
                 }
             `}</style>
         </div>

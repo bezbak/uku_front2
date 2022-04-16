@@ -75,6 +75,23 @@ export default function PostForm({
             >
                 Опубликовать
             </Button>
+            <button type="submit" className="post-form__button-mobile">
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M13.8554 6.12111L8.1916 11.8227L1.56064 7.74147C0.691759 7.20657 0.867871 5.88697 1.8467 5.60287L17.5022 1.04743C18.3925 0.789782 19.2156 1.62446 18.949 2.51889L14.304 18.1582C14.013 19.1369 12.7082 19.3064 12.1809 18.4325L8.1916 11.8227"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                </svg>
+            </button>
             <style jsx global>{`
                 .post-form {
                     display: flex;
@@ -105,6 +122,25 @@ export default function PostForm({
 
                 .post-form .post-form__button.button {
                     width: 147px;
+                }
+
+                .post-form__button-mobile {
+                    display: none;
+                }
+
+                @media all and (max-width: 490px) {
+                    .post-form__button {
+                        display: none;
+                    }
+                    .post-form__button-mobile {
+                        display: block;
+                        padding: 10px 12px;
+                        border-radius: 6px;
+                        background-color: #e56366;
+                        color: #fff;
+                        border: none;
+                        cursor: pointer;
+                    }
                 }
             `}</style>
         </form>
