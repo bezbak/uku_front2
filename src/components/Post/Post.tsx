@@ -93,11 +93,7 @@ export default function Post({
             const [file] = event.target.files;
             try {
                 const compressedFile = await compressFile(file);
-                if (compressedFile.size / 1024 >= 1000) {
-                    toast.error("Слишком большой размер фото!");
-                } else {
-                    setImage(URL.createObjectURL(compressedFile));
-                }
+                setImage(URL.createObjectURL(compressedFile));
             } catch (error) {
                 toast.error("Что то пошло не так! попробуйте позже");
             }

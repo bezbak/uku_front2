@@ -152,7 +152,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                             bottom: 70px;
                             width: 100%;
                             background: #fff;
-                            z-index: 100;
+                            z-index: 99;
                         }
 
                         .footer__deeplink-inner {

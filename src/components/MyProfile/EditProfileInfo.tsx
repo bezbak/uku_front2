@@ -51,12 +51,8 @@ export default function EditProfileInfo({
         const file = event.target.files[0];
         try {
             const compressedFile = await compressFile(file);
-            if (compressedFile.size / 1024 >= 1000) {
-                toast.error("Слишком большой размер фото!");
-            } else {
-                formData.append("avatar", compressedFile);
-                dispatch(updateAvatarAsync(formData));
-            }
+            formData.append("avatar", compressedFile);
+            dispatch(updateAvatarAsync(formData));
         } catch (error) {
             toast.error("Что то пошло не так! попробуйте позже");
         }

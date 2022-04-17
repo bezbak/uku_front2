@@ -47,19 +47,15 @@ export default function PostModal({
             const [file] = event.target.files;
             try {
                 const compressedFile = await compressFile(file);
-                if (compressedFile.size / 1024 >= 1000) {
-                    toast.error("Слишком большой размер фото!");
-                } else {
-                    const link = URL.createObjectURL(compressedFile);
-                    setImages([...images, link]);
-                    setFiles([
-                        ...files,
-                        {
-                            link: link,
-                            file: compressedFile,
-                        },
-                    ]);
-                }
+                const link = URL.createObjectURL(compressedFile);
+                setImages([...images, link]);
+                setFiles([
+                    ...files,
+                    {
+                        link: link,
+                        file: compressedFile,
+                    },
+                ]);
             } catch (error) {
                 toast.error("Что то пошло не так! попробуйте позже");
             }
