@@ -36,6 +36,7 @@ const Confirm: FC<IConfirmProps> = ({
     const rout = useRouter();
     const dispatch = useAppDispatch();
     const phone = useAppSelector(selectPhone);
+
     const handleConfirm = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = getFormDate(event.currentTarget);

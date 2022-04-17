@@ -4,7 +4,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/app/store";
 import { IPublication } from "@/services/types";
 import { container } from "tsyringe";
-import { toast } from "react-toastify";
 
 export interface PostState {
     following: boolean;
@@ -96,9 +95,7 @@ export const postImageUploadAsync = createAsyncThunk(
             const { data: post } = await response;
             return post;
         } catch (error) {
-            if ((error as any).code) {
-                toast.error("Слишком большой размер фото!");
-            }
+            console.log(error);
             return rejectWithValue((error as any).message);
         }
     }

@@ -17,6 +17,7 @@ export default function EditPostModal() {
     const categoryId = useAppSelector(selectCategoryId);
     const [images, setImages] = useState<string[]>([]);
     const [post, setPost] = useState(editingPost);
+    const [loading, setLoading] = useState(false);
     const dispatch = useAppDispatch();
     const onClose = () => {
         dispatch(editPost(null));
@@ -25,6 +26,7 @@ export default function EditPostModal() {
     const updatePost = async (text: string, images?: number[]) => {
         try {
             if (!editingPost) return;
+            setLoading(true);
             await dispatch(
                 updatePostAsync({
                     category: categoryId as number,
@@ -35,6 +37,7 @@ export default function EditPostModal() {
                 })
             );
             onClose();
+            setLoading(false);
             rout.reload();
         } catch (error: unknown) {}
     };
@@ -82,6 +85,7 @@ export default function EditPostModal() {
                     defaultText={post.description}
                     categoryName={post.category.name}
                     locationName={post.location.name}
+                    loading={loading}
                 />
             )}
         </Modal>

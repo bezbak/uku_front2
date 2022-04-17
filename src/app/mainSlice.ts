@@ -8,7 +8,7 @@ export interface LocationState {
     categoryId: number | undefined;
     editPost: null | IPublication;
     openLocationModal: boolean;
-    loaction: ILocation | null;
+    loaction: Omit<ILocation, "children"> | null;
     searchVisible: boolean;
     authConfirm: boolean;
     actionModal: number | null;
@@ -37,15 +37,24 @@ export const mainSlice = createSlice({
         setLocationModal(state, action: PayloadAction<boolean>) {
             state.openLocationModal = action.payload;
         },
-        setLocation(state, action: PayloadAction<ILocation | null>) {
+        setLocation(
+            state,
+            action: PayloadAction<Omit<ILocation, "children"> | null>
+        ) {
+            state.loaction = action.payload;
+        },
+        initLocation(
+            _,
+            action: PayloadAction<Omit<ILocation, "children"> | null>
+        ) {
             if (action.payload) {
                 localStorage.setItem(
                     UKU_LOCATION,
                     JSON.stringify(action.payload)
                 );
-                state.loaction = action.payload;
             }
         },
+
         setSearchOverlay(state, action: PayloadAction<boolean>) {
             state.searchVisible = action.payload;
         },
@@ -63,6 +72,7 @@ export const {
     editPost,
     setLocationModal,
     setLocation,
+    initLocation,
     setSearchOverlay,
     setAuthConfirm,
     setActionModal,

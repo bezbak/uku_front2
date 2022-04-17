@@ -134,6 +134,7 @@ export default function EditProfileInfo({
                     <span className="edit-info__label">Инстаграм</span>
                     <input
                         type="text"
+                        autoComplete="off"
                         className="edit-info__input"
                         placeholder="Инстаграм"
                         name="instagram"
@@ -159,6 +160,7 @@ export default function EditProfileInfo({
                     <span className="edit-info__label">Telegram</span>
                     <input
                         type="text"
+                        autoComplete="off"
                         className="edit-info__input"
                         placeholder="Ваш ник"
                         name="telegram"

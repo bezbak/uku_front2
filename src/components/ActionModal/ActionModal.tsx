@@ -546,6 +546,7 @@ const ActionModal = () => {
                         background: #fff;
                         border-bottom: 1px solid #f0f0f0;
                         border-radius: 2px 2px 0 0;
+                        padding-bottom: 10px;
                     }
 
                     .action-modal__reson {

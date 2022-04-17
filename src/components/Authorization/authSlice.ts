@@ -5,13 +5,17 @@ import { IRegisterSchema } from "./types";
 import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { authServiceToken } from "@/tokens";
 import { container } from "tsyringe";
+import { initLocation } from "@/app/mainSlice";
 
 export interface CounterState {
     value: "login" | "register" | "confirm";
     status: "idle" | "loading" | "failed";
     phoneNumber: string;
     message: string | undefined;
-    region_detail: Record<string, unknown> | null;
+    region_detail: {
+        id: number;
+        name: string;
+    } | null;
     userLogined: boolean;
     confrimStatus: "loading" | "idle" | "failed";
 }
@@ -46,7 +50,7 @@ export const confirmAsync = createAsyncThunk(
     "auth/confirm",
     async (
         data: { phone: string; confirmCode: string },
-        { rejectWithValue }
+        { rejectWithValue, dispatch }
     ) => {
         const authService = container.resolve(authServiceToken);
         try {
@@ -54,6 +58,7 @@ export const confirmAsync = createAsyncThunk(
             if (!request) return;
             const { response } = request;
             const { data: confirm } = await response;
+            dispatch(initLocation(confirm.region_detail));
             return confirm;
         } catch (error) {
             return rejectWithValue((error as any).message);
@@ -63,13 +68,17 @@ export const confirmAsync = createAsyncThunk(
 
 export const registerAsync = createAsyncThunk(
     "auth/register",
-    async (data: Omit<IRegisterSchema, "rule">, { rejectWithValue }) => {
+    async (
+        data: Omit<IRegisterSchema, "rule">,
+        { rejectWithValue, dispatch }
+    ) => {
         const authService = container.resolve(authServiceToken);
         try {
             const request = authService.register(data);
             if (!request) return;
             const { response } = request;
             const { data: register } = await response;
+            dispatch(initLocation(register.region_detail));
             return register;
         } catch (error) {
             return rejectWithValue((error as any).message);
@@ -147,5 +156,6 @@ export const selectMessage = (state: AppState) => state.auth.message;
 export const selectStatus = (state: AppState) => state.auth.status;
 export const selectConfirmStatus = (state: AppState) =>
     state.auth.confrimStatus;
+export const selectRegionDetail = (state: AppState) => state.auth.region_detail;
 
 export default authSlice.reducer;

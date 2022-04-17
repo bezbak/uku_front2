@@ -19,6 +19,7 @@ interface IPostModalProps {
     descActions?: boolean;
     categoryName?: string;
     locationName?: string;
+    loading?: boolean;
 }
 
 export default function PostModal({
@@ -30,6 +31,7 @@ export default function PostModal({
     descActions = false,
     categoryName,
     locationName,
+    loading = false,
 }: IPostModalProps) {
     const [images, setImages] = useState<string[]>(defaultImages);
     const [files, setFiles] = useState<
@@ -220,7 +222,11 @@ export default function PostModal({
                         </div>
                     </label>
                 </div>
-                <PostForm onSubmit={handleSubmit} defaultText={text} />
+                <PostForm
+                    onSubmit={handleSubmit}
+                    defaultText={text}
+                    loading={loading}
+                />
             </div>
             <style jsx>{`
                 .post-modal {

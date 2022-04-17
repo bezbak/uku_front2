@@ -1,6 +1,6 @@
 import Modal from "../Modal/Modal";
 import PostModal from "./PostModal";
-import React from "react";
+import React, { useState } from "react";
 import { postImageUploadAsync } from "./PostSlice";
 import { useAppDispatch } from "@/app/hooks";
 
@@ -22,21 +22,19 @@ export default function CreatePostModal({
     onSubmit,
 }: ICreatePostModal) {
     const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState(false);
     const handleSubmit = async (text: string, images: File[]) => {
-        if (images.length > 0) {
-            const formData = new FormData();
-            for (const file of images) {
-                formData.append("images", file);
-            }
-            if (defaultFile) {
-                formData.append("images", defaultFile);
-            }
-            const { payload } = await dispatch(postImageUploadAsync(formData));
-            if (Array.isArray(payload as any))
-                onSubmit(text, payload as number[]);
-        } else {
-            onSubmit(text);
+        const formData = new FormData();
+        for (const file of images) {
+            formData.append("images", file);
         }
+        if (defaultFile) {
+            formData.append("images", defaultFile);
+        }
+        setLoading(true);
+        const { payload } = await dispatch(postImageUploadAsync(formData));
+        if (Array.isArray(payload as any)) onSubmit(text, payload as number[]);
+        setLoading(false);
     };
 
     return (
@@ -47,6 +45,7 @@ export default function CreatePostModal({
                     onClose={onClose}
                     onSubmit={handleSubmit}
                     defaultText={defaultText}
+                    loading={loading}
                 />
             )}
         </Modal>

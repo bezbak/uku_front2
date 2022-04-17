@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Accounts from "./Accounts";
 import CN from "classnames";
 import Categories from "./Categories";
-import Header from "@/components/Header/Header";
 import Icon from "@/components/Icon";
 import Publications from "./Publications";
 import SearchIcon from "@/components/icons/SearchIcon";
@@ -76,6 +75,7 @@ export default function SearchOverlay() {
                                     <form className="search-header__form">
                                         <input
                                             type="text"
+                                            autoComplete="off"
                                             className="search-header__input"
                                             placeholder="Поиск"
                                             ref={searchInput}

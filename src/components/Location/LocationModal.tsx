@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { locationAsync, selectLocation } from "./locationSlice";
 import {
+    initLocation,
     selectOpenLocationModal,
     setLocation,
     setLocationModal,
@@ -32,7 +33,11 @@ const LocationModal: FC = () => {
     useEffect(() => {
         dispatch(locationAsync());
         const location = localStorage.getItem(UKU_LOCATION);
-        if (location) dispatch(setLocation(JSON.parse(location)));
+        if (location) {
+            dispatch(setLocation(JSON.parse(location)));
+        } else {
+            initLocation(locations[0]);
+        }
     }, []);
 
     useEffect(() => {
@@ -75,6 +80,7 @@ const LocationModal: FC = () => {
                 <div className="location-modal__body">
                     <input
                         placeholder="Введите название страны"
+                        autoComplete="off"
                         type="text"
                         className="location-modal__input"
                         onChange={(event) => handleSearch(event)}

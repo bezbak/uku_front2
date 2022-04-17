@@ -23,7 +23,6 @@ import { useRouter } from "next/router";
 
 function CustomOverlay({
     classNames,
-    selectedDay,
     children,
     ...props
 }: {

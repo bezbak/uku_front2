@@ -14,6 +14,7 @@ interface IPostFormProps {
     imageInput?: boolean;
     description?: string;
     defaultText?: string;
+    loading?: boolean;
 }
 
 export default function PostForm({
@@ -22,6 +23,7 @@ export default function PostForm({
     onInput,
     imageInput = false,
     defaultText = "",
+    loading = false,
 }: IPostFormProps) {
     const [text, setText] = useState(defaultText);
     const dispatch = useAppDispatch();
@@ -62,6 +64,7 @@ export default function PostForm({
             )}
             <input
                 type="text"
+                autoComplete="off"
                 placeholder="Введите описание объявления"
                 className="post-form__input"
                 name="text"
@@ -72,6 +75,7 @@ export default function PostForm({
             <Button
                 type="submit"
                 className="button-reset-default-styles post-form__button"
+                loading={loading}
             >
                 Опубликовать
             </Button>

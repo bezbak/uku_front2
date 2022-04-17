@@ -112,7 +112,6 @@ export default function Post({
 
     useEffect(() => {
         if (answer) setComment(answer.user);
-        inputEl.current?.focus();
     }, [answer]);
 
     useEffect(() => {
