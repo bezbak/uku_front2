@@ -403,6 +403,12 @@ export default function Post({
                     height: 250px;
                     overflow: scroll;
                     padding-bottom: 10px;
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+
+                .post-view__comments-inner::-webkit-scrollbar {
+                    display: none;
                 }
 
                 .post-view__footer {

@@ -71,6 +71,7 @@ const Search = () => {
                     })
                 );
                 setLoading(false);
+                setOpenModal(false);
                 if ((payload as any).is_created) {
                     rout.push(`/detail/${(payload as any).publication_id}`);
                 }
