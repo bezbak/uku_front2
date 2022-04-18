@@ -28,20 +28,23 @@ export default function CreatePostModal({
         for (const file of images) {
             formData.append("images", file);
         }
-        if (defaultFile) {
-            formData.append("images", defaultFile);
-        }
         setLoading(true);
-        const { payload } = await dispatch(postImageUploadAsync(formData));
-        if (Array.isArray(payload as any)) onSubmit(text, payload as number[]);
+        if (images.length > 0) {
+            const { payload } = await dispatch(postImageUploadAsync(formData));
+            if (Array.isArray(payload as any))
+                onSubmit(text, payload as number[]);
+        } else {
+            onSubmit(text);
+        }
         setLoading(false);
     };
 
     return (
         <Modal open={open} scrollableClass="post-modal__scroleble">
-            {!!open && (
+            {!!open && !!defaultFile && !!defaultImage && (
                 <PostModal
                     defaultImages={defaultImage ? [defaultImage] : []}
+                    defaultFile={defaultFile || undefined}
                     onClose={onClose}
                     onSubmit={handleSubmit}
                     defaultText={defaultText}

@@ -154,6 +154,7 @@ const Search = () => {
                                                 item={item}
                                                 followEnable={!item.is_owner}
                                                 faveEneble={!item.is_owner}
+                                                header={!item.is_owner}
                                             />
                                         );
                                     })}

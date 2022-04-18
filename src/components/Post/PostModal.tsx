@@ -15,6 +15,7 @@ interface IPostModalProps {
     onSubmit: (text: string, images: File[]) => void;
     onImageDelete?: (url: string) => void;
     defaultImages?: string[];
+    defaultFile?: File;
     defaultText?: string;
     descActions?: boolean;
     categoryName?: string;
@@ -27,13 +28,14 @@ export default function PostModal({
     onSubmit,
     onImageDelete,
     defaultImages = [],
+    defaultFile,
     defaultText = "",
     descActions = false,
     categoryName,
     locationName,
     loading = false,
 }: IPostModalProps) {
-    const [images, setImages] = useState<string[]>(defaultImages);
+    const [images, setImages] = useState<string[]>([]);
     const [files, setFiles] = useState<
         {
             link: string;
@@ -97,7 +99,17 @@ export default function PostModal({
 
     useEffect(() => {
         setImages(defaultImages);
-    }, [defaultImages]);
+    }, []);
+
+    useEffect(() => {
+        if (defaultFile)
+            setFiles([
+                {
+                    link: defaultImages[0],
+                    file: defaultFile,
+                },
+            ]);
+    }, []);
 
     useEffect(() => {
         setSelectedImg(images[0]);

@@ -88,6 +88,7 @@ const Home = () => {
                                     onFollow={updatePosts}
                                     onDelete={updatePosts}
                                     masonry={true}
+                                    header={!item.is_owner}
                                 />
                             );
                         })}
