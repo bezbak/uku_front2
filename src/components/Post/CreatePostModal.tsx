@@ -31,8 +31,9 @@ export default function CreatePostModal({
         setLoading(true);
         if (images.length > 0) {
             const { payload } = await dispatch(postImageUploadAsync(formData));
-            if (Array.isArray(payload as any))
+            if (Array.isArray(payload as any)) {
                 onSubmit(text, payload as number[]);
+            }
         } else {
             onSubmit(text);
         }

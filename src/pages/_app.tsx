@@ -120,6 +120,9 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
                         rtl={false}
                         draggable
                         limit={1}
+                        style={{
+                            zIndex: 10000000,
+                        }}
                     />
                     <div
                         className={CN("footer__deeplink", {

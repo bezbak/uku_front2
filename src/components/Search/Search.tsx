@@ -106,13 +106,6 @@ const Search = () => {
         }
     };
 
-    const checkLogin = () => {
-        const auth = useGetToken();
-        if (!auth) {
-            dispatch(setAuthConfirm(true));
-        }
-    };
-
     const handleModal = (event: ChangeEvent<HTMLInputElement>) => {
         handleImage(event);
         setOpenModal(true);
@@ -167,104 +160,13 @@ const Search = () => {
                                 />
                                 {!!categoryId && (
                                     <div className="search__footer">
-                                        <form
-                                            className="search__footer__mobile"
+                                        <PostForm
                                             onSubmit={handleSubmit}
-                                        >
-                                            <label
-                                                className="search__footer-button"
-                                                onClick={checkLogin}
-                                            >
-                                                <input
-                                                    type="file"
-                                                    accept="image/png, image/jpeg"
-                                                    className="hide-elements"
-                                                    name="image"
-                                                    disabled={!useGetToken()}
-                                                    onChange={handleModal}
-                                                    key={`${openModal}`}
-                                                />
-                                                <svg
-                                                    width="22"
-                                                    height="22"
-                                                    viewBox="0 0 22 22"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M10.9996 7.32715V14.6535"
-                                                        stroke="white"
-                                                        strokeWidth="1.5"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                    <path
-                                                        d="M14.6663 10.9904H7.33301"
-                                                        stroke="white"
-                                                        strokeWidth="1.5"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        clipRule="evenodd"
-                                                        d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-                                                        stroke="white"
-                                                        strokeWidth="1.5"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                            </label>
-                                            <input
-                                                type="text"
-                                                autoComplete="off"
-                                                placeholder="Описание объявления"
-                                                required
-                                                className="search__footer-input"
-                                                value={text}
-                                                name="text"
-                                                onChange={(event) =>
-                                                    setText(
-                                                        event.currentTarget
-                                                            .value
-                                                    )
-                                                }
-                                            />
-                                            <button
-                                                type="submit"
-                                                className="search__footer-button"
-                                            >
-                                                <svg
-                                                    width="20"
-                                                    height="20"
-                                                    viewBox="0 0 20 20"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M13.8554 6.12111L8.1916 11.8227L1.56064 7.74147C0.691759 7.20657 0.867871 5.88697 1.8467 5.60287L17.5022 1.04743C18.3925 0.789782 19.2156 1.62446 18.949 2.51889L14.304 18.1582C14.013 19.1369 12.7082 19.3064 12.1809 18.4325L8.1916 11.8227"
-                                                        stroke="white"
-                                                        strokeWidth="1.5"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </form>
-                                        <div className="search__footer__desc">
-                                            <PostForm
-                                                onSubmit={(event) =>
-                                                    handleSubmit(event)
-                                                }
-                                                onImage={handleModal}
-                                                imageInput={true}
-                                                onInput={(text) =>
-                                                    setText(text)
-                                                }
-                                                loading={loading}
-                                            />
-                                        </div>
+                                            onImage={handleModal}
+                                            imageInput={true}
+                                            onInput={(text) => setText(text)}
+                                            loading={loading}
+                                        />
                                     </div>
                                 )}
                             </div>

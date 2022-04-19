@@ -25,7 +25,7 @@ class MyDocument extends Document {
                     <meta name="description" content="Uku" />
                     <meta name="keywords" content="Uku.kg, уку, uku" />
                 </Head>
-                <body className="main">
+                <body>
                     <Main />
                     <NextScript />
                     <div dangerouslySetInnerHTML={{ __html: this.ym() }} />
@@ -35,6 +35,10 @@ class MyDocument extends Document {
                         margin: 0;
                         padding: 0;
                         box-sizing: border-box;
+                    }
+
+                    body .Toastify__toast-container {
+                        --toastify-z-index: 10000000;
                     }
                 `}</style>
             </Html>

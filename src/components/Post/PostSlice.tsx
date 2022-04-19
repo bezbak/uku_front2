@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "@/app/store";
 import { IPublication } from "@/services/types";
 import { container } from "tsyringe";
+import { toast } from "react-toastify";
 
 export interface PostState {
     following: boolean;
@@ -69,18 +70,26 @@ export const commentAsync = createAsyncThunk(
 
 export const createPostAsync = createAsyncThunk(
     "post/create",
-    async (data: {
-        category: number;
-        location: number;
-        description: string;
-        images?: number[];
-    }) => {
+    async (
+        data: {
+            category: number;
+            location: number;
+            description: string;
+            images?: number[];
+        },
+        { rejectWithValue }
+    ) => {
         const publicationService = container.resolve(publicationServiceToken);
         const request = publicationService.createPost(data);
         if (!request) return;
-        const { response } = request;
-        const { data: post } = await response;
-        return post;
+        try {
+            const { response } = request;
+            const { data: post } = await response;
+            return post;
+        } catch (error) {
+            toast.error(`Не получилось создать пост! ${(error as any).code}`);
+            return rejectWithValue((error as any).message);
+        }
     }
 );
 
@@ -95,7 +104,7 @@ export const postImageUploadAsync = createAsyncThunk(
             const { data: post } = await response;
             return post;
         } catch (error) {
-            console.log(error);
+            toast.error(`Не получилось загрузить фото! ${(error as any).code}`);
             return rejectWithValue((error as any).message);
         }
     }
