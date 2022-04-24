@@ -36,6 +36,9 @@ import { ToastContainer } from "react-toastify";
 import { container } from "tsyringe";
 import store from "../app/store";
 import MobileMenu from "@/components/MobileMenu";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "../themes";
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -100,100 +103,112 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         }
     };
 
+    React.useEffect(() => {
+        // Remove the server-side injected CSS.
+        const jssStyles = document.querySelector("#jss-server-side");
+        if (jssStyles) {
+            jssStyles.parentElement?.removeChild(jssStyles);
+        }
+    }, []);
+
     return (
-        <Provider store={store}>
-            {getLayout(
-                <>
-                    <Head>
-                        <title>uku.kg</title>
-                    </Head>
-                    <Component {...pageProps} />
-                    <ActionModal />
-                    <LocationModal />
-                    <SearchOverlay />
-                    <AuthConfirm />
-                    <ToastContainer
-                        position="top-center"
-                        hideProgressBar={true}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        draggable
-                        limit={1}
-                        style={{
-                            zIndex: 10000000,
-                        }}
-                    />
-                    <div
-                        className={CN("footer__deeplink", {
-                            "footer__deeplink--hide": !showLink,
-                        })}
-                    >
-                        <div className="footer__deeplink-inner">
-                            <div
-                                className="footer__deeplink-text"
-                                onClick={handleOpenApp}
-                            >
-                                Открыть приложение
-                            </div>
-                            <div className="footer__deeplink-button">
-                                <button
-                                    type="button"
-                                    className="action-modal__close button-reset-default-styles"
-                                    onClick={() => setShowLink(false)}
+        <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Provider store={store}>
+                {getLayout(
+                    <>
+                        <Head>
+                            <title>uku.kg</title>
+                        </Head>
+                        <Component {...pageProps} />
+                        <ActionModal />
+                        <LocationModal />
+                        <SearchOverlay />
+                        <AuthConfirm />
+                        <ToastContainer
+                            position="top-center"
+                            hideProgressBar={true}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            draggable
+                            limit={1}
+                            style={{
+                                zIndex: 10000000,
+                            }}
+                        />
+                        <div
+                            className={CN("footer__deeplink", {
+                                "footer__deeplink--hide": !showLink,
+                            })}
+                        >
+                            <div className="footer__deeplink-inner">
+                                <div
+                                    className="footer__deeplink-text"
+                                    onClick={handleOpenApp}
                                 >
-                                    &times;
-                                </button>
+                                    Открыть приложение
+                                </div>
+                                <div className="footer__deeplink-button">
+                                    <button
+                                        type="button"
+                                        className="action-modal__close button-reset-default-styles"
+                                        onClick={() => setShowLink(false)}
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <MobileMenu />
-                    <style jsx>{`
-                        .footer__deeplink {
-                            position: fixed;
-                            bottom: 70px;
-                            width: 100%;
-                            background: #fff;
-                            z-index: 99;
-                        }
-
-                        .footer__deeplink-inner {
-                            position: relative;
-                            text-align: center;
-                        }
-
-                        .footer__deeplink-button {
-                            position: absolute;
-                            right: 10px;
-                            top: 50%;
-                            transform: translateY(-50%);
-                        }
-
-                        .footer__deeplink-button button {
-                            font-size: 20px;
-                        }
-
-                        .footer__deeplink-text {
-                            font-size: 14px;
-                            color: #0095f6;
-                            padding: 10px;
-                            cursor: pointer;
-                        }
-
-                        .footer__deeplink--hide {
-                            display: none;
-                        }
-
-                        @media all and (min-width: 710px) {
+                        <MobileMenu />
+                        <style jsx>{`
                             .footer__deeplink {
+                                position: fixed;
+                                bottom: 70px;
+                                width: 100%;
+                                background: #fff;
+                                z-index: 99;
+                            }
+
+                            .footer__deeplink-inner {
+                                position: relative;
+                                text-align: center;
+                            }
+
+                            .footer__deeplink-button {
+                                position: absolute;
+                                right: 10px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                            }
+
+                            .footer__deeplink-button button {
+                                font-size: 20px;
+                            }
+
+                            .footer__deeplink-text {
+                                font-size: 14px;
+                                color: #0095f6;
+                                padding: 10px;
+                                cursor: pointer;
+                            }
+
+                            .footer__deeplink--hide {
                                 display: none;
                             }
-                        }
-                    `}</style>
-                </>
-            )}
-        </Provider>
+
+                            @media all and (min-width: 710px) {
+                                .footer__deeplink {
+                                    display: none;
+                                }
+                            }
+                        `}</style>
+                    </>
+                )}
+            </Provider>
+        </ThemeProvider>
     );
 }
 

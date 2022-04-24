@@ -1,9 +1,6 @@
-import "react-day-picker/lib/style.css";
-
 import { IErroType, registerFormSchema } from "./types";
 import React, { FC, FormEvent, ReactNode, useState } from "react";
 import { StructError, assert } from "superstruct";
-import { formatDate, parseDate } from "@/utils/formatDate";
 import { registerAsync, selectPhone } from "./authSlice";
 import {
     selectLocation,
@@ -15,31 +12,14 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Button from "../Buttons/Button";
 import CN from "classnames";
 import Checkbox from "../Checkbox";
-import DayPickerInput from "react-day-picker/DayPickerInput";
-import Select from "react-select";
-import dateFnsFormat from "date-fns/format";
+import _Select from "react-select";
 import getFormDate from "@/utils/getFormData";
 import { useRouter } from "next/router";
-
-function CustomOverlay({
-    classNames,
-    children,
-    ...props
-}: {
-    classNames: any;
-    selectedDay: Date;
-    children: ReactNode;
-}) {
-    return (
-        <div
-            className={classNames.overlayWrapper}
-            style={{ marginLeft: -100, zIndex: 10000 }}
-            {...props}
-        >
-            <div className={classNames.overlay}>{children}</div>
-        </div>
-    );
-}
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { TextField } from "@mui/material";
 
 interface IRegisterProps {
     status: string;
@@ -52,6 +32,9 @@ const Register: FC<IRegisterProps> = ({ status }) => {
     const rout = useRouter();
     const location = useAppSelector(selectLocation);
     const phone = useAppSelector(selectPhone);
+    const [month, setMonth] = useState("");
+    const [day, setDay] = useState("");
+    const [year, setYear] = useState("");
     const dispatch = useAppDispatch();
 
     const options = [
@@ -59,14 +42,15 @@ const Register: FC<IRegisterProps> = ({ status }) => {
         { value: "female", label: "Женский" },
     ];
 
-    const DATE_FORMAT = "yyyy-MM-dd";
-
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = getFormDate(event.currentTarget);
         setError({});
         try {
             if (location) data.region = location.id;
+            if (year && month && day) {
+                data.birth_date = `${year}-${month}-${day}`;
+            }
             assert(data, registerFormSchema);
             await dispatch(registerAsync(data));
             rout.push("/");
@@ -76,8 +60,14 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                     return { ...acc, [err.key]: true };
                 }, {});
                 setError(errors);
+                console.log(errors);
             }
         }
+    };
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setMonth(event.target.value as string);
+        console.log(event.target.value as string);
     };
 
     return (
@@ -116,7 +106,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                         "registration__group--error": error.birth_date,
                     })}
                 >
-                    <Select
+                    <_Select
                         id="long-value-select"
                         instanceId="long-value-select"
                         options={options}
@@ -127,20 +117,58 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                         classNamePrefix="uku"
                         name="gender"
                     />
-                    <DayPickerInput
-                        formatDate={formatDate}
-                        format={DATE_FORMAT}
-                        parseDate={parseDate}
-                        placeholder={`${dateFnsFormat(
-                            new Date(),
-                            DATE_FORMAT
-                        )}*`}
-                        overlayComponent={CustomOverlay}
-                        inputProps={{
-                            name: "birth_date",
-                            readOnly: true,
-                        }}
-                    />
+                </div>
+                <div className="registration__date">
+                    <div className="registration__date-day">
+                        <TextField
+                            label="День"
+                            variant="outlined"
+                            type="number"
+                            inputProps={{ min: 1, max: 31 }}
+                            error={error.birth_date}
+                            onChange={(event) =>
+                                setDay(event.currentTarget.value)
+                            }
+                        />
+                    </div>
+                    <div className="registration__date-month">
+                        <FormControl fullWidth error={error.birth_date}>
+                            <InputLabel>Месяц</InputLabel>
+                            <Select
+                                value={month}
+                                label="Месяц"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={1}>январь</MenuItem>
+                                <MenuItem value={2}>февраль</MenuItem>
+                                <MenuItem value={3}>март</MenuItem>
+                                <MenuItem value={4}>апрель</MenuItem>
+                                <MenuItem value={5}>май</MenuItem>
+                                <MenuItem value={6}>июнь</MenuItem>
+                                <MenuItem value={7}>июль</MenuItem>
+                                <MenuItem value={8}>август</MenuItem>
+                                <MenuItem value={9}>сентябрь</MenuItem>
+                                <MenuItem value={10}>октябрь</MenuItem>
+                                <MenuItem value={11}>ноябрь</MenuItem>
+                                <MenuItem value={12}>декабрь</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                    <div className="registration__date-year">
+                        <TextField
+                            label="Год"
+                            variant="outlined"
+                            error={error.birth_date}
+                            type="number"
+                            inputProps={{ min: 1 }}
+                            onChange={(event) =>
+                                setYear(event.currentTarget.value)
+                            }
+                        />
+                    </div>
                 </div>
                 <div className="registration__region">
                     <input
@@ -213,7 +241,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                 }
 
                 .registration__input--custom {
-                    width: 50%;
+                    width: 100%;
                 }
 
                 .registration__input--custom .uku__control {
@@ -228,6 +256,7 @@ const Register: FC<IRegisterProps> = ({ status }) => {
 
                 .registration__input--custom .uku__menu {
                     top: 70%;
+                    z-index: 2;
                 }
 
                 .registration__input--custom--error .uku__control,
@@ -236,9 +265,11 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                     color: red;
                 }
 
-                .registration__group {
+                .registration__group,
+                .registration__date {
                     display: flex;
                     column-gap: 10px;
+                    margin-bottom: 10px;
                 }
 
                 .registration__checkbox {
@@ -254,6 +285,41 @@ const Register: FC<IRegisterProps> = ({ status }) => {
                 .registration__checkbox-text span {
                     color: #e56366;
                     margin: 10px 0;
+                }
+
+                .registration__date-day {
+                    max-width: 80px;
+                    width: 52px;
+                    flex-grow: 5;
+                }
+
+                .registration__date-month {
+                    max-width: 176px;
+                    width: 115px;
+                    flex-grow: 11;
+                }
+
+                .registration__date-year {
+                    max-width: 112px;
+                    width: 73px;
+                    flex-grow: 7;
+                }
+            `}</style>
+            <style jsx global>{`
+                /* Chrome, Safari, Edge, Opera */
+                body .MuiInputBase-input::-webkit-outer-spin-button,
+                body .MuiInputBase-input::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+
+                /* Firefox */
+                body .MuiInputBase-input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+
+                body .MuiTextField-root {
+                    width: 100%;
                 }
             `}</style>
         </div>

@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import Actions from "@/components/Actions";
 import CN from "classnames";
 import ConfirmAlert from "@/components/Alert/ConfirmAlert";
-import Container from "@/components/Container";
 import EditPostModal from "@/components/Post/EditPostModal";
 import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
