@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import "reflect-metadata";
 import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
+import "../config/firebase.config";
 
 import { ApiClient, apiDIToken } from "@/lib/ApiClient";
 import { CONTENT_TYPE, CONTENT_TYPE_HEADER_NAME } from "@/constants/headers";

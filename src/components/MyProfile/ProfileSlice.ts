@@ -3,7 +3,6 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { profileServiceToken, publicationServiceToken } from "@/tokens";
 
 import type { AppState } from "../../app/store";
-import { NextRouter } from "next/router";
 import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { container } from "tsyringe";
 
@@ -99,23 +98,6 @@ export const getAvatarAsync = createAsyncThunk(
     }
 );
 
-export const sendSmsToOldPhoneAsync = createAsyncThunk(
-    "profile/change",
-    async (rout: NextRouter, { rejectWithValue, dispatch }) => {
-        const profileService = container.resolve(profileServiceToken);
-        try {
-            const request = profileService.sendSmsToOldPhone();
-            if (!request) return;
-            const { response } = request;
-            const { data: confirm } = await response;
-            dispatch(changePage("oldConfirm"));
-            return confirm;
-        } catch (error) {
-            return rejectWithValue((error as any).message);
-        }
-    }
-);
-
 export const updateProfileAsync = createAsyncThunk(
     "profile/update",
     async (
@@ -169,9 +151,6 @@ export const profileSlice = createSlice({
                 state.status = "idle";
                 if (!payload) return;
                 state.info = payload;
-            })
-            .addCase(sendSmsToOldPhoneAsync.fulfilled, (state) => {
-                state.profilePage = "oldConfirm";
             })
             .addCase(updateProfileAsync.fulfilled, (state, { payload }) => {
                 if (!payload) return;

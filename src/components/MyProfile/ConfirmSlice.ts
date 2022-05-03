@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { AppState } from "../../app/store";
-import { NextRouter } from "next/router";
-import { authServiceToken } from "@/tokens";
-import { changePage } from "./ProfileSlice";
+import { authProvider } from "@/config/firebase.config";
+import { RecaptchaVerifier } from "firebase/auth";
 import { container } from "tsyringe";
+import { authServiceToken } from "@/tokens";
 
 export interface LocationState {
     status: "idle" | "loading" | "failed";
@@ -20,21 +20,13 @@ const initialState: LocationState = {
 
 export const phoneConfirmAsync = createAsyncThunk(
     "confirm/code",
-    async (
-        data: { code: string; type: "new" | "old" },
-        { rejectWithValue, dispatch }
-    ) => {
+    async (phone: string, { rejectWithValue }) => {
         const authService = container.resolve(authServiceToken);
         try {
-            const request = authService.phoneConfirm(data.code, data.type);
+            const request = authService.newPhone(phone);
             if (!request) return;
             const { response } = request;
             const { data: confirm } = await response;
-            if (data.type === "new") {
-                dispatch(changePage("main"));
-            } else {
-                dispatch(changePage("newPhone"));
-            }
             return confirm;
         } catch (error) {
             return rejectWithValue((error as any).message);
@@ -45,19 +37,28 @@ export const phoneConfirmAsync = createAsyncThunk(
 export const newPhoneAsync = createAsyncThunk(
     "confirm/new-phone",
     async (
-        data: { phone: string; rout: NextRouter },
-        { rejectWithValue, dispatch }
+        data: {
+            phone: string;
+            verify: RecaptchaVerifier;
+        },
+        { rejectWithValue }
     ) => {
-        const authService = container.resolve(authServiceToken);
         try {
-            const request = authService.newPhone(data.phone);
-            if (!request) return;
-            const { response } = request;
-            const { data: confirm } = await response;
-            dispatch(changePage("newConfirm"));
-            return confirm;
+            return await authProvider.verifyPhoneNumber(
+                data.phone,
+                data.verify
+            );
         } catch (error) {
-            return rejectWithValue((error as any).message);
+            if (
+                (error as any).code == "auth/quota-exceeded" ||
+                (error as any).code == "auth/too-many-requests"
+            ) {
+                return rejectWithValue(
+                    "Слишком много попыток, попробуйте позже"
+                );
+            } else {
+                return rejectWithValue((error as any).message);
+            }
         }
     }
 );
@@ -66,21 +67,6 @@ export const confirmSlice = createSlice({
     name: "confirm",
     initialState,
     reducers: {},
-    extraReducers: (builder) => {
-        builder
-            .addCase(phoneConfirmAsync.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(phoneConfirmAsync.fulfilled, (state, { payload }) => {
-                state.status = "idle";
-                if (!payload) return;
-                state.message = payload.message;
-            })
-            .addCase(phoneConfirmAsync.rejected, (state, { payload }) => {
-                state.message = payload as string;
-                state.confirmStatus = "failed";
-            });
-    },
 });
 
 export const selectStatusConfirm = (state: AppState) => state.confirm.status;

@@ -3,7 +3,7 @@ import {
     ConfirmSchema,
     FollowSchema,
 } from "./schemas/AccountSchema";
-import { IAuth, IConfirm, IFollow, IOldPhoneChnage } from "./types";
+import { IAuth, IConfirm, IFollow } from "./types";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
 import { ApiClientInterface } from "@/lib/ApiClient";
@@ -11,7 +11,6 @@ import { ApiRequestInterface } from "@/lib/ApiClient/ApiRequest";
 import { IRegisterSchema } from "@/components/Authorization/types";
 import { TokenManagerInterface } from "@/lib/TokenManager";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
-import { oldPhoneSchema } from "./schemas/ProfileSchema";
 import { singleton } from "tsyringe";
 
 @singleton()
@@ -29,10 +28,9 @@ class AuthService {
         return request;
     }
 
-    confirmLogin(data: { phone: string; confirmCode: string }) {
-        const request = this.api.post("/account/login-confirm/", {
-            phone: data.phone,
-            confirmation_code: data.confirmCode,
+    confirmLogin(phone: string) {
+        const request = this.api.post("/account/auth-firebase/", {
+            phone: phone,
         });
         assertApiResponse<IConfirm>(request, ConfirmSchema);
         return request;
@@ -57,31 +55,6 @@ class AuthService {
 
     logOut() {
         this.tokenManager.discardToken();
-    }
-
-    phoneConfirm(
-        code: string,
-        type: "new" | "old"
-    ): ApiRequestInterface<IAuth> {
-        const request = this.api.post(
-            `/account/${
-                type === "new" ? "new-phone-confirm" : "old-phone-confirm"
-            }/`,
-            {
-                confirmation_code: code,
-            },
-            {
-                headers: {
-                    [AUTHORIZATION_HEADER_NAME]: `Token ${this.tokenManager.getToken()}`,
-                },
-            }
-        );
-        if (type === "new") {
-            assertApiResponse<IAuth>(request, AuthSchema);
-        } else {
-            assertApiResponse<IOldPhoneChnage>(request, oldPhoneSchema);
-        }
-        return request;
     }
 
     newPhone(phone: string): ApiRequestInterface<IAuth> {

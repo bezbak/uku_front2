@@ -6,6 +6,8 @@ import { TokenManagerDiToken } from "@/lib/TokenManager";
 import { authServiceToken } from "@/tokens";
 import { container } from "tsyringe";
 import { initLocation } from "@/app/mainSlice";
+import { authentication } from "@/config/firebase.config";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 export interface CounterState {
     value: "login" | "register" | "confirm";
@@ -32,29 +34,41 @@ const initialState: CounterState = {
 
 export const loginAsync = createAsyncThunk(
     "auth/login",
-    async (phone: string, { rejectWithValue }) => {
-        const authService = container.resolve(authServiceToken);
+    async (
+        data: {
+            phone: string;
+            verify: RecaptchaVerifier;
+        },
+        { rejectWithValue }
+    ) => {
         try {
-            const request = authService.authLogin(phone);
-            if (!request) return;
-            const { response } = request;
-            const { data: authinfo } = await response;
-            return authinfo;
+            const auth = signInWithPhoneNumber(
+                authentication,
+                data.phone,
+                data.verify
+            );
+            return await auth;
         } catch (error) {
-            return rejectWithValue((error as any).message);
+            if (
+                (error as any).code == "auth/quota-exceeded" ||
+                (error as any).code == "auth/too-many-requests"
+            ) {
+                return rejectWithValue(
+                    "Слишком много попыток, попробуйте позже"
+                );
+            } else {
+                return rejectWithValue((error as any).message);
+            }
         }
     }
 );
 
 export const confirmAsync = createAsyncThunk(
     "auth/confirm",
-    async (
-        data: { phone: string; confirmCode: string },
-        { rejectWithValue, dispatch }
-    ) => {
+    async (phone: string, { rejectWithValue, dispatch }) => {
         const authService = container.resolve(authServiceToken);
         try {
-            const request = authService.confirmLogin(data);
+            const request = authService.confirmLogin(phone);
             if (!request) return;
             const { response } = request;
             const { data: confirm } = await response;
@@ -122,6 +136,7 @@ export const authSlice = createSlice({
                     state.value = "register";
                 } else {
                     state.region_detail = payload?.region_detail || null;
+                    state.value = "login";
                 }
                 state.confrimStatus = "idle";
                 state.message = "";

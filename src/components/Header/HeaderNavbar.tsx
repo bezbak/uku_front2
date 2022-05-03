@@ -12,16 +12,21 @@ import Icon from "../Icon";
 import Link from "next/link";
 import LocationIcon from "../icons/LocationIcon";
 import Logo from "./Logo";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from "../icons/SearchIcon";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
 
 export default function HeaderNavbar({ avatar }: { avatar: string }) {
+    const [token, setToken] = useState<string | null>(null);
     const router = useRouter();
-    const token = useGetToken();
     const dispatch = useAppDispatch();
     const location = useAppSelector(selectLocation);
+
+    useEffect(() => {
+        setToken(useGetToken());
+    }, []);
+
     return (
         <div className="navbar">
             <Container>

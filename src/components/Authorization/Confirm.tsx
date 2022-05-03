@@ -14,14 +14,27 @@ import CN from "classnames";
 import Spinner from "../Spinner";
 import { changePage } from "../MyProfile/ProfileSlice";
 import getFormDate from "@/utils/getFormData";
-import { phoneConfirmAsync } from "../MyProfile/ConfirmSlice";
 import { useRouter } from "next/router";
+import {
+    PhoneAuthProvider,
+    RecaptchaVerifier,
+    updatePhoneNumber,
+} from "firebase/auth";
+import { authentication } from "@/config/firebase.config";
+import { phoneConfirmAsync } from "../MyProfile/ConfirmSlice";
 
 interface IConfirmProps {
     status: "idle" | "loading" | "failed";
     message?: string;
     confirmStatus: "idle" | "loading" | "failed";
     type: "new" | "old" | "login";
+}
+
+declare global {
+    interface Window {
+        recaptchaVerifier: any;
+        confirmationResult: any;
+    }
 }
 
 const Confirm: FC<IConfirmProps> = ({
@@ -44,22 +57,27 @@ const Confirm: FC<IConfirmProps> = ({
         try {
             assert(data, confirmFormSchema);
             if (type === "login") {
+                const confirmationResult = window.confirmationResult;
+                const { user } = await confirmationResult.confirm(data.code);
                 const { payload } = await dispatch(
-                    confirmAsync({
-                        phone,
-                        confirmCode: data.code,
-                    })
+                    confirmAsync(user.phoneNumber)
                 );
                 if ((payload as any)?.is_profile_completed) {
                     rout.push("/");
                 }
-            } else {
-                dispatch(
-                    phoneConfirmAsync({
-                        code: data.code,
-                        type,
-                    })
-                );
+            } else if (type === "old") {
+                dispatch(changePage("newPhone"));
+            } else if (type === "new") {
+                const { currentUser: fuser } = authentication;
+                if (fuser) {
+                    const cred = PhoneAuthProvider.credential(
+                        window.verifideId,
+                        data.code
+                    );
+                    updatePhoneNumber(fuser, cred);
+                    await dispatch(phoneConfirmAsync(phone));
+                    dispatch(changePage("main"));
+                }
             }
         } catch (error: unknown) {
             if (error instanceof StructError) {
@@ -131,7 +149,21 @@ const Confirm: FC<IConfirmProps> = ({
             <div className="confirm__resend">
                 <p className="confirm__resend-text">Не пришло SMS сообщение?</p>
                 <button
-                    onClick={() => dispatch(loginAsync(phone))}
+                    onClick={() => {
+                        const verify = new RecaptchaVerifier(
+                            "recaptcha-container",
+                            {
+                                size: "invisible",
+                            },
+                            authentication
+                        );
+                        dispatch(
+                            loginAsync({
+                                phone,
+                                verify,
+                            })
+                        );
+                    }}
                     disabled={!!time}
                     className={CN("confirm__resend-button", {
                         "confirm__resend-button--active": !time,
@@ -149,6 +181,7 @@ const Confirm: FC<IConfirmProps> = ({
                     )}
                 </button>
             </div>
+            <div id="recaptcha-container"></div>
             <style jsx>{`
                 .confirm__title {
                     font-size: 24px;

@@ -16,6 +16,8 @@ import { useAppDispatch } from "@/app/hooks";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import compressFile from "@/utils/compressFile";
+import { signOut } from "firebase/auth";
+import { authentication } from "@/config/firebase.config";
 
 export interface IEditProfileInfoProps {
     info: IprofileInfo | null;
@@ -43,6 +45,7 @@ export default function EditProfileInfo({
     const handleLogOut = () => {
         const authService = container.resolve(authServiceToken);
         authService.logOut();
+        signOut(authentication);
         router.push("/login");
     };
 

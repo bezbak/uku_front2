@@ -1,6 +1,6 @@
 import "react-phone-input-2/lib/style.css";
 
-import React, { FC, FormEvent } from "react";
+import React, { FC, FormEvent, useRef } from "react";
 import { changeNumber, loginAsync, selectPhone } from "./authSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
@@ -8,7 +8,10 @@ import Button from "../Buttons/Button";
 import Link from "next/link";
 import PhoneInput from "react-phone-input-2";
 import { newPhoneAsync } from "../MyProfile/ConfirmSlice";
-import { useRouter } from "next/router";
+import { authentication } from "@/config/firebase.config";
+import { RecaptchaVerifier } from "firebase/auth";
+import { toast } from "react-toastify";
+import { changePage } from "../MyProfile/ProfileSlice";
 
 interface ILoginProps {
     status: string;
@@ -16,27 +19,61 @@ interface ILoginProps {
     type: "new" | "login";
 }
 
+declare global {
+    interface Window {
+        recaptchaVerifier: any;
+        confirmationResult: any;
+        verifideId: any;
+    }
+}
+
 const Login: FC<ILoginProps> = ({ status, message, type }) => {
     const phone = useAppSelector(selectPhone);
-    const rout = useRouter();
     const dispatch = useAppDispatch();
+    const ref = useRef<HTMLDivElement | null>(null);
+
     const onChangePhone = (number: string) => {
         dispatch(changeNumber(`+${number}`));
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const verify = new RecaptchaVerifier(
+            "recaptcha-container",
+            {
+                size: "invisible",
+            },
+            authentication
+        );
+
         if (type === "login") {
-            dispatch(loginAsync(phone));
+            try {
+                const { payload } = await dispatch(
+                    loginAsync({
+                        phone,
+                        verify,
+                    })
+                );
+                window.confirmationResult = payload;
+            } catch (error) {
+                toast.error("Произошла ошибка попробуйте снова!");
+            }
         } else {
-            dispatch(
-                newPhoneAsync({
-                    phone,
-                    rout,
-                })
-            );
+            try {
+                const { payload } = await dispatch(
+                    newPhoneAsync({
+                        phone,
+                        verify,
+                    })
+                );
+                window.verifideId = payload;
+                dispatch(changePage("newConfirm"));
+            } catch (error) {
+                toast.error("Произошла ошибка попробуйте снова!");
+            }
         }
     };
+
     return (
         <div className="login">
             <div className="login__header">
@@ -72,6 +109,7 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                 >
                     Далее
                 </Button>
+                <div id="recaptcha-container" ref={ref}></div>
             </form>
             <style jsx global>{`
                 .login__header {

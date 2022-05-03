@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+    changePage,
     profileAsync,
     profileInfoAsync,
     selectProfile,
     selectProfileInfo,
     selectProfilePage,
-    sendSmsToOldPhoneAsync,
     updateProfileAsync,
 } from "@/components/MyProfile/ProfileSlice";
 import {
@@ -29,7 +29,10 @@ import { assert } from "superstruct";
 import { changeNumber } from "@/components/Authorization/authSlice";
 import { deletePostAsync } from "@/components/Post/PostSlice";
 import getFormDate from "@/utils/getFormData";
-import { useRouter } from "next/router";
+import { authentication } from "@/config/firebase.config";
+import { signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier } from "firebase/auth";
+import { toast } from "react-toastify";
 
 interface IConfirmAlert {
     title: string;
@@ -50,13 +53,14 @@ const MyProfile = () => {
     const message = useAppSelector(selectMessageConfirm);
     const confirmStatus = useAppSelector(selectConfirmStatusConfirm);
     const info = useAppSelector(selectProfileInfo);
-    const rout = useRouter();
     const dispatch = useAppDispatch();
     const [edit, setEdit] = useState(false);
     const [alert, setAlert] = useState<IConfirmAlert>(confirmAlertInitial);
     const [page, setPage] = useState(1);
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const profile = useAppSelector(selectProfile);
+    const ref = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         dispatch(profileAsync(page));
     }, [page]);
@@ -65,13 +69,32 @@ const MyProfile = () => {
         dispatch(profileInfoAsync());
     }, []);
 
-    const confirmChange = () => {
+    const confirmChange = async () => {
         if (alert.name === "delete") {
             if (deleteId) dispatch(deletePostAsync(deleteId));
             updatePost();
         } else if (alert.name === "number") {
-            dispatch(sendSmsToOldPhoneAsync(rout));
-            if (info) dispatch(changeNumber(info.phone));
+            try {
+                if (info) {
+                    const verify = new RecaptchaVerifier(
+                        "recaptcha-container",
+                        {
+                            size: "invisible",
+                        },
+                        authentication
+                    );
+                    const auth = await signInWithPhoneNumber(
+                        authentication,
+                        info.phone,
+                        verify
+                    );
+                    window.confirmationResult = auth;
+                }
+                dispatch(changePage("oldConfirm"));
+                if (info) dispatch(changeNumber(info.phone));
+            } catch (error) {
+                toast.error(`Что то пошло нет так! ${(error as any).code}`);
+            }
         }
         setAlert(confirmAlertInitial);
     };
@@ -109,13 +132,17 @@ const MyProfile = () => {
         setDeleteId(id);
     };
 
+    const handlePhoneChnage = () => {
+        setEdit(true);
+    };
+
     return (
         <Layout>
             {profilePage === "main" ? (
                 <>
                     <Header />
                     <Profile
-                        onAction={setEdit}
+                        onAction={handlePhoneChnage}
                         page="my"
                         info={info}
                         posts={profile}
@@ -137,6 +164,7 @@ const MyProfile = () => {
                         onConfirm={confirmChange}
                     />
                     <Footer />
+                    <div id="recaptcha-container" ref={ref}></div>
                 </>
             ) : (
                 <Auth>

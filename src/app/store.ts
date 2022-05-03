@@ -25,6 +25,10 @@ export function makeStore() {
             search: searchReducer,
             main: mainReducer,
         },
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware({
+                serializableCheck: false,
+            }),
     });
 }
 
