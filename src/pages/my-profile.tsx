@@ -29,8 +29,7 @@ import { assert } from "superstruct";
 import { changeNumber } from "@/components/Authorization/authSlice";
 import { deletePostAsync } from "@/components/Post/PostSlice";
 import getFormDate from "@/utils/getFormData";
-import { authentication } from "@/config/firebase.config";
-import { signInWithPhoneNumber } from "firebase/auth";
+import { authentication, authProvider } from "@/config/firebase.config";
 import { RecaptchaVerifier } from "firebase/auth";
 import { toast } from "react-toastify";
 
@@ -83,17 +82,20 @@ const MyProfile = () => {
                         },
                         authentication
                     );
-                    const auth = await signInWithPhoneNumber(
-                        authentication,
+                    const verifideId = await authProvider.verifyPhoneNumber(
                         info.phone,
                         verify
                     );
-                    window.confirmationResult = auth;
+                    window.verifideId = verifideId;
+                    dispatch(changePage("oldConfirm"));
                 }
-                dispatch(changePage("oldConfirm"));
                 if (info) dispatch(changeNumber(info.phone));
             } catch (error) {
-                toast.error(`Что то пошло нет так! ${(error as any).code}`);
+                toast.error(
+                    `Что то пошло нет так! попробуйте позже ${
+                        (error as any).code
+                    }`
+                );
             }
         }
         setAlert(confirmAlertInitial);

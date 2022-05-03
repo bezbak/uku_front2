@@ -110,6 +110,9 @@ export const authSlice = createSlice({
         incorectNumber(state) {
             state.value = "login";
         },
+        erroMessage(state, action: PayloadAction<string | undefined>) {
+            state.message = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -163,7 +166,7 @@ export const authSlice = createSlice({
     },
 });
 
-export const { changeNumber, incorectNumber } = authSlice.actions;
+export const { changeNumber, incorectNumber, erroMessage } = authSlice.actions;
 
 export const selectAuth = (state: AppState) => state.auth.value;
 export const selectPhone = (state: AppState) => state.auth.phoneNumber;
