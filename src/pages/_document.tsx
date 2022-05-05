@@ -1,6 +1,7 @@
 import Document, { Head, Html, Main, NextScript } from "next/document";
 
 import React from "react";
+import { YMInitializer } from "react-yandex-metrika";
 
 class MyDocument extends Document {
     render() {
@@ -14,6 +15,15 @@ class MyDocument extends Document {
                 <body>
                     <Main />
                     <NextScript />
+                    <YMInitializer
+                        accounts={[88273965]}
+                        options={{
+                            clickmap: true,
+                            trackLinks: true,
+                            accurateTrackBounce: true,
+                            webvisor: true,
+                        }}
+                    />
                 </body>
                 <style jsx global>{`
                     * {

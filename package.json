@@ -24,6 +24,7 @@
         "react-share": "^4.4.0",
         "react-simple-image-viewer": "^1.2.1",
         "react-toastify": "^8.2.0",
+        "react-yandex-metrika": "^2.6.0",
         "reflect-metadata": "^0.1.13",
         "superstruct": "^0.15.3",
         "swiper": "^8.0.7",
