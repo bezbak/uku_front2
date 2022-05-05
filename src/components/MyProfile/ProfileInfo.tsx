@@ -10,6 +10,7 @@ import TelagramIcon from "../icons/TelegramIcon";
 import WhatsAppIcon from "../icons/WhatsAppIcon";
 import { selectFollowStatus } from "../Post/PostSlice";
 import { useAppSelector } from "@/app/hooks";
+import CN from "classnames";
 
 export interface IProfileInfoProps {
     info: IprofileInfo | null;
@@ -17,6 +18,8 @@ export interface IProfileInfoProps {
     page: "my" | "user";
     follow?: boolean;
 }
+
+type IStatusType = "active" | "blocked";
 
 export default function ProfileInfo({
     info,
@@ -38,6 +41,15 @@ export default function ProfileInfo({
         setIsViewerOpen(false);
     };
 
+    const getStatusText = (status: IStatusType) => {
+        switch (status) {
+            case "active":
+                return "Активно";
+            case "blocked":
+                return "Заблокированно";
+        }
+    };
+
     return (
         <div className="profile-info">
             <div
@@ -53,13 +65,20 @@ export default function ProfileInfo({
                     name={info?.first_name || ""}
                 />
             </div>
+            {!!info && (
+                <div
+                    className={CN(
+                        "profile-info__status",
+                        `profile-info__status--${info.status}`
+                    )}
+                >
+                    {getStatusText(info?.status)}
+                </div>
+            )}
             <div className="profile-info__content">
                 <h4 className="profile-info__name">
                     {info?.first_name} {info?.last_name}
                 </h4>
-                {/* <span className="profile-info__info">
-                    {info?.gender} {info && ageToString(info?.age)}
-                </span> */}
             </div>
             <div className="profile-info__static">
                 <div>
@@ -240,6 +259,18 @@ export default function ProfileInfo({
                 .profile-info__tel {
                     color: #000;
                     text-decoration: none;
+                }
+
+                .profile-info__status {
+                    font-size: 14px;
+                    text-transform: capitalize;
+                    margin-top: 10px;
+                }
+                .profile-info__status--active {
+                    color: green;
+                }
+                .profile-info__status--blocked {
+                    color: red;
                 }
             `}</style>
             <style jsx global>{`

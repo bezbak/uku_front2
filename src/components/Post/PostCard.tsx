@@ -25,6 +25,8 @@ export interface IPostCardProps {
     width?: number;
 }
 
+type IStatusType = "on moderation" | "active" | "inactive" | "blocked";
+
 export default function PostCard({
     item,
     onFollow,
@@ -77,11 +79,38 @@ export default function PostCard({
         if (!followEnable) setFollow(item.user?.following);
     }, [item]);
 
+    const getStatusText = (status: IStatusType) => {
+        switch (status) {
+            case "on moderation":
+                return "На модерации";
+            case "active":
+                return "Активно";
+            case "inactive":
+                return "Неактивно";
+            case "blocked":
+                return "Заблокированно";
+        }
+    };
+
+    const getStatusClass = (status: IStatusType) => {
+        switch (status) {
+            case "on moderation":
+                return "moderation";
+            case "active":
+                return "active";
+            case "inactive":
+                return "inactive";
+            case "blocked":
+                return "blocked";
+        }
+    };
+
     return (
         <Link href={`/detail/${item.id}`}>
             <article
                 className={CN("post-card", {
                     "post-card--masonry": masonry,
+                    "post-card--blocked": item.status === "blocked",
                 })}
             >
                 <div className="post-card__inner">
@@ -190,6 +219,18 @@ export default function PostCard({
                                     ))}
                                 </div>
                             )}
+                            {item.is_owner && item.status && (
+                                <p
+                                    className={CN(
+                                        "post-card__categories",
+                                        `post-card__categories--${getStatusClass(
+                                            item.status
+                                        )}`
+                                    )}
+                                >
+                                    {getStatusText(item.status)}
+                                </p>
+                            )}
                             <p className="post-card__categories">
                                 {item.categories}
                             </p>
@@ -214,6 +255,15 @@ export default function PostCard({
                                 </div>
                             </footer>
                         </div>
+                        {item.blocking_reason_text &&
+                            item.status === "blocked" && (
+                                <div className="post-card__blocked-baner">
+                                    <div className="post-card__blocked-text">
+                                        <div>Статус: Заблокированно</div>
+                                        <p>{item.blocking_reason_text}</p>
+                                    </div>
+                                </div>
+                            )}
                     </section>
                 </div>
                 <style jsx>{`
@@ -349,6 +399,68 @@ export default function PostCard({
 
                     .post-card__content--news .post-card__comments {
                         color: #e6e6e6;
+                    }
+
+                    .post-card__categories--moderation {
+                        color: orange;
+                    }
+
+                    .post-card__categories--active {
+                        color: green;
+                    }
+
+                    .post-card__categories--inactive {
+                        color: gray;
+                    }
+
+                    .post-card__categories--blocked {
+                        color: red;
+                    }
+
+                    .post-card--blocked {
+                        position: relative;
+                        border-radius: 15px;
+                        overflow: hidden;
+                    }
+
+                    .post-card--blocked:before {
+                        content: "";
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        background: rgba(0, 0, 0, 0.5);
+                        top: 0;
+                        left: 0;
+                        z-index: 1;
+                    }
+
+                    .post-card__blocked-baner {
+                        width: 80%;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        height: 80%;
+                        background: #fff;
+                        z-index: 1;
+                        transform: translate(-50%, -50%);
+                        border-radius: 20px;
+                    }
+
+                    .post-card__blocked-text {
+                        color: #e56366;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        flex-flow: column;
+                        padding: 0 10px;
+                        font-weight: 800;
+                    }
+
+                    .post-card__blocked-text p {
+                        text-align: center;
+                        font-size: 14px;
+                        margin-top: 15px;
                     }
 
                     @media all and (max-width: 460px) {
