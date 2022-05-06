@@ -277,6 +277,7 @@ export default function PostCard({
 
                     .post-card__images {
                         position: relative;
+                        margin-bottom: -7px;
                     }
 
                     .post-card__image {
