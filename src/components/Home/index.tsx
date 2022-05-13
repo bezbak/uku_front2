@@ -94,7 +94,7 @@ const Home = () => {
         window.yaContextCb.push(() => {
             window.Ya.Context.AdvManager.render({
                 renderTo: `yandex_rtb_${id}`,
-                blockId: "R-A-1654405-1",
+                blockId: id,
                 onError: function (data: any) {
                     console.log("type", data.type); // error или warning
                     console.log("code", data.code); // Код ошибки из таблицы выше
