@@ -94,7 +94,7 @@ const Home = () => {
         window.yaContextCb.push(() => {
             window.Ya.Context.AdvManager.render({
                 renderTo: `yandex_rtb_${id}`,
-                blockId: id,
+                blockId: "R-A-1654405-1",
                 onError: function (data: any) {
                     console.log("type", data.type); // error или warning
                     console.log("code", data.code); // Код ошибки из таблицы выше
@@ -121,11 +121,11 @@ const Home = () => {
                             {feed?.results.map((item, index) => {
                                 if (index !== 0 && index % 10 === 0) {
                                     //`R-A-1654405-${index / 10}`
-                                    addAd(`R-A-1654405-1`);
+                                    addAd(`R-A-1654405-${index / 10}`);
                                     return (
                                         <div
                                             key={item.id}
-                                            id={`R-A-1654405-1`}
+                                            id={`R-A-1654405-${index / 10}`}
                                             className="ad-block"
                                         />
                                     );
