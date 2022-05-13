@@ -120,13 +120,13 @@ const Home = () => {
                         <Masonry sizes={sizes} onUpdate={updateMasonry}>
                             {feed?.results.map((item, index) => {
                                 if (index !== 0 && index % 10 === 0) {
-                                    addAd(`R-A-1654405-${index / 10}`);
+                                    //`R-A-1654405-${index / 10}`
+                                    addAd(`R-A-1654405-1`);
                                     return (
                                         <div
                                             key={item.id}
-                                            id={`yandex_rtb_R-A-1654405-${
-                                                index / 10
-                                            }`}
+                                            id={`R-A-1654405-1`}
+                                            className="ad-block"
                                         />
                                     );
                                 } else {
@@ -146,12 +146,17 @@ const Home = () => {
                     </>
                 )}
                 <div ref={ref} />
-                <style jsx>{`
+                <style jsx global>{`
                     .masonry-list {
                         display: flex;
                         justify-content: center;
                         flex-wrap: wrap;
                         gap: 10px;
+                    }
+
+                    .ad-block {
+                        width: 370px;
+                        height: 450px;
                     }
                 `}</style>
             </Wrapper>
