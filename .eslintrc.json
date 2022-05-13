@@ -49,5 +49,8 @@
         "react": {
             "version": "detect"
         }
+    },
+    "compilerOptions": {
+        "esModuleInterop": true
     }
 }

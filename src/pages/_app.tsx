@@ -40,6 +40,8 @@ import MobileMenu from "@/components/MobileMenu";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../themes";
+import Router from "next/router";
+import withYM from "next-ym";
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -213,4 +215,4 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     );
 }
 
-export default App;
+export default withYM("88273965", Router)(App);

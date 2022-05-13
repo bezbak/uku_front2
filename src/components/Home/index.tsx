@@ -14,11 +14,7 @@ declare global {
     }
 }
 
-const isInjected = false;
-
-const injectPcodeScript = (callback: VoidFunction) => {
-    if (isInjected) return;
-
+const injectPcodeScript = () => {
     const scriptElement = document.createElement("script");
     scriptElement.innerText = "window.yaContextCb = window.yaContextCb || []";
 
@@ -28,10 +24,6 @@ const injectPcodeScript = (callback: VoidFunction) => {
     loaderElement.src = "https://yandex.ru/ads/system/context.js";
 
     document.body.appendChild(loaderElement);
-
-    loaderElement.onload = () => {
-        callback();
-    };
 };
 
 const Home = () => {
@@ -95,28 +87,26 @@ const Home = () => {
     };
 
     useEffect(() => {
-        const callback = () => {
-            window.yaContextCb.push(() => {
-                window.Ya.Context.AdvManager.render({
-                    renderTo: "yandex_rtb_R-A-1654405-1",
-                    blockId: "R-A-1654405-1",
-                    onError: function (data: any) {
-                        console.log("type", data.type); // error или warning
-                        console.log("code", data.code); // Код ошибки из таблицы выше
-                        console.log("text", data.text); // Текстовое описание ошибки
-                        // Обработка ошибки со стороны площадки
-                    },
-                });
-            });
-        };
-
-        injectPcodeScript(callback);
+        injectPcodeScript();
     }, []);
+
+    const addAd = (id: string) => {
+        window.yaContextCb.push(() => {
+            window.Ya.Context.AdvManager.render({
+                renderTo: `yandex_rtb_${id}`,
+                blockId: id,
+                onError: function (data: any) {
+                    console.log("type", data.type); // error или warning
+                    console.log("code", data.code); // Код ошибки из таблицы выше
+                    console.log("text", data.text); // Текстовое описание ошибки
+                },
+            });
+        });
+    };
 
     return (
         <>
             <Wrapper title="Лента">
-                <div id="yandex_rtb_R-A-1654405-1"></div>
                 {loading ? (
                     <div className="masonry-list">
                         {Array(6)
@@ -128,17 +118,29 @@ const Home = () => {
                 ) : (
                     <>
                         <Masonry sizes={sizes} onUpdate={updateMasonry}>
-                            {feed?.results.map((item) => {
-                                return (
-                                    <PostCard
-                                        key={item.id}
-                                        item={item}
-                                        onFollow={updatePosts}
-                                        onDelete={updatePosts}
-                                        masonry={true}
-                                        header={!item.is_owner}
-                                    />
-                                );
+                            {feed?.results.map((item, index) => {
+                                if (index !== 0 && index % 10 === 0) {
+                                    addAd(`R-A-1654405-${index / 10}`);
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            id={`yandex_rtb_R-A-1654405-${
+                                                index / 10
+                                            }`}
+                                        />
+                                    );
+                                } else {
+                                    return (
+                                        <PostCard
+                                            key={item.id}
+                                            item={item}
+                                            onFollow={updatePosts}
+                                            onDelete={updatePosts}
+                                            masonry={true}
+                                            header={!item.is_owner}
+                                        />
+                                    );
+                                }
                             })}
                         </Masonry>
                     </>
