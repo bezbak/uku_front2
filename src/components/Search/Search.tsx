@@ -28,6 +28,18 @@ import { useGetToken } from "@/hooks/useGetToken";
 import CN from "classnames";
 import compressFile from "@/utils/compressFile";
 
+const injectPcodeScript = () => {
+    const scriptElement = document.createElement("script");
+    scriptElement.innerText = "window.yaContextCb = window.yaContextCb || []";
+
+    document.body.appendChild(scriptElement);
+
+    const loaderElement = document.createElement("script");
+    loaderElement.src = "https://yandex.ru/ads/system/context.js";
+
+    document.body.appendChild(loaderElement);
+};
+
 const Search = () => {
     const dispatch = useAppDispatch();
     const items = useAppSelector(selectCategory);
@@ -117,6 +129,25 @@ const Search = () => {
         setFile(null);
     };
 
+    useEffect(() => {
+        injectPcodeScript();
+    }, []);
+
+    const addAd = (id: string, page: number) => {
+        window.yaContextCb.push(() => {
+            window.Ya.Context.AdvManager.render({
+                renderTo: `yandex_rtb_${id}`,
+                blockId: "R-A-1654405-1",
+                onError: function (data: any) {
+                    console.log("type", data.type); // error или warning
+                    console.log("code", data.code); // Код ошибки из таблицы выше
+                    console.log("text", data.text); // Текстовое описание ошибки
+                },
+                pageNumber: page,
+            });
+        });
+    };
+
     return (
         <>
             <section className="search">
@@ -140,16 +171,37 @@ const Search = () => {
                             </header>
                             <div className="search__body">
                                 <PostList>
-                                    {search?.results.map((item) => {
-                                        return (
-                                            <PostCard
-                                                key={item.id}
-                                                item={item}
-                                                followEnable={!item.is_owner}
-                                                faveEneble={!item.is_owner}
-                                                header={!item.is_owner}
-                                            />
-                                        );
+                                    {search?.results.map((item, index) => {
+                                        if (index !== 0 && index % 10 === 0) {
+                                            addAd(
+                                                `R-A-1654405-1-${index / 10}`,
+                                                index / 10
+                                            );
+                                            return (
+                                                <div
+                                                    key={item.id}
+                                                    className="ad-block"
+                                                >
+                                                    <div
+                                                        id={`yandex_rtb_R-A-1654405-1-${
+                                                            index / 10
+                                                        }`}
+                                                    />
+                                                </div>
+                                            );
+                                        } else {
+                                            return (
+                                                <PostCard
+                                                    key={item.id}
+                                                    item={item}
+                                                    followEnable={
+                                                        !item.is_owner
+                                                    }
+                                                    faveEneble={!item.is_owner}
+                                                    header={!item.is_owner}
+                                                />
+                                            );
+                                        }
                                     })}
                                 </PostList>
                                 <div

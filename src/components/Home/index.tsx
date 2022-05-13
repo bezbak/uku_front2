@@ -6,6 +6,7 @@ import Masonry from "../Masonry/Masonry";
 import PostCard from "../Post/PostCard";
 import { PostCardSkeleton } from "../Post/skeletons/PostCardSkeleton";
 import Wrapper from "../Wrapper";
+import { Instance } from "bricks.js";
 
 declare global {
     interface Window {
@@ -40,6 +41,7 @@ const Home = () => {
         { mq: "1155px", columns: 3, gutter: gutter },
         { mq: "1540px", columns: 4, gutter: gutter },
     ];
+    const [masonry, setMasonry] = useState<Instance | null>(null);
 
     const updateMasonry = () => {
         setLoading(false);
@@ -100,6 +102,9 @@ const Home = () => {
                     console.log("code", data.code); // Код ошибки из таблицы выше
                     console.log("text", data.text); // Текстовое описание ошибки
                 },
+                onRender: () => {
+                    masonry?.resize(true).pack();
+                },
                 pageNumber: page,
             });
         });
@@ -118,7 +123,11 @@ const Home = () => {
                     </div>
                 ) : (
                     <>
-                        <Masonry sizes={sizes} onUpdate={updateMasonry}>
+                        <Masonry
+                            sizes={sizes}
+                            onUpdate={updateMasonry}
+                            onInit={(masonry) => setMasonry(masonry)}
+                        >
                             {feed?.results.map((item, index) => {
                                 if (index !== 0 && index % 10 === 0) {
                                     addAd(
