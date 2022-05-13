@@ -125,7 +125,9 @@ const Home = () => {
                                     return (
                                         <div
                                             key={item.id}
-                                            id={`R-A-1654405-${index / 10}`}
+                                            id={`yandex_rtb_R-A-1654405-${
+                                                index / 10
+                                            }`}
                                             className="ad-block"
                                         />
                                     );
