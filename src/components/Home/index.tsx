@@ -90,7 +90,7 @@ const Home = () => {
         injectPcodeScript();
     }, []);
 
-    const addAd = (id: string) => {
+    const addAd = (id: string, page: number) => {
         window.yaContextCb.push(() => {
             window.Ya.Context.AdvManager.render({
                 renderTo: `yandex_rtb_${id}`,
@@ -100,6 +100,7 @@ const Home = () => {
                     console.log("code", data.code); // Код ошибки из таблицы выше
                     console.log("text", data.text); // Текстовое описание ошибки
                 },
+                pageNumber: page,
             });
         });
     };
@@ -120,16 +121,18 @@ const Home = () => {
                         <Masonry sizes={sizes} onUpdate={updateMasonry}>
                             {feed?.results.map((item, index) => {
                                 if (index !== 0 && index % 10 === 0) {
-                                    //`R-A-1654405-${index / 10}`
-                                    addAd(`R-A-1654405-1-${index / 10}`);
+                                    addAd(
+                                        `R-A-1654405-1-${index / 10}`,
+                                        index / 10
+                                    );
                                     return (
-                                        <div
-                                            key={item.id}
-                                            id={`yandex_rtb_R-A-1654405-1-${
-                                                index / 10
-                                            }`}
-                                            className="ad-block"
-                                        />
+                                        <div key={item.id} className="ad-block">
+                                            <div
+                                                id={`yandex_rtb_R-A-1654405-1-${
+                                                    index / 10
+                                                }`}
+                                            />
+                                        </div>
                                     );
                                 } else {
                                     return (
