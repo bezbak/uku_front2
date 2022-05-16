@@ -71,15 +71,17 @@ const Confirm: FC<IConfirmProps> = ({
                     window.verifideId,
                     data.code
                 );
-                try {
-                    await signInWithCredential(authentication, cred);
-                    dispatch(changePage("newPhone"));
-                    dispatch(erroMessage(undefined));
-                } catch (error) {
-                    dispatch(
-                        erroMessage("Не правильный код! Введите коректный")
-                    );
-                }
+                await signInWithCredential(authentication, cred).then(
+                    () => {
+                        dispatch(changePage("newPhone"));
+                        dispatch(erroMessage(undefined));
+                    },
+                    function () {
+                        dispatch(
+                            erroMessage("Не правильный код! Введите коректный")
+                        );
+                    }
+                );
             } else if (type === "new") {
                 const { currentUser: fuser } = authentication;
                 if (fuser) {
@@ -87,28 +89,30 @@ const Confirm: FC<IConfirmProps> = ({
                         window.verifideId,
                         data.code
                     );
-                    try {
-                        await signInWithCredential(authentication, cred);
-                        try {
-                            await dispatch(phoneConfirmAsync(phone));
-                            dispatch(changePage("main"));
-                            dispatch(erroMessage(undefined));
-                        } catch (error) {
-                            dispatch((error as any).message);
+                    await signInWithCredential(authentication, cred).then(
+                        async () => {
+                            try {
+                                await dispatch(phoneConfirmAsync(phone));
+                                dispatch(changePage("main"));
+                                dispatch(erroMessage(undefined));
+                            } catch (error) {
+                                dispatch(erroMessage((error as any).message));
+                            }
+                        },
+                        function (error) {
+                            if ((error as any).message === "SESSION_EXPIRED") {
+                            } else if (
+                                (error as any).message === "SESSION_EXPIRED"
+                            ) {
+                                dispatch(
+                                    erroMessage(
+                                        "Не правильный код! Введите коректный"
+                                    )
+                                );
+                            } else {
+                            }
                         }
-                    } catch (error) {
-                        if ((error as any).message === "SESSION_EXPIRED") {
-                        } else if (
-                            (error as any).message === "SESSION_EXPIRED"
-                        ) {
-                            dispatch(
-                                erroMessage(
-                                    "Не правильный код! Введите коректный"
-                                )
-                            );
-                        } else {
-                        }
-                    }
+                    );
                 }
             }
         } catch (error: unknown) {

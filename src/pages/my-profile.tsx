@@ -26,7 +26,10 @@ import Layout from "@/components/Layout";
 import Login from "@/components/Authorization/Login";
 import Profile from "@/components/MyProfile/Profile";
 import { assert } from "superstruct";
-import { changeNumber } from "@/components/Authorization/authSlice";
+import {
+    changeNumber,
+    selectMessage,
+} from "@/components/Authorization/authSlice";
 import { deletePostAsync } from "@/components/Post/PostSlice";
 import getFormDate from "@/utils/getFormData";
 import { authentication, authProvider } from "@/config/firebase.config";
@@ -49,7 +52,7 @@ const MyProfile = () => {
     };
     const profilePage = useAppSelector(selectProfilePage);
     const status = useAppSelector(selectStatusConfirm);
-    const message = useAppSelector(selectMessageConfirm);
+    const message = useAppSelector(selectMessage);
     const confirmStatus = useAppSelector(selectConfirmStatusConfirm);
     const info = useAppSelector(selectProfileInfo);
     const dispatch = useAppDispatch();
@@ -93,7 +96,7 @@ const MyProfile = () => {
             } catch (error) {
                 toast.error(
                     `Что то пошло нет так! попробуйте позже ${
-                        (error as any).code
+                        (error as any).code ? (error as any).code : ""
                     }`
                 );
             }

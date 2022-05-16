@@ -5,6 +5,7 @@ import { authProvider } from "@/config/firebase.config";
 import { RecaptchaVerifier } from "firebase/auth";
 import { container } from "tsyringe";
 import { authServiceToken } from "@/tokens";
+import { toast } from "react-toastify";
 
 export interface LocationState {
     status: "idle" | "loading" | "failed";
@@ -29,6 +30,7 @@ export const phoneConfirmAsync = createAsyncThunk(
             const { data: confirm } = await response;
             return confirm;
         } catch (error) {
+            toast.error((error as any).message);
             return rejectWithValue((error as any).message);
         }
     }
