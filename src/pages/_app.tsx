@@ -41,7 +41,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../themes";
 import Router from "next/router";
-import withYM from "next-ym";
+import withYM from "@/lib/MetrickManager/index";
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -215,4 +215,9 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
     );
 }
 
-export default withYM("88273965", Router)(App);
+export default withYM("88273965", Router, undefined, {
+    clickmap: true,
+    trackLinks: true,
+    accurateTrackBounce: true,
+    webvisor: true,
+})(App);
