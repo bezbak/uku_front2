@@ -11,7 +11,14 @@ const firebaseConfig = {
     measurementId: "G-RDE5ZGJ86K",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const authentication = getAuth(app);
-export const authProvider = new PhoneAuthProvider(authentication);
+let authentication;
+let authProvider;
+
+if (typeof window !== "undefined") {
+    // Выполняется только в браузере
+    const app = initializeApp(firebaseConfig);
+    authentication = getAuth(app);
+    authProvider = new PhoneAuthProvider(authentication);
+}
+
+export { authentication, authProvider };
