@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, PhoneAuthProvider, Auth } from "firebase/auth";
+import { getAuth, PhoneAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA9yQYTWuSldM2S8aeq0gB8hzmEUc2r8i8",
@@ -11,13 +11,7 @@ const firebaseConfig = {
     measurementId: "G-RDE5ZGJ86K",
 };
 
-let authentication: Auth | undefined;
-let authProvider: PhoneAuthProvider | undefined;
-
-if (typeof window !== "undefined") {
-    const app = initializeApp(firebaseConfig);
-    authentication = getAuth(app);
-    authProvider = new PhoneAuthProvider(authentication);
-}
-
-export { authentication, authProvider };
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+export const authentication = getAuth(app);
+export const authProvider = new PhoneAuthProvider(authentication);
