@@ -6,10 +6,10 @@ import {
 import { IAuth, IConfirm, IFollow } from "./types";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
-import type ApiClientInterface  from "@/lib/ApiClient";
+import type {ApiClientInterface}  from "@/lib/ApiClient";
 import { ApiRequestInterface } from "@/lib/ApiClient/ApiRequest";
 import { IRegisterSchema } from "@/components/Authorization/types";
-import { TokenManagerInterface } from "@/lib/TokenManager";
+import type { TokenManagerInterface } from "@/lib/TokenManager";
 import { assertApiResponse } from "@/lib/ApiClient/helpers/assertApiResponse";
 import { singleton } from "tsyringe";
 
