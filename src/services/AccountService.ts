@@ -6,7 +6,7 @@ import {
 import { IAuth, IConfirm, IFollow } from "./types";
 
 import { AUTHORIZATION_HEADER_NAME } from "@/constants/headers";
-import { ApiClientInterface } from "@/lib/ApiClient";
+import type ApiClientInterface  from "@/lib/ApiClient";
 import { ApiRequestInterface } from "@/lib/ApiClient/ApiRequest";
 import { IRegisterSchema } from "@/components/Authorization/types";
 import { TokenManagerInterface } from "@/lib/TokenManager";
