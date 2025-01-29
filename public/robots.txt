@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://uku.kg
+
+# Sitemaps
+Sitemap: https://uku.kg/sitemap.xml

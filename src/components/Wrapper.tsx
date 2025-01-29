@@ -13,7 +13,7 @@ const Wrapper = ({
         <div className="wrapper">
             <Container>
                 <div className="wrapper__inner">
-                    <h2 className="wrapper__title">{title}</h2>
+                    <h1 className="wrapper__title">{title}</h1>
                     <div className="wrapper__content">{children}</div>
                 </div>
             </Container>

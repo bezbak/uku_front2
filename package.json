@@ -15,6 +15,7 @@
         "js-cookie": "^3.0.1",
         "lodash.debounce": "^4.0.8",
         "next": "^12.0.10",
+        "next-sitemap": "^4.2.3",
         "query-string": "^7.1.1",
         "react": "^17.0.2",
         "react-day-picker": "^7.4.10",
@@ -37,7 +38,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "cross-env APP_ENV=prod next start -H 0.0.0.0 -p ${PORT:-8080}",
-        "start:test": "cross-env APP_ENV=test next start -H 0.0.0.0 -p ${PORT:-8080}"
+        "start:test": "cross-env APP_ENV=test next start -H 0.0.0.0 -p ${PORT:-8080}",
+        "postbuild": "next-sitemap"
     },
     "devDependencies": {
         "@babel/core": "^7.17.5",

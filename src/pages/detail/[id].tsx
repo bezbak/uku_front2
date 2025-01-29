@@ -20,6 +20,7 @@ import PrevIcon from "@/components/icons/PrevIcon";
 import { default as _Post } from "@components/Post/Post";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export function getServerSideProps() {
     return {
@@ -94,9 +95,17 @@ const Post = () => {
         }
         setActions(false);
     };
+    if (!post) return null;
 
     return (
         <>
+            <Head>
+                <title>{post.description} | uku.kg</title>
+                <meta name="description" content={post.description} />
+                <meta property="og:title" content={`${post.description} | uku.kg`} />
+                <meta property="og:description" content={post.description} />
+                <meta property="og:image" content={post.images[0]?.image} />
+            </Head>
             <section className="post">
                 <header className="post__header">
                     <button
@@ -204,67 +213,67 @@ const Post = () => {
                     onConfirm={confirmDelete}
                 />
                 <style jsx>{`
-                    .post {
-                        padding: 32px 0;
-                    }
-                    .post__header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 24px;
-                        padding: 0 10px;
-                    }
+                        .post {
+                            padding: 32px 0;
+                        }
+                        .post__header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 24px;
+                            padding: 0 10px;
+                        }
 
-                    .post__prev {
-                        padding: 8px 24px;
-                        display: flex;
-                        align-items: center;
-                        column-gap: 12px;
-                        border: 1px solid #d8d8d8;
-                        border-radius: 6px;
-                    }
+                        .post__prev {
+                            padding: 8px 24px;
+                            display: flex;
+                            align-items: center;
+                            column-gap: 12px;
+                            border: 1px solid #d8d8d8;
+                            border-radius: 6px;
+                        }
 
-                    .post__actions {
-                        display: flex;
-                        column-gap: 12px;
-                    }
-                    .post__left {
-                        display: flex;
-                        column-gap: 12px;
-                        align-items: center;
-                    }
-
-                    .post__fave--faved {
-                        color: #e56366;
-                    }
-
-                    .post__actions-mobile {
-                        display: none;
-                    }
-
-                    .post__actions-mobile-dot {
-                        height: 4px;
-                        width: 4px;
-                        background-color: #000;
-                        border-radius: 50%;
-                        display: block;
-                        margin-bottom: 2px;
-                    }
-
-                    .post__actions-mobile-button {
-                        padding: 10px;
-                    }
-
-                    @media all and (max-width: 470px) {
                         .post__actions {
+                            display: flex;
+                            column-gap: 12px;
+                        }
+                        .post__left {
+                            display: flex;
+                            column-gap: 12px;
+                            align-items: center;
+                        }
+
+                        .post__fave--faved {
+                            color: #e56366;
+                        }
+
+                        .post__actions-mobile {
                             display: none;
                         }
-                        .post__actions-mobile {
+
+                        .post__actions-mobile-dot {
+                            height: 4px;
+                            width: 4px;
+                            background-color: #000;
+                            border-radius: 50%;
                             display: block;
-                            position: relative;
+                            margin-bottom: 2px;
                         }
-                    }
-                `}</style>
+
+                        .post__actions-mobile-button {
+                            padding: 10px;
+                        }
+
+                        @media all and (max-width: 470px) {
+                            .post__actions {
+                                display: none;
+                            }
+                            .post__actions-mobile {
+                                display: block;
+                                position: relative;
+                            }
+                        }
+                    `}</style>
             </section>
             <EditPostModal />
         </>
@@ -273,7 +282,8 @@ const Post = () => {
 
 export default Post;
 
-Post.getLayout = function getLayout(page: ReactNode) {
+Post.getLayout = function getLayout(page: ReactNode) { 
+    
     return (
         <Layout>
             <Header />

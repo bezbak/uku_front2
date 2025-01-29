@@ -5,11 +5,10 @@ import React from "react";
 class MyDocument extends Document {
     render() {
         return (
-            <Html lang="en">
+            <Html lang="ru">
                 <Head>
-                    <link rel="icon" href="/images/_logo.png" />
-                    <meta name="description" content="Uku" />
-                    <meta name="keywords" content="Uku.kg, уку, uku" />
+                    <title>uku.kg</title>
+                    <meta name="description" content="【uku.kg】 Крупнейший сайт для размещения бесплатных объявлений ➤ Кыргызстан ❱❱❱ 〚Актуальные объявления по темам〛▷ Недвижимость ➦ Транспорт ➦ Электроника ➦ Работа ➦ Услуги ➦ Дом и Сад ➦ Животные ➤ Кыргызстан ᐉ Сервис бесплатных частных и бизнес объявлений от uku.kg!" />
                 </Head>
                 <body>
                     <Main />
