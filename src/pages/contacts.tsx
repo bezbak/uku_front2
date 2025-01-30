@@ -22,97 +22,98 @@ export default function Contacts() {
     }, []);
 
     return (
-        <Wrapper title="Наши контактные данные">
-            {contact && (
-                <div className="contacts">
-                    <div className="contacts__left">
-                        <img
-                            src={contact.image}
-                            className="contacts__img"
-                            alt=""
-                        />
-                    </div>
-                    <div className="contacts__right">
-                        <h5 className="contacts__title">{contact.title}</h5>
-                        <div
-                            className="contacts__desc"
-                            dangerouslySetInnerHTML={{
-                                __html: contact.description,
-                            }}
-                        />
-                        <div className="contacts__footer">
-                            {contact.phone_numbers.length > 1 && (
-                                <div className="contacts__footer-block">
-                                    <h5 className="contacts__footer-title">
-                                        Наши телефоны:
-                                    </h5>
-                                    <ul className="contacts__footer-list list-reset-default-styles">
-                                        {contact.phone_numbers.map((number) => (
-                                            <li
-                                                className="contacts__footer-item"
-                                                key={number.id}
-                                            >
-                                                <Icon width={16} height={16}>
-                                                    <PhoneIcon />
-                                                </Icon>
-                                                {number.phone}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
+        <>
+            <Wrapper title="Наши контактные данные">
+                {contact && (
+                    <div className="contacts">
+                        <div className="contacts__left">
+                            <img
+                                src={contact.image}
+                                className="contacts__img"
+                                alt=""
+                            />
+                        </div>
+                        <div className="contacts__right">
+                            <h5 className="contacts__title">{contact.title}</h5>
+                            <div
+                                className="contacts__desc"
+                                dangerouslySetInnerHTML={{
+                                    __html: contact.description,
+                                }}
+                            />
+                            <div className="contacts__footer">
+                                {contact.phone_numbers.length > 1 && (
+                                    <div className="contacts__footer-block">
+                                        <h5 className="contacts__footer-title">
+                                            Наши телефоны:
+                                        </h5>
+                                        <ul className="contacts__footer-list list-reset-default-styles">
+                                            {contact.phone_numbers.map((number) => (
+                                                <li
+                                                    className="contacts__footer-item"
+                                                    key={number.id}
+                                                >
+                                                    <Icon width={16} height={16}>
+                                                        <PhoneIcon />
+                                                    </Icon>
+                                                    {number.phone}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
 
-                            {contact.instagram ||
-                                contact.facebook ||
-                                (contact.telegram && (
+                                {contact.instagram ||
+                                    contact.facebook ||
+                                    (contact.telegram && (
+                                        <div>
+                                            <h5 className="contacts__footer-title">
+                                                Мы в соц. сетях:
+                                            </h5>
+                                            <ul className="contacts__footer-list list-reset-default-styles">
+                                                <li className="contacts__footer-item">
+                                                    <Icon width={16} height={16}>
+                                                        <TelagramIcon />
+                                                    </Icon>
+                                                    Телеграм
+                                                </li>
+                                                <li className="contacts__footer-item">
+                                                    <Icon width={16} height={16}>
+                                                        <WhatsAppIcon />
+                                                    </Icon>
+                                                    WhatsApp
+                                                </li>
+                                                <li className="contacts__footer-item">
+                                                    <Icon width={16} height={16}>
+                                                        <InstagramIcon />
+                                                    </Icon>
+                                                    Instagram
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    ))}
+
+                                {contact.address && (
                                     <div>
                                         <h5 className="contacts__footer-title">
-                                            Мы в соц. сетях:
+                                            Наш адрес:
                                         </h5>
                                         <ul className="contacts__footer-list list-reset-default-styles">
                                             <li className="contacts__footer-item">
                                                 <Icon width={16} height={16}>
-                                                    <TelagramIcon />
+                                                    <LocationIcon />
                                                 </Icon>
-                                                Телеграм
-                                            </li>
-                                            <li className="contacts__footer-item">
-                                                <Icon width={16} height={16}>
-                                                    <WhatsAppIcon />
-                                                </Icon>
-                                                WhatsApp
-                                            </li>
-                                            <li className="contacts__footer-item">
-                                                <Icon width={16} height={16}>
-                                                    <InstagramIcon />
-                                                </Icon>
-                                                Instagram
+                                                {contact.address}
                                             </li>
                                         </ul>
                                     </div>
-                                ))}
-
-                            {contact.address && (
-                                <div>
-                                    <h5 className="contacts__footer-title">
-                                        Наш адрес:
-                                    </h5>
-                                    <ul className="contacts__footer-list list-reset-default-styles">
-                                        <li className="contacts__footer-item">
-                                            <Icon width={16} height={16}>
-                                                <LocationIcon />
-                                            </Icon>
-                                            {contact.address}
-                                        </li>
-                                    </ul>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <style jsx>{`
+                <style jsx>{`
                 .contacts {
                     display: flex;
                     gap: 32px;
@@ -168,7 +169,8 @@ export default function Contacts() {
                     }
                 }
             `}</style>
-        </Wrapper>
+            </Wrapper>
+        </>
     );
 }
 

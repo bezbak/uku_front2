@@ -16,7 +16,6 @@ import {
     searchServiceToken,
     systemServiceToken,
 } from "@/tokens";
-
 import ActionModal from "@/components/ActionModal/ActionModal";
 import type { AppProps } from "next/app";
 import AuthConfirm from "@/components/Authorization/AuthConfirm";
@@ -116,6 +115,9 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
 
     return (
         <ThemeProvider theme={theme}>
+            <Head>
+                <title>uku.kg</title>
+            </Head>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             <Provider store={store}>

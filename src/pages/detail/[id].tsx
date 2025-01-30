@@ -21,12 +21,29 @@ import { default as _Post } from "@components/Post/Post";
 import { useGetToken } from "@/hooks/useGetToken";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 
-export function getServerSideProps() {
-    return {
-        props: {},
-    };
+interface PostProps {
+    title: string;
 }
+
+export const getServerSideProps: GetServerSideProps<PostProps> = async (context) => {
+    const { id } = context.params as { id: string };
+    let title: string = "uku.kg";
+
+    try {
+        const res = await fetch(`https://uku.kg/api/v1/publication/${id}/`);
+        if (res.ok) {
+            const data = await res.json();
+            title = data.title || title;
+        }
+    } catch (error) {
+        console.error("Ошибка загрузки данных:", error);
+    }
+
+    return { props: { title } };
+};
+
 
 interface IConfirmAlert {
     title: string;
@@ -35,7 +52,7 @@ interface IConfirmAlert {
     name: string;
 }
 
-const Post = () => {
+const Post = ({ title }) => {
     const confirmAlertInitial = {
         name: "",
         title: "",
@@ -99,6 +116,7 @@ const Post = () => {
 
     return (
         <>
+            
             <section className="post">
                 <header className="post__header">
                     <button
@@ -275,10 +293,14 @@ const Post = () => {
 
 export default Post;
 
-Post.getLayout = function getLayout(page: ReactNode) { 
+Post.getLayout = function getLayout(page: ReactNode) {
+    const {title} = page.props.children[0].props;
     
     return (
         <Layout>
+            <Head>
+                <title>{`${title} | uku.kg`}</title>
+            </Head>
             <Header />
             {page}
             <Footer />
