@@ -34,7 +34,7 @@ export default function MobileMenu() {
     };
 
     return (
-        <div
+        (<div
             className={CN("footer-menu", {
                 "footer-menu--hide": categoryId !== undefined,
             })}
@@ -42,7 +42,7 @@ export default function MobileMenu() {
             <div className="footer-menu__inner">
                 <ul className="list-reset-default-styles footer-menu__list">
                     <li className="footer-menu__item">
-                        <Link href="/">
+                        <Link href="/" legacyBehavior>
                             <a
                                 className={CN("footer-menu__link", {
                                     "footer-menu__link--active":
@@ -61,7 +61,7 @@ export default function MobileMenu() {
                         </Link>
                     </li>
                     <li className="footer-menu__item">
-                        <Link href="/search">
+                        <Link href="/search" legacyBehavior>
                             <a
                                 className={CN("footer-menu__link", {
                                     "footer-menu__link--active":
@@ -185,6 +185,6 @@ export default function MobileMenu() {
                     }
                 }
             `}</style>
-        </div>
+        </div>)
     );
 }

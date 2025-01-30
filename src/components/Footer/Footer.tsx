@@ -14,7 +14,7 @@ export default function Footer() {
     const router = useRouter();
 
     return (
-        <div
+        (<div
             className={CN("footer", {
                 "footer--no-space": categoryId !== undefined,
                 "footer--hide": router.pathname === "/search",
@@ -23,10 +23,10 @@ export default function Footer() {
             <Container>
                 <div className="footer__inner">
                     <ul className="footer__list list-reset-default-styles">
-                        <Link href={"/contacts"}>
+                        <Link href={"/contacts"} legacyBehavior>
                             <li className="footer__item">Контакты</li>
                         </Link>
-                        <Link href={"/faq"}>
+                        <Link href={"/faq"} legacyBehavior>
                             <li className="footer__item">F.A.Q.</li>
                         </Link>
                     </ul>
@@ -129,6 +129,6 @@ export default function Footer() {
                     }
                 }
             `}</style>
-        </div>
+        </div>)
     );
 }

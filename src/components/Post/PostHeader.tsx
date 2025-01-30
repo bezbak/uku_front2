@@ -51,8 +51,8 @@ export default function PostHeader({
     };
 
     return (
-        <header className={CN("post-card__header", headerClass)}>
-            <Link href={`/profile/${userLink}`}>
+        (<header className={CN("post-card__header", headerClass)}>
+            <Link href={`/profile/${userLink}`} legacyBehavior>
                 <div className="post-card__header-left">
                     <Avatar url={avatar} name={first_name} />
                     <div>
@@ -63,7 +63,6 @@ export default function PostHeader({
                     </div>
                 </div>
             </Link>
-
             <div className="post-card__header-right">
                 {followEnable && (
                     <button
@@ -95,7 +94,6 @@ export default function PostHeader({
                     </button>
                 </div>
             </div>
-
             {isOwner && (
                 <div className="post-card__header-actions">
                     <button
@@ -122,7 +120,6 @@ export default function PostHeader({
                     />
                 </div>
             )}
-
             <style jsx>{`
                 .post-card__header {
                     padding: 12px 16px;
@@ -184,6 +181,6 @@ export default function PostHeader({
                     }
                 }
             `}</style>
-        </header>
+        </header>)
     );
 }

@@ -28,7 +28,7 @@ export default function HeaderNavbar({ avatar }: { avatar: string }) {
     }, []);
 
     return (
-        <div className="navbar">
+        (<div className="navbar">
             <Container>
                 <div className="navbar__inner">
                     <div className="navbar__left">
@@ -68,7 +68,7 @@ export default function HeaderNavbar({ avatar }: { avatar: string }) {
                                         <span>Поиск</span>
                                     </a>
                                 ) : (
-                                    <Link href={"/search"}>
+                                    <Link href={"/search"} legacyBehavior>
                                         <a className="navbar__right-link link-reset-default-styles">
                                             <Icon width={18} height={18}>
                                                 <SearchIcon />
@@ -79,7 +79,7 @@ export default function HeaderNavbar({ avatar }: { avatar: string }) {
                                 )}
                             </li>
                             <li>
-                                <Link href="/favourite">
+                                <Link href="/favourite" legacyBehavior>
                                     <a className="navbar__right-link link-reset-default-styles">
                                         <Icon width={18} height={18}>
                                             <HearIcon />
@@ -89,7 +89,7 @@ export default function HeaderNavbar({ avatar }: { avatar: string }) {
                                 </Link>
                             </li>
                             <li>
-                                <Link href={token ? "/my-profile" : "/login"}>
+                                <Link href={token ? "/my-profile" : "/login"} legacyBehavior>
                                     <div className="navbar__right-link">
                                         {token ? (
                                             <>
@@ -166,6 +166,6 @@ export default function HeaderNavbar({ avatar }: { avatar: string }) {
                     color: #979797;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 }

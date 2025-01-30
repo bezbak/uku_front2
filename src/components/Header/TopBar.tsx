@@ -4,16 +4,16 @@ import React from "react";
 
 const TopBar = () => {
     return (
-        <div className="top-bar">
+        (<div className="top-bar">
             <Container>
                 <ul className="top-bar__list list-reset-default-styles">
-                    <Link href={"/"}>
+                    <Link href={"/"} legacyBehavior>
                         <li className="top-bar__item">Главная</li>
                     </Link>
-                    <Link href={"/contacts"}>
+                    <Link href={"/contacts"} legacyBehavior>
                         <li className="top-bar__item">Контакты</li>
                     </Link>
-                    <Link href={"/faq"}>
+                    <Link href={"/faq"} legacyBehavior>
                         <li className="top-bar__item">F.A.Q.</li>
                     </Link>
                 </ul>
@@ -35,7 +35,7 @@ const TopBar = () => {
                     color: #4f4f4f;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 };
 

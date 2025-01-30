@@ -3,8 +3,8 @@ import * as React from "react";
 
 export default function Logo() {
     return (
-        <div className="logo">
-            <Link href={"/"}>
+        (<div className="logo">
+            <Link href={"/"} legacyBehavior>
                 <img src="/images/logo.png" alt="" />
             </Link>
             <style jsx>{`
@@ -12,6 +12,6 @@ export default function Logo() {
                     cursor: pointer;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 }

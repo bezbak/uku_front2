@@ -51,7 +51,7 @@ const Header = () => {
     };
 
     return (
-        <div className="header">
+        (<div className="header">
             <div className="header__main">
                 <TopBar />
                 <HeaderNavbar avatar={avatar} />
@@ -60,7 +60,7 @@ const Header = () => {
                 <Container>
                     <div className="mobile__inner">
                         {router.pathname !== "/search" && (
-                            <Link href="/">
+                            <Link href="/" legacyBehavior>
                                 <h2 className="mobile__logo">Uku.kg</h2>
                             </Link>
                         )}
@@ -94,7 +94,7 @@ const Header = () => {
                             </>
                         )}
                         {router.pathname !== "/search" ? (
-                            <Link href="/search">
+                            <Link href="/search" legacyBehavior>
                                 <button
                                     type="button"
                                     className="button-reset-default-styles mobile__add"
@@ -179,7 +179,7 @@ const Header = () => {
                     cursor: pointer;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 };
 

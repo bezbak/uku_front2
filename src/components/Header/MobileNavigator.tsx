@@ -41,7 +41,7 @@ function MobileNavigator({
     }, [open]);
 
     return (
-        <ul
+        (<ul
             className={CN("mobile-navigator list-reset-default-styles", {
                 "mobile-navigator--open": open,
             })}
@@ -62,7 +62,7 @@ function MobileNavigator({
                 </div>
             ) : (
                 <>
-                    <Link href="/">
+                    <Link href="/" legacyBehavior>
                         <li
                             className="mobile-navigator__item"
                             onClick={() => setOpen(false)}
@@ -70,7 +70,7 @@ function MobileNavigator({
                             Главная
                         </li>
                     </Link>
-                    <Link href="/contacts">
+                    <Link href="/contacts" legacyBehavior>
                         <li
                             className="mobile-navigator__item"
                             onClick={() => setOpen(false)}
@@ -78,7 +78,7 @@ function MobileNavigator({
                             Контакты
                         </li>
                     </Link>
-                    <Link href="/faq">
+                    <Link href="/faq" legacyBehavior>
                         <li
                             className="mobile-navigator__item"
                             onClick={() => setOpen(false)}
@@ -129,7 +129,7 @@ function MobileNavigator({
                             Поиск
                         </li>
                     ) : (
-                        <Link href={"/search"}>
+                        <Link href={"/search"} legacyBehavior>
                             <li
                                 className="mobile-navigator__item"
                                 onClick={() => setOpen(false)}
@@ -142,7 +142,7 @@ function MobileNavigator({
                         </Link>
                     )}
 
-                    <Link href="/favourite">
+                    <Link href="/favourite" legacyBehavior>
                         <li
                             className="mobile-navigator__item"
                             onClick={() => setOpen(false)}
@@ -154,7 +154,7 @@ function MobileNavigator({
                         </li>
                     </Link>
                     {!!auth ? (
-                        <Link href="/my-profile">
+                        <Link href="/my-profile" legacyBehavior>
                             <li
                                 className="mobile-navigator__item"
                                 onClick={() => setOpen(false)}
@@ -173,7 +173,7 @@ function MobileNavigator({
                             </li>
                         </Link>
                     ) : (
-                        <Link href="/login">
+                        <Link href="/login" legacyBehavior>
                             <li
                                 className="mobile-navigator__item"
                                 onClick={() => setOpen(false)}
@@ -236,7 +236,7 @@ function MobileNavigator({
                     margin: 24px 0;
                 }
             `}</style>
-        </ul>
+        </ul>)
     );
 }
 

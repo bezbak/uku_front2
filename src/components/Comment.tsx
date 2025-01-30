@@ -12,7 +12,7 @@ export interface ICommentProps {
 export default function Comment({ comment, setAnswer }: ICommentProps) {
     const [show, setShow] = useState(false);
     return (
-        <div className="comment">
+        (<div className="comment">
             <Avatar
                 name={comment.author.first_name}
                 url={comment.author.avatar}
@@ -20,7 +20,7 @@ export default function Comment({ comment, setAnswer }: ICommentProps) {
             />
             <div className="comment__content">
                 <p className="comment__text">
-                    <Link href={`/profile/${comment.author.id}`}>
+                    <Link href={`/profile/${comment.author.id}`} legacyBehavior>
                         <a className="comment__author">
                             {comment.author.first_name}{" "}
                             {comment.author.last_name}
@@ -113,6 +113,6 @@ export default function Comment({ comment, setAnswer }: ICommentProps) {
                     border-radius: 2px;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 }

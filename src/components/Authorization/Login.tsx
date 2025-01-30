@@ -1,3 +1,4 @@
+'use client'
 import "react-phone-input-2/lib/style.css";
 
 import React, { FC, FormEvent, useRef } from "react";
@@ -38,16 +39,26 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const verify = new RecaptchaVerifier(
-            "recaptcha-container",
-            {
-                size: "invisible",
-            },
-            authentication
-        );
 
-        if (type === "login") {
-            try {
+        if (!authentication) {
+            console.error("Firebase authentication is not initialized");
+            toast.error("Ошибка: Firebase не инициализирован!");
+            return;
+        }
+
+        try {
+            // Используем глобальный RecaptchaVerifier
+            if (!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new RecaptchaVerifier(authentication, 'recaptcha-container', {
+                    size: 'invisible',
+                    callback: () => {
+                        console.log('recaptcha resolved..')
+                    }
+                });
+            }
+            const verify = window.recaptchaVerifier;
+
+            if (type === "login") {
                 const { payload } = await dispatch(
                     loginAsync({
                         phone,
@@ -55,11 +66,7 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                     })
                 );
                 window.confirmationResult = payload;
-            } catch (error) {
-                toast.error("Произошла ошибка попробуйте снова!");
-            }
-        } else {
-            try {
+            } else {
                 const { payload } = await dispatch(
                     newPhoneAsync({
                         phone,
@@ -68,17 +75,18 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                 );
                 window.verifideId = payload;
                 dispatch(changePage("newConfirm"));
-            } catch (error) {
-                toast.error("Произошла ошибка попробуйте снова!");
             }
+        } catch (error) {
+            console.error("Ошибка:", error);
+            toast.error("Произошла ошибка, попробуйте снова!");
         }
     };
 
     return (
-        <div className="login">
+        (<div className="login">
             <div className="login__header">
                 <h3>{type === "login" ? "Вход" : "Введите новый номер"}</h3>
-                <Link href={"/"}>
+                <Link href={"/"} legacyBehavior>
                     <button className="login__button">Отмена</button>
                 </Link>
             </div>
@@ -146,7 +154,7 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
                     background: #fff;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 };
 

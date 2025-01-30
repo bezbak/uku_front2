@@ -48,10 +48,10 @@ export default function Accounts({ params }: { params: string | null }) {
     }, [users?.next]);
 
     return (
-        <div className="search-accounts">
+        (<div className="search-accounts">
             {users?.results.map((user) => {
                 return (
-                    <Link href={`/profile/${user.id}`} key={user.id}>
+                    (<Link href={`/profile/${user.id}`} key={user.id} legacyBehavior>
                         <div className="search-accounts__account">
                             <Avatar name={user.first_name} url={user.avatar} />
                             <div className="search-accounts__info">
@@ -63,7 +63,7 @@ export default function Accounts({ params }: { params: string | null }) {
                                 </p>
                             </div>
                         </div>
-                    </Link>
+                    </Link>)
                 );
             })}
             <div ref={ref} />
@@ -88,6 +88,6 @@ export default function Accounts({ params }: { params: string | null }) {
                     color: #5a5a5a;
                 }
             `}</style>
-        </div>
+        </div>)
     );
 }

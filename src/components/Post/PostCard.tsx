@@ -106,7 +106,7 @@ export default function PostCard({
     };
 
     return (
-        <Link href={`/detail/${item.id}`}>
+        (<Link href={`/detail/${item.id}`} legacyBehavior>
             <article
                 className={CN("post-card", {
                     "post-card--masonry": masonry,
@@ -471,6 +471,6 @@ export default function PostCard({
                     }
                 `}</style>
             </article>
-        </Link>
+        </Link>)
     );
 }
