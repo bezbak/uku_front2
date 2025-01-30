@@ -35,7 +35,8 @@ export const getServerSideProps: GetServerSideProps<PostProps> = async (context)
         const res = await fetch(`https://uku.kg/api/v1/publication/${id}/`);
         if (res.ok) {
             const data = await res.json();
-            title = data.title || title;
+            
+            title = `${data.title} - ${data.category.name}` || title;
         }
     } catch (error) {
         console.error("Ошибка загрузки данных:", error);

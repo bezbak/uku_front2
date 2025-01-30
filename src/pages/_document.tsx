@@ -7,35 +7,39 @@ import Document, {
     DocumentInitialProps,
   } from "next/document";
   
-  class MyDocument extends Document<{  description: string }> {
+  class MyDocument extends Document<{  description: string, image: string }> {
     static async getInitialProps(
       ctx: DocumentContext
-    ): Promise<DocumentInitialProps & { description: string }> {
+    ): Promise<DocumentInitialProps & { description: string, image: string }> {
       let description =
         "【uku.kg】 Крупнейший сайт для размещения бесплатных объявлений ➤ Кыргызстан ❱❱❱ 〚Актуальные объявления по темам〛▷ Недвижимость ➦ Транспорт ➦ Электроника ➦ Работа ➦ Услуги ➦ Дом и Сад ➦ Животные ➤ Кыргызстан ᐉ Сервис бесплатных частных и бизнес объявлений от uku.kg!";
-  
+      let image = '/image/_logo.png'
       try {
         const { id } = ctx.query;
         
         if (id) {
           const res = await fetch(`https://uku.kg/api/v1/publication/${id}/`);
           const data = await res.json();
-          description = data.description || description;
+          image = data.images[0].image
+          console.log(data.images);
+          description = `${data.description} - ${data.category.name}` || description;
         }
       } catch (error) {
         console.error("Ошибка загрузки данных:", error);
       }
       
       const initialProps = await Document.getInitialProps(ctx);
-      return { ...initialProps, description };
+      return { ...initialProps, description, image };
     }
   
     render() {
-        const { description } = this.props;
+        const { description, image } = this.props;
         return (
             <Html lang="ru">
                 <Head>
                     <meta name="description" content={`${description}`} />
+                    <meta property="og:image" content={`${image}`} />
+                    <meta property="image_src" content={`${image}`} />
                 </Head>
                 <body>
                     <Main />
