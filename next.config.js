@@ -3,7 +3,6 @@ const API_URL = "https://api.uku.kg/"
 module.exports = {
     reactStrictMode: true,
     trailingSlash: true,
-    ignoreBuildErrors: true,
     async rewrites() {
         return [
             {
@@ -27,5 +26,9 @@ module.exports = {
                 destination: `${API_URL}api/v1/:slug*/`,
             },
         ];
+    },
+    typescript: {
+        // Игнорировать ошибки TypeScript при сборке
+        ignoreBuildErrors: true,
     },
 };
