@@ -40,6 +40,7 @@ import Document, {
                     <meta name="description" content={`${description}`} />
                     <meta property="og:image" content={`${image}`} />
                     <meta property="image_src" content={`${image}`} />
+                    <meta property="og:title" content={`${description}`} />
                 </Head>
                 <body>
                     <Main />
