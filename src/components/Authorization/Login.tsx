@@ -49,12 +49,16 @@ const Login: FC<ILoginProps> = ({ status, message, type }) => {
         try {
             // Используем глобальный RecaptchaVerifier
             if (!window.recaptchaVerifier) {
-                window.recaptchaVerifier = new RecaptchaVerifier(authentication, 'recaptcha-container', {
-                    size: 'invisible',
-                    callback: () => {
-                        console.log('recaptcha resolved..')
-                    }
-                });
+                window.recaptchaVerifier = new RecaptchaVerifier(
+                    "recaptcha-container", // ✅ Правильный порядок
+                    {
+                        size: "invisible",
+                        callback: () => {
+                            console.log("reCAPTCHA resolved...");
+                        },
+                    },
+                    authentication // ✅ auth идёт в конце
+                );
             }
             const verify = window.recaptchaVerifier;
 
