@@ -6,10 +6,6 @@ class MyDocument extends Document {
     render() {
         return (
             <Html lang="ru">
-                <Head>
-                    <title>uku.kg</title>
-                    <meta name="description" content="【uku.kg】 Крупнейший сайт для размещения бесплатных объявлений ➤ Кыргызстан ❱❱❱ 〚Актуальные объявления по темам〛▷ Недвижимость ➦ Транспорт ➦ Электроника ➦ Работа ➦ Услуги ➦ Дом и Сад ➦ Животные ➤ Кыргызстан ᐉ Сервис бесплатных частных и бизнес объявлений от uku.kg!" />
-                </Head>
                 <body>
                     <Main />
                     <NextScript />
