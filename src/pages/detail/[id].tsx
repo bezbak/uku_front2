@@ -99,13 +99,6 @@ const Post = () => {
 
     return (
         <>
-            <Head>
-                <title>{post.description} | uku.kg</title>
-                <meta name="description" content={post.description} />
-                <meta property="og:title" content={`${post.description} | uku.kg`} />
-                <meta property="og:description" content={post.description} />
-                <meta property="og:image" content={post.images[0]?.image} />
-            </Head>
             <section className="post">
                 <header className="post__header">
                     <button

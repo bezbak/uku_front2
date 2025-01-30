@@ -121,9 +121,6 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
             <Provider store={store}>
                 {getLayout(
                     <>
-                        <Head>
-                            <title>uku.kg</title>
-                        </Head>
                         <Component {...pageProps} />
                         <ActionModal />
                         <LocationModal />
