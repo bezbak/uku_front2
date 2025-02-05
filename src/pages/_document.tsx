@@ -11,10 +11,9 @@ import Document, {
     static async getInitialProps(
       ctx: DocumentContext
     ): Promise<DocumentInitialProps & { description: string, image: string, title: string }> {
-      let description =
-        "【uku.kg】 Крупнейший сайт для размещения бесплатных объявлений ➤ Кыргызстан ❱❱❱ 〚Актуальные объявления по темам〛▷ Недвижимость ➦ Транспорт ➦ Электроника ➦ Работа ➦ Услуги ➦ Дом и Сад ➦ Животные ➤ Кыргызстан ᐉ Сервис бесплатных частных и бизнес объявлений от uku.kg!";
+      let description = "Сервис с удобством для быстрого размещения много объявлений ♡ 〚 Продайте новый и БУ товар уже сегодня 〛Электроника ➜ Одежда ➜ Услуги ➜ Косметика ➜ Стройматериал ➜ Транспорт ➜ Недвижимость ➜ Кыргызстан ▍ uku.kg";
+      let title = 'Сайт быстрых объявлений ♡ Новые и БУ товары Кыргызстана ▍ uku.kg'
       let image = '/image/_logo.png'
-      let title = 'uku.kg'
       try {
         const { id } = ctx.query;
         
